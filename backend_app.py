@@ -647,7 +647,7 @@ elif page == "✏️ Pronostici":
         predictions["match_id"] = predictions["match_id"].astype(int)
         matches["match_id"] = matches["match_id"].astype(int)
 
-        participants = sorted(predictions["participant"].dropna().unique())
+        participants = sorted(predictions["partecipant"].dropna().unique())
 
         selected_participant = st.selectbox(
             "Partecipante",
@@ -655,7 +655,7 @@ elif page == "✏️ Pronostici":
         )
 
         df_user = predictions[
-            predictions["participant"] == selected_participant
+            predictions["partecipant"] == selected_participant
         ].copy()
 
         match_info_cols = [
@@ -725,7 +725,7 @@ elif page == "✏️ Pronostici":
                 match_id = int(row["match_id"])
 
                 mask = (
-                    (predictions["participant"] == selected_participant)
+                    (predictions["partecipant"] == selected_participant)
                     & (predictions["match_id"] == match_id)
                 )
 

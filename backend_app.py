@@ -413,7 +413,7 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     }
 
     required_predictions = {
-        "participant",
+        "partecipant",
         "match_id",
         "pred_home_score",
         "pred_away_score",
@@ -466,7 +466,7 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     player_points = pd.concat([df, points], axis=1)
 
     keep_cols = [
-        "participant",
+        "partecipant",
         "match_id",
         "datetime",
         "group",
@@ -490,7 +490,7 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
 
     standings = (
         player_points
-        .groupby("participant", as_index=False)
+        .groupby("partecipant", as_index=False)
         .agg(
             total_points=("total_points", "sum"),
             exact_scores=("exact_score_points", lambda x: (x > 0).sum()),
@@ -695,44 +695,44 @@ def reset_tournament() -> None:
 
 def init_predictions() -> pd.DataFrame:
     matches = read_csv(MATCHES_PATH)
-    participants = read_csv(PARTECIPANTS_PATH)
+    partecipants = read_csv(PARTECIPANTS_PATH)
 
     if matches.empty:
         raise ValueError("matches.csv non trovato o vuoto.")
 
-    if participants.empty:
+    if partecipants.empty:
         raise ValueError("partecipants.csv non trovato o vuoto.")
 
     if "match_id" not in matches.columns:
         raise ValueError("matches.csv deve contenere la colonna match_id.")
 
-    if "partecipant" in participants.columns:
-        participant_col = "partecipant"
-    elif "participant" in participants.columns:
-        participant_col = "participant"
+    if "partecipant" in partecipants.columns:
+        partecipant_col = "partecipant"
+    elif "partecipant" in partecipants.columns:
+        partecipant_col = "partecipant"
     else:
         raise ValueError(
-            "partecipants.csv deve contenere la colonna partecipant oppure participant."
+            "partecipants.csv deve contenere la colonna partecipant oppure partecipant."
         )
 
     matches["match_id"] = matches["match_id"].astype(int)
 
-    participant_names = (
-        participants[participant_col]
+    partecipant_names = (
+        partecipants[partecipant_col]
         .dropna()
         .astype(str)
         .str.strip()
     )
 
-    participant_names = sorted(set([x for x in participant_names if x != ""]))
+    partecipant_names = sorted(set([x for x in partecipant_names if x != ""]))
 
     rows = []
 
-    for participant in participant_names:
+    for partecipant in partecipant_names:
         for match_id in matches["match_id"].tolist():
             rows.append(
                 {
-                    "participant": participant,
+                    "partecipant": partecipant,
                     "match_id": int(match_id),
                     "pred_home_score": "",
                     "pred_away_score": "",
@@ -748,7 +748,7 @@ def init_predictions() -> pd.DataFrame:
         old_df = read_csv(PREDICTIONS_PATH)
 
         required_cols = {
-            "participant",
+            "partecipant",
             "match_id",
             "pred_home_score",
             "pred_away_score",
@@ -764,7 +764,7 @@ def init_predictions() -> pd.DataFrame:
 
             merged = new_df.merge(
                 old_data,
-                on=["participant", "match_id"],
+                on=["partecipant", "match_id"],
                 how="left",
                 suffixes=("", "_old"),
             )
@@ -784,7 +784,7 @@ def init_predictions() -> pd.DataFrame:
 
             new_df = merged[
                 [
-                    "participant",
+                    "partecipant",
                     "match_id",
                     "pred_home_score",
                     "pred_away_score",
@@ -871,12 +871,12 @@ if page == "📊 Dashboard":
         st.metric("Partite concluse", int(finished))
 
     with c3:
-        if predictions.empty or "participant" not in predictions.columns:
-            participants_count = 0
+        if predictions.empty or "partecipant" not in predictions.columns:
+            partecipants_count = 0
         else:
-            participants_count = predictions["participant"].nunique()
+            partecipants_count = predictions["partecipant"].nunique()
 
-        st.metric("Partecipanti", participants_count)
+        st.metric("Partecipanti", partecipants_count)
 
     with c4:
         if predictions.empty or "last_update" not in predictions.columns:
@@ -952,15 +952,15 @@ elif page == "✏️ Pronostici":
         predictions["match_id"] = predictions["match_id"].astype(int)
         matches["match_id"] = matches["match_id"].astype(int)
 
-        participants = sorted(predictions["participant"].dropna().astype(str).unique())
+        partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
 
-        selected_participant = st.selectbox(
+        selected_partecipant = st.selectbox(
             "Partecipante",
-            participants,
+            partecipants,
         )
 
         df_user = predictions[
-            predictions["participant"].astype(str) == selected_participant
+            predictions["partecipant"].astype(str) == selected_partecipant
         ].copy()
 
         match_info_cols = [
@@ -1024,7 +1024,7 @@ elif page == "✏️ Pronostici":
                 match_id = int(row["match_id"])
 
                 mask = (
-                    (predictions["participant"].astype(str) == selected_participant)
+                    (predictions["partecipant"].astype(str) == selected_partecipant)
                     & (predictions["match_id"].astype(int) == match_id)
                 )
 
@@ -1192,13 +1192,13 @@ elif page == "🏆 Classifica":
     if not player_points.empty:
         st.subheader("Dettaglio punti partita per partita")
 
-        participants = ["Tutti"] + sorted(player_points["participant"].dropna().astype(str).unique().tolist())
-        selected = st.selectbox("Filtro partecipante", participants)
+        partecipants = ["Tutti"] + sorted(player_points["partecipant"].dropna().astype(str).unique().tolist())
+        selected = st.selectbox("Filtro partecipante", partecipants)
 
         view = player_points.copy()
 
         if selected != "Tutti":
-            view = view[view["participant"].astype(str) == selected]
+            view = view[view["partecipant"].astype(str) == selected]
 
         st.dataframe(view, width="stretch")
 

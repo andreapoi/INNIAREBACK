@@ -1,11 +1,11 @@
-# backend_app.py
-
 from pathlib import Path
 from datetime import datetime
-import shutil
+from io import StringIO
 import base64
-import requests
+import shutil
+
 import pandas as pd
+import requests
 import streamlit as st
 
 
@@ -20,14 +20,22 @@ BACKUP_DIR = DATA_DIR / "backups"
 MATCHES_PATH = DATA_DIR / "matches.csv"
 PREDICTIONS_PATH = DATA_DIR / "predictions.csv"
 PARTECIPANTS_PATH = DATA_DIR / "partecipants.csv"
+TEAM_MAPPING_PATH = DATA_DIR / "team_mapping.csv"
 STANDINGS_PATH = DATA_DIR / "standings.csv"
 PLAYER_POINTS_PATH = DATA_DIR / "player_points.csv"
-TEAM_MAPPING_PATH = DATA_DIR / "team_mapping.csv"
 
 POINTS_EXACT_SCORE = 5
 POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
+CSV_FILES = [
+    MATCHES_PATH,
+    PREDICTIONS_PATH,
+    PARTECIPANTS_PATH,
+    TEAM_MAPPING_PATH,
+    STANDINGS_PATH,
+    PLAYER_POINTS_PATH,
+]
 
 st.set_page_config(
     page_title="INNIAREBACK Backend",
@@ -35,140 +43,6 @@ st.set_page_config(
     layout="wide",
 )
 
-
-# ============================================================
-# GENERIC HELPERS
-# ============================================================
-
-def read_csv(path: Path) -> pd.DataFrame:
-    if not path.exists():
-        return pd.DataFrame()
-
-    df = pd.read_csv(
-        path,
-        sep=None,
-        engine="python",
-        encoding="utf-8-sig",
-    )
-
-    df.columns = (
-        df.columns
-        .astype(str)
-        .str.replace("\ufeff", "", regex=False)
-        .str.strip()
-    )
-
-    return df
-
-
-def save_csv(df: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(path, index=False, encoding="utf-8")
-
-
-def clean_value(value) -> str:
-    if pd.isna(value):
-        return ""
-
-    value = str(value).strip()
-
-    if value.endswith(".0"):
-        value = value[:-2]
-
-    return value
-
-
-def clean_result_value(value) -> str:
-    return clean_value(value).upper()
-
-
-def to_int_or_none(value):
-    value = clean_value(value)
-
-    if value == "":
-        return None
-
-    try:
-        return int(float(value))
-    except Exception:
-        return None
-
-
-def calc_result(home_score, away_score) -> str:
-    home = to_int_or_none(home_score)
-    away = to_int_or_none(away_score)
-
-    if home is None or away is None:
-        return ""
-
-    if home > away:
-        return "1"
-    elif home < away:
-        return "2"
-    else:
-        return "X"
-
-
-def normalize_scorer(value: str) -> str:
-    value = clean_value(value)
-
-    if value.upper() in ["OG", "AUTOGOL", "OWN GOAL"]:
-        return "OG"
-
-    return value
-
-
-def normalize_scorers_list(value: str) -> str:
-    value = clean_value(value)
-
-    if value == "":
-        return ""
-
-    parts = [
-        normalize_scorer(x)
-        for x in value.split(";")
-        if clean_value(x) != ""
-    ]
-
-    return ";".join(parts)
-
-
-def ensure_data_dir() -> None:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-
-
-# ============================================================
-# SCORING HELPERS
-# ============================================================
-
-def exact_score_correct(row) -> bool:
-    pred_home = to_int_or_none(row.get("pred_home_score"))
-    pred_away = to_int_or_none(row.get("pred_away_score"))
-    real_home = to_int_or_none(row.get("home_score"))
-    real_away = to_int_or_none(row.get("away_score"))
-
-    if None in [pred_home, pred_away, real_home, real_away]:
-        return False
-
-    return pred_home == real_home and pred_away == real_away
-
-
-def result_1x2_correct(row) -> bool:
-    pred_result = clean_result_value(row.get("pred_result"))
-
-    if pred_result == "":
-        pred_result = calc_result(
-            row.get("pred_home_score"),
-            row.get("pred_away_score"),
-        )
-
-    real_result = calc_result(
-        row.get("home_score"),
-        row.get("away_score"),
-    )
-
-    return pred_result != "" and pred_result == real_result
 
 # ============================================================
 # GITHUB PERSISTENCE
@@ -215,17 +89,12 @@ def github_get_file(path_in_repo: str):
     response.raise_for_status()
 
     payload = response.json()
-
     content = base64.b64decode(payload["content"]).decode("utf-8")
 
     return content, payload["sha"]
 
 
-def github_put_file(
-    path_in_repo: str,
-    content: str,
-    message: str,
-) -> None:
+def github_put_file(path_in_repo: str, content: str, message: str) -> None:
     token, repo, branch = get_github_config()
 
     _, sha = github_get_file(path_in_repo)
@@ -253,29 +122,234 @@ def github_put_file(
     response.raise_for_status()
 
 
-def save_csv_and_push(
-    df: pd.DataFrame,
-    local_path: Path,
-    commit_message: str,
-) -> None:
-    save_csv(df, local_path)
+def github_list_directory(path_in_repo: str) -> list[dict]:
+    token, repo, branch = get_github_config()
 
+    url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
+
+    response = requests.get(
+        url,
+        headers=github_headers(token),
+        params={"ref": branch},
+        timeout=30,
+    )
+
+    if response.status_code == 404:
+        return []
+
+    response.raise_for_status()
+
+    payload = response.json()
+
+    if isinstance(payload, dict):
+        return [payload]
+
+    return payload
+
+
+def repo_path(local_path: Path) -> str:
+    return local_path.relative_to(BASE_DIR).as_posix()
+
+
+def sync_file_from_github(local_path: Path) -> bool:
     if not github_enabled():
-        st.warning(
-            "File salvato localmente, ma GitHub non è configurato nei Secrets. "
-            "Le modifiche potrebbero non persistere dopo un riavvio."
-        )
+        return False
+
+    path_in_repo = repo_path(local_path)
+    content, _ = github_get_file(path_in_repo)
+
+    if content is None:
+        return False
+
+    local_path.parent.mkdir(parents=True, exist_ok=True)
+    local_path.write_text(content, encoding="utf-8")
+
+    return True
+
+
+def sync_core_files_from_github() -> None:
+    if not github_enabled():
         return
 
-    relative_path = local_path.relative_to(BASE_DIR).as_posix()
+    for path in CSV_FILES:
+        try:
+            sync_file_from_github(path)
+        except Exception:
+            pass
 
+
+def save_text_and_push(local_path: Path, content: str, commit_message: str) -> None:
+    local_path.parent.mkdir(parents=True, exist_ok=True)
+    local_path.write_text(content, encoding="utf-8")
+
+    if github_enabled():
+        github_put_file(
+            path_in_repo=repo_path(local_path),
+            content=content,
+            message=commit_message,
+        )
+    else:
+        st.warning(
+            "GitHub non è configurato nei Secrets. "
+            "Il file è stato salvato solo localmente e potrebbe non persistere."
+        )
+
+
+def save_csv(df: pd.DataFrame, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False, encoding="utf-8")
+
+
+def save_csv_and_push(df: pd.DataFrame, path: Path, commit_message: str) -> None:
     csv_content = df.to_csv(index=False)
+    save_text_and_push(path, csv_content, commit_message)
 
-    github_put_file(
-        path_in_repo=relative_path,
-        content=csv_content,
-        message=commit_message,
+
+# ============================================================
+# GENERIC HELPERS
+# ============================================================
+
+def ensure_data_dir() -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def read_csv(path: Path, sync: bool = True) -> pd.DataFrame:
+    if sync and github_enabled():
+        try:
+            sync_file_from_github(path)
+        except Exception:
+            pass
+
+    if not path.exists():
+        return pd.DataFrame()
+
+    try:
+        df = pd.read_csv(
+            path,
+            sep=None,
+            engine="python",
+            encoding="utf-8-sig",
+        )
+    except pd.errors.EmptyDataError:
+        return pd.DataFrame()
+
+    df.columns = (
+        df.columns
+        .astype(str)
+        .str.replace("\ufeff", "", regex=False)
+        .str.strip()
     )
+
+    return df
+
+
+def clean_value(value) -> str:
+    if pd.isna(value):
+        return ""
+
+    value = str(value).strip()
+
+    if value.endswith(".0"):
+        value = value[:-2]
+
+    return value
+
+
+def clean_result_value(value) -> str:
+    return clean_value(value).upper()
+
+
+def to_int_or_none(value):
+    value = clean_value(value)
+
+    if value == "":
+        return None
+
+    try:
+        return int(float(value))
+    except Exception:
+        return None
+
+
+def calc_result(home_score, away_score) -> str:
+    home = to_int_or_none(home_score)
+    away = to_int_or_none(away_score)
+
+    if home is None or away is None:
+        return ""
+
+    if home > away:
+        return "1"
+    if home < away:
+        return "2"
+
+    return "X"
+
+
+def normalize_scorer(value) -> str:
+    value = clean_value(value)
+
+    if value.upper() in ["OG", "AUTOGOL", "OWN GOAL"]:
+        return "OG"
+
+    return value
+
+
+def normalize_scorers_list(value) -> str:
+    value = clean_value(value)
+
+    if value == "":
+        return ""
+
+    parts = [
+        normalize_scorer(x)
+        for x in value.split(";")
+        if clean_value(x) != ""
+    ]
+
+    return ";".join(parts)
+
+
+def now_string() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def commit_suffix() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+# ============================================================
+# SCORING
+# ============================================================
+
+def exact_score_correct(row) -> bool:
+    pred_home = to_int_or_none(row.get("pred_home_score"))
+    pred_away = to_int_or_none(row.get("pred_away_score"))
+    real_home = to_int_or_none(row.get("home_score"))
+    real_away = to_int_or_none(row.get("away_score"))
+
+    if None in [pred_home, pred_away, real_home, real_away]:
+        return False
+
+    return pred_home == real_home and pred_away == real_away
+
+
+def result_1x2_correct(row) -> bool:
+    pred_result = clean_result_value(row.get("pred_result"))
+
+    if pred_result == "":
+        pred_result = calc_result(
+            row.get("pred_home_score"),
+            row.get("pred_away_score"),
+        )
+
+    real_result = calc_result(
+        row.get("home_score"),
+        row.get("away_score"),
+    )
+
+    return pred_result != "" and pred_result == real_result
 
 
 def scorer_correct(row) -> bool:
@@ -374,7 +448,19 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     ].copy()
 
     if df.empty:
-        return pd.DataFrame(), pd.DataFrame()
+        empty_points = pd.DataFrame()
+        empty_standings = pd.DataFrame()
+        save_csv_and_push(
+            empty_points,
+            PLAYER_POINTS_PATH,
+            f"Reset player_points - {commit_suffix()}",
+        )
+        save_csv_and_push(
+            empty_standings,
+            STANDINGS_PATH,
+            f"Reset standings - {commit_suffix()}",
+        )
+        return empty_points, empty_standings
 
     points = df.apply(score_row, axis=1)
     player_points = pd.concat([df, points], axis=1)
@@ -427,21 +513,22 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     standings.insert(0, "rank", range(1, len(standings) + 1))
 
     save_csv_and_push(
-    player_points,
-    PLAYER_POINTS_PATH,
-    f"Update player points {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        player_points,
+        PLAYER_POINTS_PATH,
+        f"Update player_points - {commit_suffix()}",
     )
+
     save_csv_and_push(
-    standings,
-    STANDINGS_PATH,
-    f"Update standings {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        standings,
+        STANDINGS_PATH,
+        f"Update standings - {commit_suffix()}",
     )
 
     return player_points, standings
 
 
 # ============================================================
-# BACKUP / RESET HELPERS
+# BACKUP / RESTORE / RESET
 # ============================================================
 
 def create_backup() -> Path:
@@ -451,37 +538,53 @@ def create_backup() -> Path:
     backup_path = BACKUP_DIR / f"backup_{timestamp}"
     backup_path.mkdir(parents=True, exist_ok=True)
 
-    files_to_backup = [
-        MATCHES_PATH,
-        PREDICTIONS_PATH,
-        PARTECIPANTS_PATH,
-        TEAM_MAPPING_PATH,
-        STANDINGS_PATH,
-        PLAYER_POINTS_PATH,
-    ]
-
     copied = 0
 
-    for source in files_to_backup:
-        if source.exists():
-            shutil.copy2(source, backup_path / source.name)
-            if github_enabled():
-               relative_path = (backup_path / source.name).relative_to(BASE_DIR).as_posix()
-               content = source.read_text(encoding="utf-8")
+    for source in CSV_FILES:
+        if github_enabled():
+            try:
+                sync_file_from_github(source)
+            except Exception:
+                pass
 
-               github_put_file(
-               path_in_repo=relative_path,
-               content=content,
-               message=f"Create backup {backup_path.name}",
-               )
+        if source.exists():
+            dest = backup_path / source.name
+            shutil.copy2(source, dest)
             copied += 1
+
+            if github_enabled():
+                content = dest.read_text(encoding="utf-8")
+                github_put_file(
+                    path_in_repo=repo_path(dest),
+                    content=content,
+                    message=f"Create backup {backup_path.name} - {source.name}",
+                )
 
     return backup_path
 
 
 def list_backups() -> list[Path]:
-    if not BACKUP_DIR.exists():
-        return []
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+
+    if github_enabled():
+        try:
+            items = github_list_directory("data/backups")
+            backup_dirs = [
+                item["name"]
+                for item in items
+                if item.get("type") == "dir" and item.get("name", "").startswith("backup_")
+            ]
+
+            for backup_name in backup_dirs:
+                local_backup_dir = BACKUP_DIR / backup_name
+                local_backup_dir.mkdir(parents=True, exist_ok=True)
+
+            return sorted(
+                [BACKUP_DIR / b for b in backup_dirs],
+                reverse=True,
+            )
+        except Exception:
+            pass
 
     return sorted(
         [
@@ -492,12 +595,50 @@ def list_backups() -> list[Path]:
     )
 
 
+def sync_backup_dir_from_github(backup_path: Path) -> None:
+    if not github_enabled():
+        return
+
+    backup_repo_path = repo_path(backup_path)
+
+    try:
+        items = github_list_directory(backup_repo_path)
+    except Exception:
+        return
+
+    backup_path.mkdir(parents=True, exist_ok=True)
+
+    for item in items:
+        if item.get("type") != "file":
+            continue
+
+        file_repo_path = item["path"]
+        content, _ = github_get_file(file_repo_path)
+
+        if content is None:
+            continue
+
+        local_file = backup_path / item["name"]
+        local_file.write_text(content, encoding="utf-8")
+
+
 def restore_backup(backup_path: Path) -> int:
+    if github_enabled():
+        sync_backup_dir_from_github(backup_path)
+
     restored = 0
 
     for file_path in backup_path.glob("*.csv"):
-        shutil.copy2(file_path, DATA_DIR / file_path.name)
+        dest = DATA_DIR / file_path.name
+        shutil.copy2(file_path, dest)
         restored += 1
+
+        if github_enabled():
+            github_put_file(
+                path_in_repo=repo_path(dest),
+                content=dest.read_text(encoding="utf-8"),
+                message=f"Restore {file_path.name} from {backup_path.name}",
+            )
 
     return restored
 
@@ -509,10 +650,11 @@ def reset_tournament() -> None:
         for col in ["home_score", "away_score", "real_scorers"]:
             if col in matches.columns:
                 matches[col] = ""
+
         save_csv_and_push(
-        matches,
-        MATCHES_PATH,
-        f"Update matches {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            matches,
+            MATCHES_PATH,
+            f"Reset matches results - {commit_suffix()}",
         )
 
     predictions = read_csv(PREDICTIONS_PATH)
@@ -527,19 +669,28 @@ def reset_tournament() -> None:
         ]:
             if col in predictions.columns:
                 predictions[col] = ""
+
         save_csv_and_push(
-        predictions,
-        PREDICTIONS_PATH,
-        f"Update predictions {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            predictions,
+            PREDICTIONS_PATH,
+            f"Reset predictions - {commit_suffix()}",
         )
 
-    for path in [STANDINGS_PATH, PLAYER_POINTS_PATH]:
-        if path.exists():
-            path.unlink()
+    save_csv_and_push(
+        pd.DataFrame(),
+        PLAYER_POINTS_PATH,
+        f"Reset player_points - {commit_suffix()}",
+    )
+
+    save_csv_and_push(
+        pd.DataFrame(),
+        STANDINGS_PATH,
+        f"Reset standings - {commit_suffix()}",
+    )
 
 
 # ============================================================
-# INIT PREDICTIONS HELPER
+# INIT PREDICTIONS
 # ============================================================
 
 def init_predictions() -> pd.DataFrame:
@@ -561,8 +712,7 @@ def init_predictions() -> pd.DataFrame:
         participant_col = "participant"
     else:
         raise ValueError(
-            "partecipants.csv deve contenere la colonna partecipant "
-            "oppure participant."
+            "partecipants.csv deve contenere la colonna partecipant oppure participant."
         )
 
     matches["match_id"] = matches["match_id"].astype(int)
@@ -574,12 +724,7 @@ def init_predictions() -> pd.DataFrame:
         .str.strip()
     )
 
-    participant_names = [
-        x for x in participant_names
-        if x != ""
-    ]
-
-    participant_names = sorted(set(participant_names))
+    participant_names = sorted(set([x for x in participant_names if x != ""]))
 
     rows = []
 
@@ -588,7 +733,7 @@ def init_predictions() -> pd.DataFrame:
             rows.append(
                 {
                     "participant": participant,
-                    "match_id": match_id,
+                    "match_id": int(match_id),
                     "pred_home_score": "",
                     "pred_away_score": "",
                     "pred_result": "",
@@ -632,6 +777,7 @@ def init_predictions() -> pd.DataFrame:
                 "last_update",
             ]:
                 old_col = f"{col}_old"
+
                 if old_col in merged.columns:
                     merged[col] = merged[old_col].combine_first(merged[col])
                     merged = merged.drop(columns=[old_col])
@@ -649,34 +795,50 @@ def init_predictions() -> pd.DataFrame:
             ]
 
     save_csv_and_push(
-    new_df,
-    PREDICTIONS_PATH,
-    f"Update predictions {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        new_df,
+        PREDICTIONS_PATH,
+        f"Initialize predictions - {commit_suffix()}",
     )
+
     return new_df
+
+
+# ============================================================
+# STARTUP
+# ============================================================
+
+ensure_data_dir()
+
+if "synced_once" not in st.session_state:
+    sync_core_files_from_github()
+    st.session_state["synced_once"] = True
 
 
 # ============================================================
 # UI
 # ============================================================
 
-ensure_data_dir()
-
 st.title("⚙️ INNIAREBACK - Backend Mondiali 2026")
 
-st.sidebar.title("Menu")
+with st.sidebar:
+    st.title("Menu")
 
-page = st.sidebar.radio(
-    "Sezione",
-    [
-        "📊 Dashboard",
-        "📅 Calendario",
-        "✏️ Pronostici",
-        "⚽ Risultati reali",
-        "🏆 Classifica",
-        "🛠️ Amministrazione",
-    ],
-)
+    if github_enabled():
+        st.success("GitHub persistence attiva")
+    else:
+        st.warning("GitHub persistence non configurata")
+
+    page = st.radio(
+        "Sezione",
+        [
+            "📊 Dashboard",
+            "📅 Calendario",
+            "✏️ Pronostici",
+            "⚽ Risultati reali",
+            "🏆 Classifica",
+            "🛠️ Amministrazione",
+        ],
+    )
 
 
 # ============================================================
@@ -696,7 +858,7 @@ if page == "📊 Dashboard":
         st.metric("Partite", 0 if matches.empty else len(matches))
 
     with c2:
-        if matches.empty or "home_score" not in matches.columns:
+        if matches.empty or "home_score" not in matches.columns or "away_score" not in matches.columns:
             finished = 0
         else:
             finished = (
@@ -705,6 +867,7 @@ if page == "📊 Dashboard":
                 & (matches["home_score"].astype(str).str.strip() != "")
                 & (matches["away_score"].astype(str).str.strip() != "")
             ).sum()
+
         st.metric("Partite concluse", int(finished))
 
     with c3:
@@ -712,6 +875,7 @@ if page == "📊 Dashboard":
             participants_count = 0
         else:
             participants_count = predictions["participant"].nunique()
+
         st.metric("Partecipanti", participants_count)
 
     with c4:
@@ -722,6 +886,7 @@ if page == "📊 Dashboard":
                 predictions["last_update"].notna()
                 & (predictions["last_update"].astype(str).str.strip() != "")
             ).sum()
+
         st.metric("Pronostici compilati", int(updated))
 
     st.divider()
@@ -745,14 +910,16 @@ elif page == "📅 Calendario":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto. Caricalo nella cartella data.")
     else:
-        groups = ["Tutti"] + sorted(matches["group"].dropna().unique().tolist())
-
-        selected_group = st.selectbox("Filtro gruppo", groups)
+        if "group" in matches.columns:
+            groups = ["Tutti"] + sorted(matches["group"].dropna().astype(str).unique().tolist())
+            selected_group = st.selectbox("Filtro gruppo", groups)
+        else:
+            selected_group = "Tutti"
 
         view = matches.copy()
 
-        if selected_group != "Tutti":
-            view = view[view["group"] == selected_group]
+        if selected_group != "Tutti" and "group" in view.columns:
+            view = view[view["group"].astype(str) == selected_group]
 
         st.dataframe(view, width="stretch")
 
@@ -769,6 +936,7 @@ elif page == "✏️ Pronostici":
 
     if predictions.empty:
         st.warning("predictions.csv non trovato o vuoto.")
+
         if st.button("Inizializza predictions.csv"):
             try:
                 df_init = init_predictions()
@@ -784,7 +952,7 @@ elif page == "✏️ Pronostici":
         predictions["match_id"] = predictions["match_id"].astype(int)
         matches["match_id"] = matches["match_id"].astype(int)
 
-        participants = sorted(predictions["partecipant"].dropna().unique())
+        participants = sorted(predictions["participant"].dropna().astype(str).unique())
 
         selected_participant = st.selectbox(
             "Partecipante",
@@ -792,7 +960,7 @@ elif page == "✏️ Pronostici":
         )
 
         df_user = predictions[
-            predictions["partecipant"] == selected_participant
+            predictions["participant"].astype(str) == selected_participant
         ].copy()
 
         match_info_cols = [
@@ -803,10 +971,7 @@ elif page == "✏️ Pronostici":
             "away_team",
         ]
 
-        match_info_cols = [
-            c for c in match_info_cols
-            if c in matches.columns
-        ]
+        match_info_cols = [c for c in match_info_cols if c in matches.columns]
 
         view = df_user.merge(
             matches[match_info_cols],
@@ -827,10 +992,7 @@ elif page == "✏️ Pronostici":
             "last_update",
         ]
 
-        editable_cols = [
-            c for c in editable_cols
-            if c in view.columns
-        ]
+        editable_cols = [c for c in editable_cols if c in view.columns]
 
         st.caption(
             "Compila pred_home_score, pred_away_score e pred_scorer. "
@@ -856,14 +1018,14 @@ elif page == "✏️ Pronostici":
         )
 
         if st.button("💾 Salva pronostici"):
-            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            now = now_string()
 
             for _, row in edited.iterrows():
                 match_id = int(row["match_id"])
 
                 mask = (
-                    (predictions["partecipant"] == selected_participant)
-                    & (predictions["match_id"] == match_id)
+                    (predictions["participant"].astype(str) == selected_participant)
+                    & (predictions["match_id"].astype(int) == match_id)
                 )
 
                 pred_home = row.get("pred_home_score", "")
@@ -875,21 +1037,22 @@ elif page == "✏️ Pronostici":
                 predictions.loc[mask, "pred_scorer"] = pred_scorer
                 predictions.loc[mask, "pred_result"] = calc_result(pred_home, pred_away)
 
-                # Aggiorno last_update solo se almeno qualcosa è stato compilato
                 if (
                     clean_value(pred_home) != ""
                     or clean_value(pred_away) != ""
                     or clean_value(pred_scorer) != ""
                 ):
                     predictions.loc[mask, "last_update"] = now
+                else:
+                    predictions.loc[mask, "last_update"] = ""
 
             save_csv_and_push(
-            predictions,
-            PREDICTIONS_PATH,
-            f"Update predictions {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                predictions,
+                PREDICTIONS_PATH,
+                f"Update predictions - {commit_suffix()}",
             )
 
-            st.success("Pronostici salvati.")
+            st.success("Pronostici salvati su GitHub.")
             st.rerun()
 
 
@@ -916,10 +1079,7 @@ elif page == "⚽ Risultati reali":
             "real_scorers",
         ]
 
-        edit_cols = [
-            c for c in edit_cols
-            if c in matches.columns
-        ]
+        edit_cols = [c for c in edit_cols if c in matches.columns]
 
         edited = st.data_editor(
             matches[edit_cols],
@@ -957,12 +1117,12 @@ elif page == "⚽ Risultati reali":
                         )
 
                 save_csv_and_push(
-                matches,
-                MATCHES_PATH,
-                f"Update matches {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                    matches,
+                    MATCHES_PATH,
+                    f"Update match results - {commit_suffix()}",
                 )
 
-                st.success("Risultati reali salvati.")
+                st.success("Risultati reali salvati su GitHub.")
                 st.rerun()
 
         with col2:
@@ -971,16 +1131,21 @@ elif page == "⚽ Risultati reali":
                     match_id = int(row["match_id"])
                     mask = matches["match_id"].astype(int) == match_id
 
-                    matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
-                    matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
-                    matches.loc[mask, "real_scorers"] = normalize_scorers_list(
-                        row.get("real_scorers", "")
-                    )
+                    if "home_score" in matches.columns:
+                        matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
+
+                    if "away_score" in matches.columns:
+                        matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
+
+                    if "real_scorers" in matches.columns:
+                        matches.loc[mask, "real_scorers"] = normalize_scorers_list(
+                            row.get("real_scorers", "")
+                        )
 
                 save_csv_and_push(
-                matches,
-                MATCHES_PATH,
-                f"Update matches {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                    matches,
+                    MATCHES_PATH,
+                    f"Update match results - {commit_suffix()}",
                 )
 
                 try:
@@ -989,7 +1154,7 @@ elif page == "⚽ Risultati reali":
                     if standings.empty:
                         st.warning("Nessuna partita con risultato reale completo.")
                     else:
-                        st.success("Classifica calcolata.")
+                        st.success("Classifica calcolata e salvata su GitHub.")
                         st.dataframe(standings, width="stretch")
                 except Exception as e:
                     st.error(str(e))
@@ -1009,7 +1174,7 @@ elif page == "🏆 Classifica":
             if standings.empty:
                 st.warning("Nessuna partita con risultato reale completo.")
             else:
-                st.success("Classifica ricalcolata.")
+                st.success("Classifica ricalcolata e salvata su GitHub.")
                 st.rerun()
         except Exception as e:
             st.error(str(e))
@@ -1027,13 +1192,13 @@ elif page == "🏆 Classifica":
     if not player_points.empty:
         st.subheader("Dettaglio punti partita per partita")
 
-        participants = ["Tutti"] + sorted(player_points["participant"].dropna().unique().tolist())
+        participants = ["Tutti"] + sorted(player_points["participant"].dropna().astype(str).unique().tolist())
         selected = st.selectbox("Filtro partecipante", participants)
 
         view = player_points.copy()
 
         if selected != "Tutti":
-            view = view[view["participant"] == selected]
+            view = view[view["participant"].astype(str) == selected]
 
         st.dataframe(view, width="stretch")
 
@@ -1044,6 +1209,31 @@ elif page == "🏆 Classifica":
 
 elif page == "🛠️ Amministrazione":
     st.header("🛠️ Amministrazione")
+
+    st.subheader("Stato persistenza")
+
+    if github_enabled():
+        token, repo, branch = get_github_config()
+        st.success(f"GitHub configurato: {repo} / branch {branch}")
+    else:
+        st.error(
+            "GitHub non configurato. Aggiungi GITHUB_TOKEN, GITHUB_REPO, "
+            "GITHUB_BRANCH nei Secrets di Streamlit."
+        )
+
+    st.divider()
+
+    st.subheader("Sync")
+
+    if st.button("🔄 Sincronizza file core da GitHub"):
+        try:
+            sync_core_files_from_github()
+            st.success("File core sincronizzati da GitHub.")
+            st.rerun()
+        except Exception as e:
+            st.error(str(e))
+
+    st.divider()
 
     st.subheader("Backup / Restore / Reset")
 
@@ -1063,6 +1253,7 @@ elif page == "🛠️ Amministrazione":
 
         if backup_names:
             selected_backup = st.selectbox("Backup da ripristinare", backup_names)
+
             if st.button("♻️ Ripristina backup"):
                 try:
                     backup_path = BACKUP_DIR / selected_backup
@@ -1099,5 +1290,5 @@ elif page == "🛠️ Amministrazione":
         st.info("Nessun CSV trovato nella cartella data.")
     else:
         for path in files:
-            df = read_csv(path)
+            df = read_csv(path, sync=False)
             st.write(f"**{path.name}** — {len(df)} righe")

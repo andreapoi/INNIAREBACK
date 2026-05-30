@@ -3,7 +3,8 @@
 from pathlib import Path
 from datetime import datetime
 import shutil
-
+import base64
+import requests
 import pandas as pd
 import streamlit as st
 
@@ -169,6 +170,113 @@ def result_1x2_correct(row) -> bool:
 
     return pred_result != "" and pred_result == real_result
 
+# ============================================================
+# GITHUB PERSISTENCE
+# ============================================================
+
+def github_enabled() -> bool:
+    return (
+        "GITHUB_TOKEN" in st.secrets
+        and "GITHUB_REPO" in st.secrets
+        and "GITHUB_BRANCH" in st.secrets
+    )
+
+
+def get_github_config():
+    token = st.secrets["GITHUB_TOKEN"]
+    repo = st.secrets["GITHUB_REPO"]
+    branch = st.secrets.get("GITHUB_BRANCH", "main")
+    return token, repo, branch
+
+
+def github_headers(token: str) -> dict:
+    return {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+
+
+def github_get_file(path_in_repo: str):
+    token, repo, branch = get_github_config()
+
+    url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
+
+    response = requests.get(
+        url,
+        headers=github_headers(token),
+        params={"ref": branch},
+        timeout=30,
+    )
+
+    if response.status_code == 404:
+        return None, None
+
+    response.raise_for_status()
+
+    payload = response.json()
+
+    content = base64.b64decode(payload["content"]).decode("utf-8")
+
+    return content, payload["sha"]
+
+
+def github_put_file(
+    path_in_repo: str,
+    content: str,
+    message: str,
+) -> None:
+    token, repo, branch = get_github_config()
+
+    _, sha = github_get_file(path_in_repo)
+
+    url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
+
+    encoded = base64.b64encode(content.encode("utf-8")).decode("utf-8")
+
+    payload = {
+        "message": message,
+        "content": encoded,
+        "branch": branch,
+    }
+
+    if sha:
+        payload["sha"] = sha
+
+    response = requests.put(
+        url,
+        headers=github_headers(token),
+        json=payload,
+        timeout=30,
+    )
+
+    response.raise_for_status()
+
+
+def save_csv_and_push(
+    df: pd.DataFrame,
+    local_path: Path,
+    commit_message: str,
+) -> None:
+    save_csv(df, local_path)
+
+    if not github_enabled():
+        st.warning(
+            "File salvato localmente, ma GitHub non è configurato nei Secrets. "
+            "Le modifiche potrebbero non persistere dopo un riavvio."
+        )
+        return
+
+    relative_path = local_path.relative_to(BASE_DIR).as_posix()
+
+    csv_content = df.to_csv(index=False)
+
+    github_put_file(
+        path_in_repo=relative_path,
+        content=csv_content,
+        message=commit_message,
+    )
+
 
 def scorer_correct(row) -> bool:
     pred_scorer = normalize_scorer(row.get("pred_scorer"))
@@ -318,8 +426,16 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
 
     standings.insert(0, "rank", range(1, len(standings) + 1))
 
-    save_csv(player_points, PLAYER_POINTS_PATH)
-    save_csv(standings, STANDINGS_PATH)
+    save_csv_and_push(
+    player_points,
+    PLAYER_POINTS_PATH,
+    f"Update player points {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+    )
+    save_csv_and_push(
+    standings,
+    STANDINGS_PATH,
+    f"Update standings {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+    )
 
     return player_points, standings
 
@@ -349,6 +465,15 @@ def create_backup() -> Path:
     for source in files_to_backup:
         if source.exists():
             shutil.copy2(source, backup_path / source.name)
+            if github_enabled():
+               relative_path = (backup_path / source.name).relative_to(BASE_DIR).as_posix()
+               content = source.read_text(encoding="utf-8")
+
+               github_put_file(
+               path_in_repo=relative_path,
+               content=content,
+               message=f"Create backup {backup_path.name}",
+               )
             copied += 1
 
     return backup_path
@@ -384,7 +509,11 @@ def reset_tournament() -> None:
         for col in ["home_score", "away_score", "real_scorers"]:
             if col in matches.columns:
                 matches[col] = ""
-        save_csv(matches, MATCHES_PATH)
+        save_csv_and_push(
+        matches,
+        MATCHES_PATH,
+        f"Update matches {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        )
 
     predictions = read_csv(PREDICTIONS_PATH)
 
@@ -398,7 +527,11 @@ def reset_tournament() -> None:
         ]:
             if col in predictions.columns:
                 predictions[col] = ""
-        save_csv(predictions, PREDICTIONS_PATH)
+        save_csv_and_push(
+        predictions,
+        PREDICTIONS_PATH,
+        f"Update predictions {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        )
 
     for path in [STANDINGS_PATH, PLAYER_POINTS_PATH]:
         if path.exists():
@@ -515,7 +648,11 @@ def init_predictions() -> pd.DataFrame:
                 ]
             ]
 
-    save_csv(new_df, PREDICTIONS_PATH)
+    save_csv_and_push(
+    new_df,
+    PREDICTIONS_PATH,
+    f"Update predictions {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+    )
     return new_df
 
 
@@ -746,7 +883,11 @@ elif page == "✏️ Pronostici":
                 ):
                     predictions.loc[mask, "last_update"] = now
 
-            save_csv(predictions, PREDICTIONS_PATH)
+            save_csv_and_push(
+            predictions,
+            PREDICTIONS_PATH,
+            f"Update predictions {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            )
 
             st.success("Pronostici salvati.")
             st.rerun()
@@ -815,7 +956,11 @@ elif page == "⚽ Risultati reali":
                             row.get("real_scorers", "")
                         )
 
-                save_csv(matches, MATCHES_PATH)
+                save_csv_and_push(
+                matches,
+                MATCHES_PATH,
+                f"Update matches {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                )
 
                 st.success("Risultati reali salvati.")
                 st.rerun()
@@ -832,7 +977,11 @@ elif page == "⚽ Risultati reali":
                         row.get("real_scorers", "")
                     )
 
-                save_csv(matches, MATCHES_PATH)
+                save_csv_and_push(
+                matches,
+                MATCHES_PATH,
+                f"Update matches {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                )
 
                 try:
                     player_points, standings = run_scoring()

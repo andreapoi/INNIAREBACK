@@ -706,19 +706,13 @@ def init_predictions() -> pd.DataFrame:
     if "match_id" not in matches.columns:
         raise ValueError("matches.csv deve contenere la colonna match_id.")
 
-    if "partecipant" in partecipants.columns:
-        partecipant_col = "partecipant"
-    elif "partecipant" in partecipants.columns:
-        partecipant_col = "partecipant"
-    else:
-        raise ValueError(
-            "partecipants.csv deve contenere la colonna partecipant oppure partecipant."
-        )
+    if "partecipant" not in partecipants.columns:
+        raise ValueError("partecipants.csv deve contenere la colonna partecipant.")
 
     matches["match_id"] = matches["match_id"].astype(int)
 
     partecipant_names = (
-        partecipants[partecipant_col]
+        partecipants["partecipant"]
         .dropna()
         .astype(str)
         .str.strip()
@@ -746,6 +740,10 @@ def init_predictions() -> pd.DataFrame:
 
     if PREDICTIONS_PATH.exists():
         old_df = read_csv(PREDICTIONS_PATH)
+
+        # Migrazione automatica vecchia colonna participant -> partecipant
+        if "participant" in old_df.columns and "partecipant" not in old_df.columns:
+            old_df = old_df.rename(columns={"participant": "partecipant"})
 
         required_cols = {
             "partecipant",
@@ -1292,3 +1290,14 @@ elif page == "🛠️ Amministrazione":
         for path in files:
             df = read_csv(path, sync=False)
             st.write(f"**{path.name}** — {len(df)} righe")
+
+
+    st.subheader("Rigenerazione predictions")
+
+    if st.button("🔄 Rigenera predictions da partecipants.csv"):
+       try:
+           df_init = init_predictions()
+           st.success(f"predictions.csv rigenerato: {len(df_init)} righe.")
+           st.rerun()
+       except Exception as e:
+           st.error(str(e))

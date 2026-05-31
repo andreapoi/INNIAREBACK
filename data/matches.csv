@@ -1,5 +1,5 @@
 match_id,stage,group,matchday,datetime,home_team,away_team,home_score,away_score,real_scorers
-1,Group Stage,A,1,2026-06-11 21:00,Mexico,South Africa,1,1,Lozano
+1,Group Stage,A,1,2026-06-11 21:00,Mexico,South Africa,,,
 2,Group Stage,A,1,2026-06-12 04:00,South Korea,Czechia,,,
 3,Group Stage,B,1,2026-06-12 21:00,Canada,Bosnia and Herzegovina,,,
 4,Group Stage,D,1,2026-06-13 03:00,USA,Paraguay,,,

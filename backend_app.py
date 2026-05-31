@@ -998,22 +998,38 @@ elif page == "✏️ Pronostici":
         )
 
         edited = st.data_editor(
-            view[editable_cols],
-            width="stretch",
-            num_rows="fixed",
-            disabled=[
-                c for c in [
-                    "match_id",
-                    "datetime",
-                    "group",
-                    "home_team",
-                    "away_team",
-                    "pred_result",
-                    "last_update",
-                ]
-                if c in editable_cols
-            ],
-        )
+                 view[editable_cols],
+                 width="stretch",
+                 num_rows="fixed",
+                 disabled=[
+                 c for c in [
+                 "match_id",
+                 "datetime",
+                 "group",
+                 "home_team",
+                 "away_team",
+                 "pred_result",
+                 "last_update",
+                 ]
+                 if c in editable_cols
+                 ],
+            column_config={
+            "pred_scorer": st.column_config.TextColumn(
+            "Marcatore",
+            help="Inserisci il nome del marcatore oppure OG",
+            ),
+            "pred_home_score": st.column_config.NumberColumn(
+            "Gol Casa",
+            min_value=0,
+            step=1,
+            ),
+            "pred_away_score": st.column_config.NumberColumn(
+            "Gol Trasferta",
+            min_value=0,
+            step=1,
+            ),
+            },
+            )
 
         if st.button("💾 Salva pronostici"):
             now = now_string()

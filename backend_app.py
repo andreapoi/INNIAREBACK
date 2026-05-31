@@ -9,12 +9,6 @@ import streamlit as st
 
 from auth import login_box, logout_button, user_is_admin
 
-USERS_PATH = DATA_DIR / "users.csv"
-
-current_user = login_box(USERS_PATH)
-is_admin = user_is_admin(current_user)
-logout_button()
-
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 BACKUP_DIR = DATA_DIR / "backups"
@@ -25,12 +19,21 @@ PARTECIPANTS_PATH = DATA_DIR / "partecipants.csv"
 TEAM_MAPPING_PATH = DATA_DIR / "team_mapping.csv"
 STANDINGS_PATH = DATA_DIR / "standings.csv"
 PLAYER_POINTS_PATH = DATA_DIR / "player_points.csv"
+USERS_PATH = DATA_DIR / "users.csv"
 
 POINTS_EXACT_SCORE = 5
 POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
-CSV_FILES = [MATCHES_PATH, PREDICTIONS_PATH, PARTECIPANTS_PATH, TEAM_MAPPING_PATH, STANDINGS_PATH, PLAYER_POINTS_PATH]
+CSV_FILES = [
+    MATCHES_PATH,
+    PREDICTIONS_PATH,
+    PARTECIPANTS_PATH,
+    TEAM_MAPPING_PATH,
+    STANDINGS_PATH,
+    PLAYER_POINTS_PATH,
+    USERS_PATH,
+]
 
 st.set_page_config(page_title="INNIAREBACK Backend", page_icon="⚽", layout="wide")
 
@@ -44,7 +47,11 @@ def get_github_config():
 
 
 def github_headers(token: str) -> dict:
-    return {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
+    return {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
 
 
 def github_get_file(path_in_repo: str):
@@ -62,7 +69,11 @@ def github_put_file(path_in_repo: str, content: str, message: str) -> None:
     token, repo, branch = get_github_config()
     _, sha = github_get_file(path_in_repo)
     url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
-    payload = {"message": message, "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"), "branch": branch}
+    payload = {
+        "message": message,
+        "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+        "branch": branch,
+    }
     if sha:
         payload["sha"] = sha
     r = requests.put(url, headers=github_headers(token), json=payload, timeout=30)
@@ -273,7 +284,12 @@ def score_row(row) -> pd.Series:
     exact_points = POINTS_EXACT_SCORE if exact else 0
     result_points = POINTS_1X2 if result else 0
     scorer_points = POINTS_SCORER if scorer else 0
-    return pd.Series({"exact_score_points": exact_points, "result_1x2_points": result_points, "scorer_points": scorer_points, "total_points": exact_points + result_points + scorer_points})
+    return pd.Series({
+        "exact_score_points": exact_points,
+        "result_1x2_points": result_points,
+        "scorer_points": scorer_points,
+        "total_points": exact_points + result_points + scorer_points,
+    })
 
 
 def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -290,7 +306,12 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     if required_predictions - set(predictions.columns):
         raise ValueError(f"predictions.csv manca colonne: {required_predictions - set(predictions.columns)}")
     df = predictions.merge(matches, on="match_id", how="left", suffixes=("_pred", "_real"))
-    df = df[df["home_score"].notna() & df["away_score"].notna() & (df["home_score"].astype(str).str.strip() != "") & (df["away_score"].astype(str).str.strip() != "")].copy()
+    df = df[
+        df["home_score"].notna()
+        & df["away_score"].notna()
+        & (df["home_score"].astype(str).str.strip() != "")
+        & (df["away_score"].astype(str).str.strip() != "")
+    ].copy()
     if df.empty:
         empty_points_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
         empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
@@ -300,7 +321,13 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     player_points = pd.concat([df, df.apply(score_row, axis=1)], axis=1)
     keep_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
     player_points = player_points[[c for c in keep_cols if c in player_points.columns]]
-    standings = player_points.groupby("partecipant", as_index=False).agg(total_points=("total_points", "sum"), exact_scores=("exact_score_points", lambda x: (x > 0).sum()), correct_1x2=("result_1x2_points", lambda x: (x > 0).sum()), correct_scorers=("scorer_points", lambda x: (x > 0).sum()), matches_scored=("match_id", "count"))
+    standings = player_points.groupby("partecipant", as_index=False).agg(
+        total_points=("total_points", "sum"),
+        exact_scores=("exact_score_points", lambda x: (x > 0).sum()),
+        correct_1x2=("result_1x2_points", lambda x: (x > 0).sum()),
+        correct_scorers=("scorer_points", lambda x: (x > 0).sum()),
+        matches_scored=("match_id", "count"),
+    )
     standings = standings.sort_values(by=["total_points", "exact_scores", "correct_scorers", "correct_1x2"], ascending=[False, False, False, False]).reset_index(drop=True)
     standings.insert(0, "rank", range(1, len(standings) + 1))
     save_csv_and_push(player_points, PLAYER_POINTS_PATH, f"Update player_points - {commit_suffix()}")
@@ -441,15 +468,25 @@ if "synced_once" not in st.session_state:
     sync_core_files_from_github()
     st.session_state["synced_once"] = True
 
+current_user = login_box(USERS_PATH)
+is_admin = user_is_admin(current_user)
+current_partecipant = clean_value(current_user.get("partecipant", "")) if current_user else ""
+
 st.title("⚙️ INNIAREBACK - Backend Mondiali 2026")
 
 with st.sidebar:
     st.title("Menu")
+    st.caption(f"Utente: {clean_value(current_user.get('username', ''))}")
+    st.caption(f"Ruolo: {'admin' if is_admin else 'user'}")
+    logout_button()
     if github_enabled():
         st.success("GitHub persistence attiva")
     else:
         st.warning("GitHub persistence non configurata")
-    page = st.radio("Sezione", ["📊 Dashboard", "📅 Calendario", "✏️ Pronostici", "⚽ Risultati reali", "🏆 Classifica", "🛠️ Amministrazione"])
+
+    admin_pages = ["📊 Dashboard", "📅 Calendario", "✏️ Pronostici", "⚽ Risultati reali", "🏆 Classifica", "🛠️ Amministrazione"]
+    user_pages = ["📊 Dashboard", "📅 Calendario", "✏️ Pronostici", "🏆 Classifica"]
+    page = st.radio("Sezione", admin_pages if is_admin else user_pages)
 
 if page == "📊 Dashboard":
     st.header("📊 Dashboard")
@@ -489,16 +526,11 @@ elif page == "📅 Calendario":
 
 elif page == "✏️ Pronostici":
     st.header("✏️ Inserimento pronostici")
-    if is_admin:
-       selected_partecipant = st.selectbox("Partecipante", partecipants)
-    else:
-       selected_partecipant = current_user.get("partecipant")
-    st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if predictions.empty:
         st.warning("predictions.csv non trovato o vuoto.")
-        if st.button("Inizializza predictions.csv"):
+        if is_admin and st.button("Inizializza predictions.csv"):
             try:
                 df_init = init_predictions()
                 st.success(f"predictions.csv creato/aggiornato: {len(df_init)} righe.")
@@ -511,14 +543,35 @@ elif page == "✏️ Pronostici":
         st.error("predictions.csv deve contenere la colonna partecipant.")
     else:
         partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
-        selected_partecipant = st.selectbox("Partecipante", partecipants)
+        if is_admin:
+            selected_partecipant = st.selectbox("Partecipante", partecipants)
+        else:
+            selected_partecipant = current_partecipant
+            st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
+            if selected_partecipant not in partecipants:
+                st.error("Il tuo utente non è associato a un partecipante presente in predictions.csv.")
+                st.stop()
+
         df_user = predictions[predictions["partecipant"].astype(str) == selected_partecipant].copy()
         match_info_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in matches.columns]
         view = df_user.merge(matches[match_info_cols], on="match_id", how="left")
         editable_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"] if c in view.columns]
         view = prepare_predictions_editor_view(view)
         st.caption("Compila gol casa, gol trasferta e marcatore. Il segno 1/X/2 viene calcolato automaticamente.")
-        edited = st.data_editor(view[editable_cols], width="stretch", num_rows="fixed", disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_result", "last_update"] if c in editable_cols], column_config={"pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"), "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"), "pred_scorer": st.column_config.TextColumn("Marcatore", help="Nome del marcatore oppure OG. Lascia vuoto per nessun marcatore."), "pred_result": st.column_config.TextColumn("1/X/2"), "last_update": st.column_config.TextColumn("Ultimo aggiornamento")}, key=f"pred_editor_{selected_partecipant}")
+        edited = st.data_editor(
+            view[editable_cols],
+            width="stretch",
+            num_rows="fixed",
+            disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_result", "last_update"] if c in editable_cols],
+            column_config={
+                "pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
+                "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
+                "pred_scorer": st.column_config.TextColumn("Marcatore", help="Nome del marcatore oppure OG. Lascia vuoto per nessun marcatore."),
+                "pred_result": st.column_config.TextColumn("1/X/2"),
+                "last_update": st.column_config.TextColumn("Ultimo aggiornamento"),
+            },
+            key=f"pred_editor_{selected_partecipant}",
+        )
         if st.button("💾 Salva pronostici"):
             now = now_string()
             predictions = normalize_predictions_df(predictions)
@@ -539,6 +592,9 @@ elif page == "✏️ Pronostici":
             st.rerun()
 
 elif page == "⚽ Risultati reali":
+    if not is_admin:
+        st.error("Sezione riservata agli admin.")
+        st.stop()
     st.header("⚽ Inserimento risultati reali")
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if matches.empty:
@@ -546,7 +602,19 @@ elif page == "⚽ Risultati reali":
     else:
         edit_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers"] if c in matches.columns]
         view = prepare_results_editor_view(matches[edit_cols])
-        edited = st.data_editor(view, width="stretch", num_rows="fixed", disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols], column_config={"home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"), "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"), "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ; e usa OG per autogol.")}, key="real_results_editor")
+        edited = st.data_editor(
+            view,
+            width="stretch",
+            num_rows="fixed",
+            disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols],
+            column_config={
+                "home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
+                "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
+                "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ; e usa OG per autogol."),
+            },
+            key="real_results_editor",
+        )
+
         def save_results_from_editor():
             current_matches = normalize_matches_df(matches)
             for _, row in edited.iterrows():
@@ -560,6 +628,7 @@ elif page == "⚽ Risultati reali":
                     current_matches.loc[mask, "real_scorers"] = normalize_scorers_list(row.get("real_scorers", ""))
             current_matches = normalize_matches_df(current_matches)
             save_csv_and_push(current_matches, MATCHES_PATH, f"Update match results - {commit_suffix()}")
+
         col1, col2 = st.columns(2)
         with col1:
             if st.button("💾 Salva risultati reali"):
@@ -584,7 +653,7 @@ elif page == "⚽ Risultati reali":
 
 elif page == "🏆 Classifica":
     st.header("🏆 Classifica")
-    if st.button("🔄 Ricalcola classifica"):
+    if is_admin and st.button("🔄 Ricalcola classifica"):
         try:
             _, standings = run_scoring()
             if standings.empty:
@@ -599,12 +668,18 @@ elif page == "🏆 Classifica":
     player_points = read_csv(PLAYER_POINTS_PATH)
     if not player_points.empty and "partecipant" in player_points.columns:
         st.subheader("Dettaglio punti partita per partita")
-        partecipants = ["Tutti"] + sorted(player_points["partecipant"].dropna().astype(str).unique().tolist())
-        selected = st.selectbox("Filtro partecipante", partecipants)
-        view = player_points if selected == "Tutti" else player_points[player_points["partecipant"].astype(str) == selected]
+        if is_admin:
+            partecipants = ["Tutti"] + sorted(player_points["partecipant"].dropna().astype(str).unique().tolist())
+            selected = st.selectbox("Filtro partecipante", partecipants)
+            view = player_points if selected == "Tutti" else player_points[player_points["partecipant"].astype(str) == selected]
+        else:
+            view = player_points[player_points["partecipant"].astype(str) == current_partecipant]
         st.dataframe(view, width="stretch")
 
 elif page == "🛠️ Amministrazione":
+    if not is_admin:
+        st.error("Sezione riservata agli admin.")
+        st.stop()
     st.header("🛠️ Amministrazione")
     st.subheader("Stato persistenza")
     if github_enabled():

@@ -26,6 +26,7 @@ POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
 STAGE_COL = "stato_avanzamento_torneo"
+MATCH_DAY_COL = "match_day"
 LOCK_TIMESTAMP_COL = "lock_timestamp"
 PRED_OG_1 = "pred_autogol_squadra_1"
 PRED_OG_2 = "pred_autogol_squadra_2"
@@ -202,7 +203,13 @@ def is_locked_value(value) -> bool:
     return parsed <= now_dt()
 
 
-def add_stage_lock_timestamps(matches: pd.DataFrame) -> pd.DataFrame:
+def add_lock_timestamps(matches: pd.DataFrame) -> pd.DataFrame:
+    """Set lock_timestamp by match_day: same match_day => same min datetime lock.
+
+    Fallback order when match_day is missing/blank:
+    1) stato_avanzamento_torneo
+    2) individual match datetime
+    """
     matches = matches.copy()
     if LOCK_TIMESTAMP_COL not in matches.columns:
         matches[LOCK_TIMESTAMP_COL] = ""
@@ -210,23 +217,34 @@ def add_stage_lock_timestamps(matches: pd.DataFrame) -> pd.DataFrame:
         return matches
 
     dt = parse_datetime_series(matches["datetime"])
-    if STAGE_COL in matches.columns:
-        stages = matches[STAGE_COL].fillna("").astype(str).str.strip()
-    else:
-        stages = pd.Series([""] * len(matches), index=matches.index)
-
     lock_values = pd.Series([""] * len(matches), index=matches.index, dtype="object")
-    for stage in sorted(stages.unique().tolist()):
-        mask = stages == stage
-        stage_dates = dt[mask].dropna()
-        if stage_dates.empty:
-            continue
-        lock_dt = stage_dates.min()
-        lock_values.loc[mask] = format_datetime_value(lock_dt)
 
-    no_stage_mask = stages == ""
-    if no_stage_mask.any():
-        lock_values.loc[no_stage_mask] = dt[no_stage_mask].apply(format_datetime_value)
+    if MATCH_DAY_COL in matches.columns:
+        match_days = matches[MATCH_DAY_COL].fillna("").astype(str).str.strip()
+    else:
+        match_days = pd.Series([""] * len(matches), index=matches.index)
+
+    # Primary rule: all rows with the same match_day lock at the first datetime of that match_day.
+    for match_day in sorted([x for x in match_days.unique().tolist() if x != ""]):
+        mask = match_days == match_day
+        dates = dt[mask].dropna()
+        if not dates.empty:
+            lock_values.loc[mask] = format_datetime_value(dates.min())
+
+    # Fallback for rows without match_day: group by stage if present.
+    remaining = lock_values == ""
+    if remaining.any() and STAGE_COL in matches.columns:
+        stages = matches[STAGE_COL].fillna("").astype(str).str.strip()
+        for stage in sorted([x for x in stages[remaining].unique().tolist() if x != ""]):
+            mask = remaining & (stages == stage)
+            dates = dt[mask].dropna()
+            if not dates.empty:
+                lock_values.loc[mask] = format_datetime_value(dates.min())
+
+    # Last fallback: single-match datetime.
+    remaining = lock_values == ""
+    if remaining.any():
+        lock_values.loc[remaining] = dt[remaining].apply(format_datetime_value)
 
     matches[LOCK_TIMESTAMP_COL] = lock_values
     return matches
@@ -270,7 +288,7 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    for col in [STAGE_COL, LOCK_TIMESTAMP_COL, "home_score", "away_score", "real_scorers"]:
+    for col in [STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_score", "away_score", "real_scorers"]:
         if col not in df.columns:
             df[col] = ""
         df[col] = df[col].apply(clean_value).astype("object")
@@ -280,7 +298,7 @@ def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
         df[col] = clean_bool_series(df[col])
     if "match_id" in df.columns and not df.empty:
         df["match_id"] = df["match_id"].astype(int)
-    return add_stage_lock_timestamps(df)
+    return add_lock_timestamps(df)
 
 
 def clean_result_value(value) -> str:
@@ -326,10 +344,11 @@ def filter_dataframe(df: pd.DataFrame, key_prefix: str, label: str = "Filtri") -
     filtered = df.copy()
     with st.expander(label, expanded=False):
         st.caption("Puoi filtrare qualsiasi colonna visibile nella tabella.")
+        default_filters = [c for c in [MATCH_DAY_COL, STAGE_COL] if c in filtered.columns]
         filter_cols = st.multiselect(
             "Colonne da filtrare",
             options=list(filtered.columns),
-            default=[STAGE_COL] if STAGE_COL in filtered.columns else [],
+            default=default_filters[:1],
             key=f"{key_prefix}_filter_cols",
         )
         for col in filter_cols:
@@ -392,7 +411,7 @@ def score_row(row) -> pd.Series:
 
 def scoring_columns() -> list[str]:
     return [
-        "partecipant", "match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team",
+        "partecipant", "match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team",
         "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2,
         "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2,
         "exact_score_points", "result_1x2_points", "scorer_points", "total_points",
@@ -541,7 +560,7 @@ def init_predictions() -> pd.DataFrame:
 
 def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     view = normalize_predictions_df(view)
-    for col in ["pred_scorer", "last_update", "home_team", "away_team", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "datetime"]:
+    for col in ["pred_scorer", "last_update", "home_team", "away_team", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
     for col in ["pred_home_score", "pred_away_score"]:
@@ -552,7 +571,7 @@ def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_results_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     view = normalize_matches_df(view)
-    for col in [STAGE_COL, LOCK_TIMESTAMP_COL, "real_scorers", "home_team", "away_team", "group", "datetime"]:
+    for col in [STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "real_scorers", "home_team", "away_team", "group", "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
     for col in ["home_score", "away_score"]:
@@ -618,7 +637,10 @@ elif page == "📅 Calendario":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        save_current_matches(matches) if LOCK_TIMESTAMP_COL not in matches.columns else None
+        if MATCH_DAY_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
+            save_current_matches(matches)
+            st.info("Schema matches aggiornato con match_day/lock_timestamp. Ricarico la pagina.")
+            st.rerun()
         view = filter_dataframe(matches.copy(), "calendar", "Filtri calendario")
         st.dataframe(view, width="stretch")
 
@@ -644,9 +666,9 @@ elif page == "✏️ Pronostici":
             save_current_predictions(predictions)
             st.info("Schema predictions aggiornato con le colonne autogol. Ricarico la pagina.")
             st.rerun()
-        if STAGE_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
+        if MATCH_DAY_COL not in matches.columns or STAGE_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
             save_current_matches(matches)
-            st.info("Schema matches aggiornato con stato/lock_timestamp. Ricarico la pagina.")
+            st.info("Schema matches aggiornato con stato/match_day/lock_timestamp. Ricarico la pagina.")
             st.rerun()
 
         partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
@@ -657,22 +679,22 @@ elif page == "✏️ Pronostici":
             st.stop()
 
         df_user = predictions[predictions["partecipant"].astype(str) == selected_partecipant].copy()
-        match_info_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team"] if c in matches.columns]
+        match_info_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team"] if c in matches.columns]
         view = df_user.merge(matches[match_info_cols], on="match_id", how="left")
-        editable_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
+        editable_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
         view = prepare_predictions_editor_view(view)
         view = filter_dataframe(view, "predictions", "Filtri pronostici")
         view["locked"] = view[LOCK_TIMESTAMP_COL].apply(is_locked_value)
         unlocked_view = view[~view["locked"]].copy()
         locked_view = view[view["locked"]].copy()
 
-        st.caption("1/X/2 non è mostrato: viene calcolato automaticamente. Dopo il lock_timestamp dello stage, le righe sono bloccate e non modificabili.")
+        st.caption("Il lock_timestamp è calcolato per match_day: tutte le righe con lo stesso match_day si bloccano all'inizio della prima partita di quel match day.")
         if not unlocked_view.empty:
             edited = st.data_editor(
                 unlocked_view[[c for c in editable_cols if c in unlocked_view.columns]],
                 width="stretch",
                 num_rows="fixed",
-                disabled=[c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "last_update"] if c in editable_cols],
+                disabled=[c for c in ["match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "last_update"] if c in editable_cols],
                 column_config={
                     "pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                     "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
@@ -721,7 +743,7 @@ elif page == "✏️ Pronostici":
                 st.success("Pronostici salvati su GitHub.")
                 st.rerun()
         else:
-            st.info("Non ci sono pronostici modificabili con i filtri correnti: tutti gli stage visualizzati sono già bloccati oppure non ci sono righe.")
+            st.info("Non ci sono pronostici modificabili con i filtri correnti: tutti i match day visualizzati sono già bloccati oppure non ci sono righe.")
 
         if not locked_view.empty:
             st.subheader("Pronostici tuoi bloccati")
@@ -734,9 +756,9 @@ elif page == "✏️ Pronostici":
         visible["locked"] = visible[LOCK_TIMESTAMP_COL].apply(is_locked_value)
         visible = visible[visible["locked"]].copy()
         if visible.empty:
-            st.info("Nessun pronostico visibile: gli stage non sono ancora arrivati al lock_timestamp.")
+            st.info("Nessun pronostico visibile: i match day non sono ancora arrivati al lock_timestamp.")
         else:
-            show_cols = [c for c in ["partecipant", "match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in visible.columns]
+            show_cols = [c for c in ["partecipant", "match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in visible.columns]
             visible = filter_dataframe(visible[show_cols], "visible_predictions", "Filtri pronostici visibili")
             st.dataframe(visible, width="stretch")
 
@@ -749,11 +771,11 @@ elif page == "⚽ Risultati reali":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns) or STAGE_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
+        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns) or MATCH_DAY_COL not in matches.columns or STAGE_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
             save_current_matches(matches)
-            st.info("Schema matches aggiornato con colonne stato/lock/autogol. Ricarico la pagina.")
+            st.info("Schema matches aggiornato con colonne stato/match_day/lock/autogol. Ricarico la pagina.")
             st.rerun()
-        edit_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
+        edit_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
         view = prepare_results_editor_view(matches[edit_cols])
         view = filter_dataframe(view, "real_results", "Filtri risultati reali")
         edited = st.data_editor(
@@ -763,7 +785,8 @@ elif page == "⚽ Risultati reali":
             disabled=[c for c in ["match_id", "datetime", "group", LOCK_TIMESTAMP_COL, "home_team", "away_team"] if c in edit_cols],
             column_config={
                 STAGE_COL: st.column_config.TextColumn("Stato avanzamento torneo", help="Es. Giornata 1, Giornata 2, Giornata 3, Ottavi, Quarti..."),
-                LOCK_TIMESTAMP_COL: st.column_config.TextColumn("Lock timestamp", help="Calcolato automaticamente come minimo datetime dello stage."),
+                MATCH_DAY_COL: st.column_config.TextColumn("Match day", help="Valore che raggruppa le partite con stesso lock. Es. 1, 2, 3, Ottavi-1..."),
+                LOCK_TIMESTAMP_COL: st.column_config.TextColumn("Lock timestamp", help="Calcolato automaticamente come minimo datetime del match_day."),
                 "home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                 "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
                 "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ;. Non usare OG/autogol: usa i flag dedicati."),
@@ -780,6 +803,7 @@ elif page == "⚽ Risultati reali":
                 match_id = int(row["match_id"])
                 mask = current_matches["match_id"].astype(int) == match_id
                 current_matches.loc[mask, STAGE_COL] = clean_value(row.get(STAGE_COL, ""))
+                current_matches.loc[mask, MATCH_DAY_COL] = clean_value(row.get(MATCH_DAY_COL, ""))
                 current_matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
                 current_matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
                 real_scorers_raw = clean_value(row.get("real_scorers", ""))

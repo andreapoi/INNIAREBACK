@@ -25,6 +25,7 @@ POINTS_EXACT_SCORE = 5
 POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
+STAGE_COL = "stato_avanzamento_torneo"
 PRED_OG_1 = "pred_autogol_squadra_1"
 PRED_OG_2 = "pred_autogol_squadra_2"
 REAL_OG_1 = "real_autogol_squadra_1"
@@ -214,7 +215,7 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    for col in ["home_score", "away_score", "real_scorers"]:
+    for col in [STAGE_COL, "home_score", "away_score", "real_scorers"]:
         if col not in df.columns:
             df[col] = ""
         df[col] = df[col].apply(clean_value).astype("object")
@@ -264,6 +265,32 @@ def safe_display_df(df: pd.DataFrame, message_if_empty: str) -> None:
         st.dataframe(df, width="stretch")
 
 
+def filter_dataframe(df: pd.DataFrame, key_prefix: str, label: str = "Filtri") -> pd.DataFrame:
+    if df is None or df.empty:
+        return df
+    filtered = df.copy()
+    with st.expander(label, expanded=False):
+        st.caption("Puoi filtrare qualsiasi colonna visibile nella tabella.")
+        filter_cols = st.multiselect(
+            "Colonne da filtrare",
+            options=list(filtered.columns),
+            default=[STAGE_COL] if STAGE_COL in filtered.columns else [],
+            key=f"{key_prefix}_filter_cols",
+        )
+        for col in filter_cols:
+            series = filtered[col].fillna("").astype(str)
+            unique_values = sorted([x for x in series.unique().tolist() if x != ""])
+            if 0 < len(unique_values) <= 60:
+                selected_values = st.multiselect(f"Filtro {col}", unique_values, key=f"{key_prefix}_{col}_values")
+                if selected_values:
+                    filtered = filtered[filtered[col].fillna("").astype(str).isin(selected_values)]
+            else:
+                text_filter = st.text_input(f"Contiene in {col}", key=f"{key_prefix}_{col}_text")
+                if text_filter:
+                    filtered = filtered[filtered[col].fillna("").astype(str).str.contains(text_filter, case=False, na=False)]
+    return filtered
+
+
 def exact_score_correct(row) -> bool:
     pred_home = to_int_or_none(row.get("pred_home_score"))
     pred_away = to_int_or_none(row.get("pred_away_score"))
@@ -285,13 +312,10 @@ def scorer_or_own_goal_correct(row) -> bool:
     pred_og_2 = bool_value(row.get(PRED_OG_2))
     real_og_1 = bool_value(row.get(REAL_OG_1))
     real_og_2 = bool_value(row.get(REAL_OG_2))
-
     if pred_og_1 or pred_og_2:
         return (pred_og_1 and real_og_1) or (pred_og_2 and real_og_2)
-
     if real_og_1 or real_og_2:
         return False
-
     pred_scorer = normalize_scorer(row.get("pred_scorer"))
     real_scorers = normalize_scorers_list(row.get("real_scorers"))
     if pred_scorer == "" and real_scorers == "":
@@ -308,17 +332,12 @@ def score_row(row) -> pd.Series:
     exact_points = POINTS_EXACT_SCORE if exact else 0
     result_points = POINTS_1X2 if result else 0
     scorer_points = POINTS_SCORER if scorer else 0
-    return pd.Series({
-        "exact_score_points": exact_points,
-        "result_1x2_points": result_points,
-        "scorer_points": scorer_points,
-        "total_points": exact_points + result_points + scorer_points,
-    })
+    return pd.Series({"exact_score_points": exact_points, "result_1x2_points": result_points, "scorer_points": scorer_points, "total_points": exact_points + result_points + scorer_points})
 
 
 def scoring_columns() -> list[str]:
     return [
-        "partecipant", "match_id", "datetime", "group", "home_team", "away_team",
+        "partecipant", "match_id", "datetime", "group", STAGE_COL, "home_team", "away_team",
         "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2,
         "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2,
         "exact_score_points", "result_1x2_points", "scorer_points", "total_points",
@@ -338,19 +357,13 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
         raise ValueError(f"matches.csv manca colonne: {required_matches - set(matches.columns)}")
     if required_predictions - set(predictions.columns):
         raise ValueError(f"predictions.csv manca colonne: {required_predictions - set(predictions.columns)}")
-
     df = predictions.merge(matches, on="match_id", how="left", suffixes=("_pred", "_real"))
-    df = df[
-        df["home_score"].notna()
-        & df["away_score"].notna()
-        & (df["home_score"].astype(str).str.strip() != "")
-        & (df["away_score"].astype(str).str.strip() != "")
-    ].copy()
+    df = df[df["home_score"].astype(str).str.strip().ne("") & df["away_score"].astype(str).str.strip().ne("")].copy()
     if df.empty:
         save_empty_csv_and_push(PLAYER_POINTS_PATH, scoring_columns(), f"Reset player_points - {commit_suffix()}")
-        save_empty_csv_and_push(STANDINGS_PATH, ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"], f"Reset standings - {commit_suffix()}")
-        return pd.DataFrame(columns=scoring_columns()), pd.DataFrame(columns=["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"])
-
+        empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
+        save_empty_csv_and_push(STANDINGS_PATH, empty_standings_cols, f"Reset standings - {commit_suffix()}")
+        return pd.DataFrame(columns=scoring_columns()), pd.DataFrame(columns=empty_standings_cols)
     player_points = pd.concat([df, df.apply(score_row, axis=1)], axis=1)
     player_points = player_points[[c for c in scoring_columns() if c in player_points.columns]]
     standings = player_points.groupby("partecipant", as_index=False).agg(
@@ -453,17 +466,7 @@ def init_predictions() -> pd.DataFrame:
     rows = []
     for partecipant in names:
         for match_id in matches["match_id"].tolist():
-            rows.append({
-                "partecipant": partecipant,
-                "match_id": int(match_id),
-                "pred_home_score": "",
-                "pred_away_score": "",
-                "pred_result": "",
-                "pred_scorer": "",
-                PRED_OG_1: False,
-                PRED_OG_2: False,
-                "last_update": "",
-            })
+            rows.append({"partecipant": partecipant, "match_id": int(match_id), "pred_home_score": "", "pred_away_score": "", "pred_result": "", "pred_scorer": "", PRED_OG_1: False, PRED_OG_2: False, "last_update": ""})
     new_df = pd.DataFrame(rows)
     if PREDICTIONS_PATH.exists():
         old_df = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
@@ -483,7 +486,7 @@ def init_predictions() -> pd.DataFrame:
 
 def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     view = normalize_predictions_df(view)
-    for col in ["pred_result", "pred_scorer", "last_update", "home_team", "away_team", "group", "datetime"]:
+    for col in ["pred_scorer", "last_update", "home_team", "away_team", "group", STAGE_COL, "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
     for col in ["pred_home_score", "pred_away_score"]:
@@ -494,7 +497,7 @@ def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_results_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     view = normalize_matches_df(view)
-    for col in ["real_scorers", "home_team", "away_team", "group", "datetime"]:
+    for col in [STAGE_COL, "real_scorers", "home_team", "away_team", "group", "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
     for col in ["home_score", "away_score"]:
@@ -560,12 +563,11 @@ elif page == "📅 Calendario":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        selected_group = "Tutti"
-        if "group" in matches.columns:
-            selected_group = st.selectbox("Filtro gruppo", ["Tutti"] + sorted(matches["group"].dropna().astype(str).unique().tolist()))
-        view = matches.copy()
-        if selected_group != "Tutti" and "group" in view.columns:
-            view = view[view["group"].astype(str) == selected_group]
+        if STAGE_COL not in matches.columns:
+            save_current_matches(matches)
+            st.info("Schema matches aggiornato con stato_avanzamento_torneo. Ricarico la pagina.")
+            st.rerun()
+        view = filter_dataframe(matches.copy(), "calendar", "Filtri calendario")
         st.dataframe(view, width="stretch")
 
 elif page == "✏️ Pronostici":
@@ -590,31 +592,34 @@ elif page == "✏️ Pronostici":
             save_current_predictions(predictions)
             st.info("Schema predictions aggiornato con le colonne autogol. Ricarico la pagina.")
             st.rerun()
+        if STAGE_COL not in matches.columns:
+            save_current_matches(matches)
+            st.info("Schema matches aggiornato con stato_avanzamento_torneo. Ricarico la pagina.")
+            st.rerun()
         partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
         selected_partecipant = current_partecipant
         st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
         if selected_partecipant not in partecipants:
             st.error("Il tuo utente non è associato a un partecipante presente in predictions.csv.")
             st.stop()
-
         df_user = predictions[predictions["partecipant"].astype(str) == selected_partecipant].copy()
-        match_info_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in matches.columns]
+        match_info_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team"] if c in matches.columns]
         view = df_user.merge(matches[match_info_cols], on="match_id", how="left")
-        editable_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
+        editable_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
         view = prepare_predictions_editor_view(view)
-        st.caption("Se flagghi un autogol, il marcatore viene svuotato. Nei pronostici puoi selezionare al massimo una tra Autogol squadra 1 e Autogol squadra 2.")
+        view = filter_dataframe(view, "predictions", "Filtri pronostici")
+        st.caption("1/X/2 non è più mostrato: viene calcolato automaticamente dal risultato pronosticato. Se flagghi un autogol, il marcatore viene svuotato.")
         edited = st.data_editor(
             view[editable_cols],
             width="stretch",
             num_rows="fixed",
-            disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_result", "last_update"] if c in editable_cols],
+            disabled=[c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team", "last_update"] if c in editable_cols],
             column_config={
                 "pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                 "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
                 "pred_scorer": st.column_config.TextColumn("Marcatore", help="Non usare OG/autogol: usa i flag dedicati."),
                 PRED_OG_1: st.column_config.CheckboxColumn("Autogol squadra 1"),
                 PRED_OG_2: st.column_config.CheckboxColumn("Autogol squadra 2"),
-                "pred_result": st.column_config.TextColumn("1/X/2"),
                 "last_update": st.column_config.TextColumn("Ultimo aggiornamento"),
             },
             key=f"pred_editor_{selected_partecipant}",
@@ -663,18 +668,20 @@ elif page == "⚽ Risultati reali":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns):
+        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns) or STAGE_COL not in matches.columns:
             save_current_matches(matches)
-            st.info("Schema matches aggiornato con le colonne autogol reali. Ricarico la pagina.")
+            st.info("Schema matches aggiornato con colonne stato/autogol. Ricarico la pagina.")
             st.rerun()
-        edit_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
+        edit_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
         view = prepare_results_editor_view(matches[edit_cols])
+        view = filter_dataframe(view, "real_results", "Filtri risultati reali")
         edited = st.data_editor(
             view,
             width="stretch",
             num_rows="fixed",
             disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols],
             column_config={
+                STAGE_COL: st.column_config.TextColumn("Stato avanzamento torneo", help="Es. Giornata 1, Giornata 2, Giornata 3, Ottavi, Quarti..."),
                 "home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                 "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
                 "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ;. Non usare OG/autogol: usa i flag dedicati."),
@@ -690,10 +697,9 @@ elif page == "⚽ Risultati reali":
             for _, row in edited.iterrows():
                 match_id = int(row["match_id"])
                 mask = current_matches["match_id"].astype(int) == match_id
-                if "home_score" in current_matches.columns:
-                    current_matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
-                if "away_score" in current_matches.columns:
-                    current_matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
+                current_matches.loc[mask, STAGE_COL] = clean_value(row.get(STAGE_COL, ""))
+                current_matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
+                current_matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
                 real_scorers_raw = clean_value(row.get("real_scorers", ""))
                 real_scorers = normalize_scorers_list(real_scorers_raw)
                 if real_scorers_raw != "" and real_scorers == "":

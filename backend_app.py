@@ -7,6 +7,14 @@ import pandas as pd
 import requests
 import streamlit as st
 
+from auth import login_box, logout_button, user_is_admin
+
+USERS_PATH = DATA_DIR / "users.csv"
+
+current_user = login_box(USERS_PATH)
+is_admin = user_is_admin(current_user)
+logout_button()
+
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 BACKUP_DIR = DATA_DIR / "backups"
@@ -481,6 +489,11 @@ elif page == "📅 Calendario":
 
 elif page == "✏️ Pronostici":
     st.header("✏️ Inserimento pronostici")
+    if is_admin:
+       selected_partecipant = st.selectbox("Partecipante", partecipants)
+    else:
+       selected_partecipant = current_user.get("partecipant")
+    st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if predictions.empty:

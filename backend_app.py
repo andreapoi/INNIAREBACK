@@ -108,6 +108,11 @@ def save_csv_and_push(df: pd.DataFrame, path: Path, commit_message: str) -> None
     save_text_and_push(path, df.to_csv(index=False), commit_message)
 
 
+def save_empty_csv_and_push(path: Path, columns: list[str], commit_message: str) -> None:
+    df = pd.DataFrame(columns=columns)
+    save_csv_and_push(df, path, commit_message)
+
+
 def ensure_data_dir() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
@@ -122,9 +127,23 @@ def read_csv(path: Path, sync: bool = True) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame()
     try:
-        df = pd.read_csv(path, sep=None, engine="python", encoding="utf-8-sig")
+        text = path.read_text(encoding="utf-8-sig")
+    except Exception:
+        return pd.DataFrame()
+    if text.strip() == "":
+        return pd.DataFrame()
+    try:
+        if ";" in text.splitlines()[0] and "," not in text.splitlines()[0]:
+            df = pd.read_csv(path, sep=";", encoding="utf-8-sig")
+        else:
+            df = pd.read_csv(path, sep=",", encoding="utf-8-sig")
     except pd.errors.EmptyDataError:
         return pd.DataFrame()
+    except Exception:
+        try:
+            df = pd.read_csv(path, sep=None, engine="python", encoding="utf-8-sig")
+        except Exception:
+            return pd.DataFrame()
     df.columns = df.columns.astype(str).str.replace("\ufeff", "", regex=False).str.strip()
     if "participant" in df.columns and "partecipant" not in df.columns:
         df = df.rename(columns={"participant": "partecipant"})
@@ -149,7 +168,7 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
     for col in ["partecipant", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
         if col in df.columns:
             df[col] = df[col].apply(clean_value).astype("object")
-    if "match_id" in df.columns:
+    if "match_id" in df.columns and not df.empty:
         df["match_id"] = df["match_id"].astype(int)
     return df
 
@@ -159,7 +178,7 @@ def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
     for col in ["home_score", "away_score", "real_scorers"]:
         if col in df.columns:
             df[col] = df[col].apply(clean_value).astype("object")
-    if "match_id" in df.columns:
+    if "match_id" in df.columns and not df.empty:
         df["match_id"] = df["match_id"].astype(int)
     return df
 
@@ -265,11 +284,11 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     df = predictions.merge(matches, on="match_id", how="left", suffixes=("_pred", "_real"))
     df = df[df["home_score"].notna() & df["away_score"].notna() & (df["home_score"].astype(str).str.strip() != "") & (df["away_score"].astype(str).str.strip() != "")].copy()
     if df.empty:
-        empty_points = pd.DataFrame()
-        empty_standings = pd.DataFrame()
-        save_csv_and_push(empty_points, PLAYER_POINTS_PATH, f"Reset player_points - {commit_suffix()}")
-        save_csv_and_push(empty_standings, STANDINGS_PATH, f"Reset standings - {commit_suffix()}")
-        return empty_points, empty_standings
+        empty_points_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
+        empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
+        save_empty_csv_and_push(PLAYER_POINTS_PATH, empty_points_cols, f"Reset player_points - {commit_suffix()}")
+        save_empty_csv_and_push(STANDINGS_PATH, empty_standings_cols, f"Reset standings - {commit_suffix()}")
+        return pd.DataFrame(columns=empty_points_cols), pd.DataFrame(columns=empty_standings_cols)
     player_points = pd.concat([df, df.apply(score_row, axis=1)], axis=1)
     keep_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
     player_points = player_points[[c for c in keep_cols if c in player_points.columns]]
@@ -348,8 +367,10 @@ def reset_tournament() -> None:
             if col in predictions.columns:
                 predictions[col] = ""
         save_csv_and_push(predictions, PREDICTIONS_PATH, f"Reset predictions - {commit_suffix()}")
-    save_csv_and_push(pd.DataFrame(), PLAYER_POINTS_PATH, f"Reset player_points - {commit_suffix()}")
-    save_csv_and_push(pd.DataFrame(), STANDINGS_PATH, f"Reset standings - {commit_suffix()}")
+    empty_points_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
+    empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
+    save_empty_csv_and_push(PLAYER_POINTS_PATH, empty_points_cols, f"Reset player_points - {commit_suffix()}")
+    save_empty_csv_and_push(STANDINGS_PATH, empty_standings_cols, f"Reset standings - {commit_suffix()}")
 
 
 def init_predictions() -> pd.DataFrame:

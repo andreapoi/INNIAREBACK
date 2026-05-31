@@ -26,6 +26,7 @@ POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
 STAGE_COL = "stato_avanzamento_torneo"
+LOCK_TIMESTAMP_COL = "lock_timestamp"
 PRED_OG_1 = "pred_autogol_squadra_1"
 PRED_OG_2 = "pred_autogol_squadra_2"
 REAL_OG_1 = "real_autogol_squadra_1"
@@ -177,6 +178,60 @@ def clean_bool_series(series: pd.Series) -> pd.Series:
     return series.apply(bool_value).astype(bool)
 
 
+def parse_datetime_series(series: pd.Series) -> pd.Series:
+    return pd.to_datetime(series.fillna("").astype(str).str.strip(), errors="coerce", dayfirst=False)
+
+
+def format_datetime_value(value) -> str:
+    if pd.isna(value):
+        return ""
+    try:
+        return pd.Timestamp(value).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return ""
+
+
+def now_dt() -> pd.Timestamp:
+    return pd.Timestamp(datetime.now())
+
+
+def is_locked_value(value) -> bool:
+    parsed = pd.to_datetime(clean_value(value), errors="coerce")
+    if pd.isna(parsed):
+        return False
+    return parsed <= now_dt()
+
+
+def add_stage_lock_timestamps(matches: pd.DataFrame) -> pd.DataFrame:
+    matches = matches.copy()
+    if LOCK_TIMESTAMP_COL not in matches.columns:
+        matches[LOCK_TIMESTAMP_COL] = ""
+    if matches.empty or "datetime" not in matches.columns:
+        return matches
+
+    dt = parse_datetime_series(matches["datetime"])
+    if STAGE_COL in matches.columns:
+        stages = matches[STAGE_COL].fillna("").astype(str).str.strip()
+    else:
+        stages = pd.Series([""] * len(matches), index=matches.index)
+
+    lock_values = pd.Series([""] * len(matches), index=matches.index, dtype="object")
+    for stage in sorted(stages.unique().tolist()):
+        mask = stages == stage
+        stage_dates = dt[mask].dropna()
+        if stage_dates.empty:
+            continue
+        lock_dt = stage_dates.min()
+        lock_values.loc[mask] = format_datetime_value(lock_dt)
+
+    no_stage_mask = stages == ""
+    if no_stage_mask.any():
+        lock_values.loc[no_stage_mask] = dt[no_stage_mask].apply(format_datetime_value)
+
+    matches[LOCK_TIMESTAMP_COL] = lock_values
+    return matches
+
+
 def normalize_scorer(value) -> str:
     value = clean_value(value)
     if value.upper() in ["OG", "AUTOGOL", "OWN GOAL"]:
@@ -215,7 +270,7 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    for col in [STAGE_COL, "home_score", "away_score", "real_scorers"]:
+    for col in [STAGE_COL, LOCK_TIMESTAMP_COL, "home_score", "away_score", "real_scorers"]:
         if col not in df.columns:
             df[col] = ""
         df[col] = df[col].apply(clean_value).astype("object")
@@ -225,7 +280,7 @@ def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
         df[col] = clean_bool_series(df[col])
     if "match_id" in df.columns and not df.empty:
         df["match_id"] = df["match_id"].astype(int)
-    return df
+    return add_stage_lock_timestamps(df)
 
 
 def clean_result_value(value) -> str:
@@ -337,7 +392,7 @@ def score_row(row) -> pd.Series:
 
 def scoring_columns() -> list[str]:
     return [
-        "partecipant", "match_id", "datetime", "group", STAGE_COL, "home_team", "away_team",
+        "partecipant", "match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team",
         "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2,
         "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2,
         "exact_score_points", "result_1x2_points", "scorer_points", "total_points",
@@ -486,7 +541,7 @@ def init_predictions() -> pd.DataFrame:
 
 def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     view = normalize_predictions_df(view)
-    for col in ["pred_scorer", "last_update", "home_team", "away_team", "group", STAGE_COL, "datetime"]:
+    for col in ["pred_scorer", "last_update", "home_team", "away_team", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
     for col in ["pred_home_score", "pred_away_score"]:
@@ -497,7 +552,7 @@ def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_results_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     view = normalize_matches_df(view)
-    for col in [STAGE_COL, "real_scorers", "home_team", "away_team", "group", "datetime"]:
+    for col in [STAGE_COL, LOCK_TIMESTAMP_COL, "real_scorers", "home_team", "away_team", "group", "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
     for col in ["home_score", "away_score"]:
@@ -563,10 +618,7 @@ elif page == "📅 Calendario":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        if STAGE_COL not in matches.columns:
-            save_current_matches(matches)
-            st.info("Schema matches aggiornato con stato_avanzamento_torneo. Ricarico la pagina.")
-            st.rerun()
+        save_current_matches(matches) if LOCK_TIMESTAMP_COL not in matches.columns else None
         view = filter_dataframe(matches.copy(), "calendar", "Filtri calendario")
         st.dataframe(view, width="stretch")
 
@@ -592,72 +644,101 @@ elif page == "✏️ Pronostici":
             save_current_predictions(predictions)
             st.info("Schema predictions aggiornato con le colonne autogol. Ricarico la pagina.")
             st.rerun()
-        if STAGE_COL not in matches.columns:
+        if STAGE_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
             save_current_matches(matches)
-            st.info("Schema matches aggiornato con stato_avanzamento_torneo. Ricarico la pagina.")
+            st.info("Schema matches aggiornato con stato/lock_timestamp. Ricarico la pagina.")
             st.rerun()
+
         partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
         selected_partecipant = current_partecipant
         st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
         if selected_partecipant not in partecipants:
             st.error("Il tuo utente non è associato a un partecipante presente in predictions.csv.")
             st.stop()
+
         df_user = predictions[predictions["partecipant"].astype(str) == selected_partecipant].copy()
-        match_info_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team"] if c in matches.columns]
+        match_info_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team"] if c in matches.columns]
         view = df_user.merge(matches[match_info_cols], on="match_id", how="left")
-        editable_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
+        editable_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
         view = prepare_predictions_editor_view(view)
         view = filter_dataframe(view, "predictions", "Filtri pronostici")
-        st.caption("1/X/2 non è più mostrato: viene calcolato automaticamente dal risultato pronosticato. Se flagghi un autogol, il marcatore viene svuotato.")
-        edited = st.data_editor(
-            view[editable_cols],
-            width="stretch",
-            num_rows="fixed",
-            disabled=[c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team", "last_update"] if c in editable_cols],
-            column_config={
-                "pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
-                "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
-                "pred_scorer": st.column_config.TextColumn("Marcatore", help="Non usare OG/autogol: usa i flag dedicati."),
-                PRED_OG_1: st.column_config.CheckboxColumn("Autogol squadra 1"),
-                PRED_OG_2: st.column_config.CheckboxColumn("Autogol squadra 2"),
-                "last_update": st.column_config.TextColumn("Ultimo aggiornamento"),
-            },
-            key=f"pred_editor_{selected_partecipant}",
-        )
-        if st.button("💾 Salva pronostici"):
-            now = now_string()
-            predictions = normalize_predictions_df(predictions)
-            both_flags_count = 0
-            scorer_cleared_count = 0
-            for _, row in edited.iterrows():
-                match_id = int(row["match_id"])
-                mask = (predictions["partecipant"].astype(str) == selected_partecipant) & (predictions["match_id"].astype(int) == match_id)
-                pred_home = clean_value(row.get("pred_home_score", ""))
-                pred_away = clean_value(row.get("pred_away_score", ""))
-                og1 = bool_value(row.get(PRED_OG_1))
-                og2 = bool_value(row.get(PRED_OG_2))
-                if og1 and og2:
-                    og2 = False
-                    both_flags_count += 1
-                pred_scorer = normalize_scorer(row.get("pred_scorer", ""))
-                if og1 or og2:
-                    if pred_scorer != "":
-                        scorer_cleared_count += 1
-                    pred_scorer = ""
-                predictions.loc[mask, "pred_home_score"] = pred_home
-                predictions.loc[mask, "pred_away_score"] = pred_away
-                predictions.loc[mask, "pred_scorer"] = pred_scorer
-                predictions.loc[mask, PRED_OG_1] = og1
-                predictions.loc[mask, PRED_OG_2] = og2
-                predictions.loc[mask, "pred_result"] = calc_result(pred_home, pred_away)
-                predictions.loc[mask, "last_update"] = now if (pred_home or pred_away or pred_scorer or og1 or og2) else ""
-            save_current_predictions(predictions)
-            if both_flags_count:
-                st.warning(f"In {both_flags_count} riga/e erano flaggate entrambe le squadre: ho mantenuto solo Autogol squadra 1.")
-            if scorer_cleared_count:
-                st.warning(f"In {scorer_cleared_count} riga/e il marcatore è stato svuotato perché era presente un flag autogol.")
-            st.success("Pronostici salvati su GitHub.")
-            st.rerun()
+        view["locked"] = view[LOCK_TIMESTAMP_COL].apply(is_locked_value)
+        unlocked_view = view[~view["locked"]].copy()
+        locked_view = view[view["locked"]].copy()
+
+        st.caption("1/X/2 non è mostrato: viene calcolato automaticamente. Dopo il lock_timestamp dello stage, le righe sono bloccate e non modificabili.")
+        if not unlocked_view.empty:
+            edited = st.data_editor(
+                unlocked_view[[c for c in editable_cols if c in unlocked_view.columns]],
+                width="stretch",
+                num_rows="fixed",
+                disabled=[c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "last_update"] if c in editable_cols],
+                column_config={
+                    "pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
+                    "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
+                    "pred_scorer": st.column_config.TextColumn("Marcatore", help="Non usare OG/autogol: usa i flag dedicati."),
+                    PRED_OG_1: st.column_config.CheckboxColumn("Autogol squadra 1"),
+                    PRED_OG_2: st.column_config.CheckboxColumn("Autogol squadra 2"),
+                    "last_update": st.column_config.TextColumn("Ultimo aggiornamento"),
+                },
+                key=f"pred_editor_{selected_partecipant}",
+            )
+            if st.button("💾 Salva pronostici"):
+                now = now_string()
+                predictions = normalize_predictions_df(predictions)
+                both_flags_count = 0
+                scorer_cleared_count = 0
+                for _, row in edited.iterrows():
+                    match_id = int(row["match_id"])
+                    match_lock = matches.loc[matches["match_id"].astype(int) == match_id, LOCK_TIMESTAMP_COL]
+                    if not match_lock.empty and is_locked_value(match_lock.iloc[0]):
+                        continue
+                    mask = (predictions["partecipant"].astype(str) == selected_partecipant) & (predictions["match_id"].astype(int) == match_id)
+                    pred_home = clean_value(row.get("pred_home_score", ""))
+                    pred_away = clean_value(row.get("pred_away_score", ""))
+                    og1 = bool_value(row.get(PRED_OG_1))
+                    og2 = bool_value(row.get(PRED_OG_2))
+                    if og1 and og2:
+                        og2 = False
+                        both_flags_count += 1
+                    pred_scorer = normalize_scorer(row.get("pred_scorer", ""))
+                    if og1 or og2:
+                        if pred_scorer != "":
+                            scorer_cleared_count += 1
+                        pred_scorer = ""
+                    predictions.loc[mask, "pred_home_score"] = pred_home
+                    predictions.loc[mask, "pred_away_score"] = pred_away
+                    predictions.loc[mask, "pred_scorer"] = pred_scorer
+                    predictions.loc[mask, PRED_OG_1] = og1
+                    predictions.loc[mask, PRED_OG_2] = og2
+                    predictions.loc[mask, "pred_result"] = calc_result(pred_home, pred_away)
+                    predictions.loc[mask, "last_update"] = now if (pred_home or pred_away or pred_scorer or og1 or og2) else ""
+                save_current_predictions(predictions)
+                if both_flags_count:
+                    st.warning(f"In {both_flags_count} riga/e erano flaggate entrambe le squadre: ho mantenuto solo Autogol squadra 1.")
+                if scorer_cleared_count:
+                    st.warning(f"In {scorer_cleared_count} riga/e il marcatore è stato svuotato perché era presente un flag autogol.")
+                st.success("Pronostici salvati su GitHub.")
+                st.rerun()
+        else:
+            st.info("Non ci sono pronostici modificabili con i filtri correnti: tutti gli stage visualizzati sono già bloccati oppure non ci sono righe.")
+
+        if not locked_view.empty:
+            st.subheader("Pronostici tuoi bloccati")
+            st.dataframe(locked_view[[c for c in editable_cols if c in locked_view.columns]], width="stretch")
+
+        st.divider()
+        st.subheader("Pronostici visibili dopo blocco")
+        all_predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
+        visible = all_predictions.merge(matches[match_info_cols], on="match_id", how="left")
+        visible["locked"] = visible[LOCK_TIMESTAMP_COL].apply(is_locked_value)
+        visible = visible[visible["locked"]].copy()
+        if visible.empty:
+            st.info("Nessun pronostico visibile: gli stage non sono ancora arrivati al lock_timestamp.")
+        else:
+            show_cols = [c for c in ["partecipant", "match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in visible.columns]
+            visible = filter_dataframe(visible[show_cols], "visible_predictions", "Filtri pronostici visibili")
+            st.dataframe(visible, width="stretch")
 
 elif page == "⚽ Risultati reali":
     if not is_admin:
@@ -668,20 +749,21 @@ elif page == "⚽ Risultati reali":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns) or STAGE_COL not in matches.columns:
+        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns) or STAGE_COL not in matches.columns or LOCK_TIMESTAMP_COL not in matches.columns:
             save_current_matches(matches)
-            st.info("Schema matches aggiornato con colonne stato/autogol. Ricarico la pagina.")
+            st.info("Schema matches aggiornato con colonne stato/lock/autogol. Ricarico la pagina.")
             st.rerun()
-        edit_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
+        edit_cols = [c for c in ["match_id", "datetime", "group", STAGE_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
         view = prepare_results_editor_view(matches[edit_cols])
         view = filter_dataframe(view, "real_results", "Filtri risultati reali")
         edited = st.data_editor(
             view,
             width="stretch",
             num_rows="fixed",
-            disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols],
+            disabled=[c for c in ["match_id", "datetime", "group", LOCK_TIMESTAMP_COL, "home_team", "away_team"] if c in edit_cols],
             column_config={
                 STAGE_COL: st.column_config.TextColumn("Stato avanzamento torneo", help="Es. Giornata 1, Giornata 2, Giornata 3, Ottavi, Quarti..."),
+                LOCK_TIMESTAMP_COL: st.column_config.TextColumn("Lock timestamp", help="Calcolato automaticamente come minimo datetime dello stage."),
                 "home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                 "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
                 "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ;. Non usare OG/autogol: usa i flag dedicati."),

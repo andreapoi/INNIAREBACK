@@ -587,6 +587,73 @@ def save_current_matches(matches: pd.DataFrame) -> None:
 def save_current_predictions(predictions: pd.DataFrame) -> None:
     save_csv_and_push(normalize_predictions_df(predictions), PREDICTIONS_PATH, f"Update prediction schema/data - {commit_suffix()}")
 
+def get_team_flag_map() -> dict:
+    mapping = read_csv(TEAM_MAPPING_PATH)
+
+    if mapping.empty:
+        return {}
+
+    if not {"team_name", "team_flag"}.issubset(mapping.columns):
+        return {}
+
+    mapping["team_name"] = mapping["team_name"].fillna("").astype(str).str.strip()
+    mapping["team_flag"] = mapping["team_flag"].fillna("").astype(str).str.strip()
+
+    return dict(zip(mapping["team_name"], mapping["team_flag"]))
+
+
+def team_label(team_name, flag_map: dict) -> str:
+    team_name = clean_value(team_name)
+
+    if team_name == "":
+        return ""
+
+    for flag in flag_map.values():
+        if flag and team_name.startswith(f"{flag} "):
+            return team_name
+
+    flag = clean_value(flag_map.get(team_name, ""))
+
+    if flag == "":
+        return team_name
+
+    return f"{flag} {team_name}"
+
+
+def add_team_flags(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return df
+
+    if "home_team" not in df.columns and "away_team" not in df.columns:
+        return df
+
+    df = df.copy()
+    flag_map = get_team_flag_map()
+
+    if "home_team" in df.columns:
+        df["home_team"] = df["home_team"].apply(lambda x: team_label(x, flag_map))
+
+    if "away_team" in df.columns:
+        df["away_team"] = df["away_team"].apply(lambda x: team_label(x, flag_map))
+
+    return df
+
+
+def team_columns_config(extra: dict | None = None) -> dict:
+    cfg = dict(extra or {})
+
+    cfg.setdefault(
+        "home_team",
+        st.column_config.TextColumn("Casa", width="medium"),
+    )
+
+    cfg.setdefault(
+        "away_team",
+        st.column_config.TextColumn("Trasferta", width="medium"),
+    )
+
+    return cfg
+
 
 ensure_data_dir()
 if "synced_once" not in st.session_state:
@@ -642,7 +709,12 @@ elif page == "📅 Calendario":
             st.info("Schema matches aggiornato con match_day/lock_timestamp. Ricarico la pagina.")
             st.rerun()
         view = filter_dataframe(matches.copy(), "calendar", "Filtri calendario")
-        st.dataframe(view, width="stretch")
+        view = add_team_flags(view)
+        st.dataframe(
+        view,
+        width="stretch",
+        column_config=team_columns_config(),
+        )
 
 elif page == "✏️ Pronostici":
     st.header("✏️ Inserimento pronostici")
@@ -687,6 +759,8 @@ elif page == "✏️ Pronostici":
         view["locked"] = view[LOCK_TIMESTAMP_COL].apply(is_locked_value)
         unlocked_view = view[~view["locked"]].copy()
         locked_view = view[view["locked"]].copy()
+        unlocked_view = add_team_flags(unlocked_view)
+        locked_view = add_team_flags(locked_view)
 
         st.caption("Il lock_timestamp è calcolato per match_day: tutte le righe con lo stesso match_day si bloccano all'inizio della prima partita di quel match day.")
         if not unlocked_view.empty:
@@ -792,6 +866,8 @@ elif page == "⚽ Risultati reali":
                 "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ;. Non usare OG/autogol: usa i flag dedicati."),
                 REAL_OG_1: st.column_config.CheckboxColumn("Autogol squadra 1 reale"),
                 REAL_OG_2: st.column_config.CheckboxColumn("Autogol squadra 2 reale"),
+                "home_team": st.column_config.TextColumn("Casa", width="medium"),
+                "away_team": st.column_config.TextColumn("Trasferta", width="medium"),
             },
             key="real_results_editor",
         )
@@ -862,7 +938,12 @@ elif page == "🏆 Classifica":
             view = player_points if selected == "Tutti" else player_points[player_points["partecipant"].astype(str) == selected]
         else:
             view = player_points[player_points["partecipant"].astype(str) == current_partecipant]
-        st.dataframe(view, width="stretch")
+        view = add_team_flags(view)
+        st.dataframe(
+        view,
+        width="stretch",
+        column_config=team_columns_config(),
+        )
 
 elif page == "🛠️ Amministrazione":
     if not is_admin:

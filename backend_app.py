@@ -131,12 +131,22 @@ def read_csv(path: Path, sync: bool = True) -> pd.DataFrame:
     return df
 
 
+def clean_value(value) -> str:
+    if pd.isna(value):
+        return ""
+    value = str(value).strip()
+    if value.endswith(".0"):
+        value = value[:-2]
+    if value.lower() == "nan" or value.lower() == "none":
+        return ""
+    return value
+
+
 def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     if "participant" in df.columns and "partecipant" not in df.columns:
         df = df.rename(columns={"participant": "partecipant"})
-    text_cols = ["partecipant", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]
-    for col in text_cols:
+    for col in ["partecipant", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
         if col in df.columns:
             df[col] = df[col].apply(clean_value).astype("object")
     if "match_id" in df.columns:
@@ -144,15 +154,14 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def clean_value(value) -> str:
-    if pd.isna(value):
-        return ""
-    value = str(value).strip()
-    if value.endswith(".0"):
-        value = value[:-2]
-    if value.lower() == "nan":
-        return ""
-    return value
+def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    for col in ["home_score", "away_score", "real_scorers"]:
+        if col in df.columns:
+            df[col] = df[col].apply(clean_value).astype("object")
+    if "match_id" in df.columns:
+        df["match_id"] = df["match_id"].astype(int)
+    return df
 
 
 def clean_result_value(value) -> str:
@@ -241,7 +250,7 @@ def score_row(row) -> pd.Series:
 
 
 def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
     if matches.empty:
         raise ValueError("matches.csv non trovato o vuoto.")
@@ -253,8 +262,6 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
         raise ValueError(f"matches.csv manca colonne: {required_matches - set(matches.columns)}")
     if required_predictions - set(predictions.columns):
         raise ValueError(f"predictions.csv manca colonne: {required_predictions - set(predictions.columns)}")
-    matches["match_id"] = matches["match_id"].astype(int)
-    predictions["match_id"] = predictions["match_id"].astype(int)
     df = predictions.merge(matches, on="match_id", how="left", suffixes=("_pred", "_real"))
     df = df[df["home_score"].notna() & df["away_score"].notna() & (df["home_score"].astype(str).str.strip() != "") & (df["away_score"].astype(str).str.strip() != "")].copy()
     if df.empty:
@@ -329,7 +336,7 @@ def restore_backup(backup_path: Path) -> int:
 
 
 def reset_tournament() -> None:
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if not matches.empty:
         for col in ["home_score", "away_score", "real_scorers"]:
             if col in matches.columns:
@@ -346,7 +353,7 @@ def reset_tournament() -> None:
 
 
 def init_predictions() -> pd.DataFrame:
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     partecipants = read_csv(PARTECIPANTS_PATH)
     if matches.empty:
         raise ValueError("matches.csv non trovato o vuoto.")
@@ -356,7 +363,6 @@ def init_predictions() -> pd.DataFrame:
         raise ValueError("matches.csv deve contenere la colonna match_id.")
     if "partecipant" not in partecipants.columns:
         raise ValueError("partecipants.csv deve contenere la colonna partecipant.")
-    matches["match_id"] = matches["match_id"].astype(int)
     names = sorted(set(x for x in partecipants["partecipant"].dropna().astype(str).str.strip() if x != ""))
     rows = []
     for partecipant in names:
@@ -367,7 +373,6 @@ def init_predictions() -> pd.DataFrame:
         old_df = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
         required = {"partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"}
         if required.issubset(old_df.columns):
-            old_df["match_id"] = old_df["match_id"].astype(int)
             merged = new_df.merge(old_df[list(required)], on=["partecipant", "match_id"], how="left", suffixes=("", "_old"))
             for col in ["pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
                 old_col = f"{col}_old"
@@ -419,7 +424,7 @@ with st.sidebar:
 
 if page == "📊 Dashboard":
     st.header("📊 Dashboard")
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
     standings = read_csv(STANDINGS_PATH)
     c1, c2, c3, c4 = st.columns(4)
@@ -432,23 +437,16 @@ if page == "📊 Dashboard":
             finished = (matches["home_score"].notna() & matches["away_score"].notna() & (matches["home_score"].astype(str).str.strip() != "") & (matches["away_score"].astype(str).str.strip() != "")).sum()
         st.metric("Partite concluse", int(finished))
     with c3:
-        if predictions.empty or "partecipant" not in predictions.columns:
-            partecipants_count = 0
-        else:
-            partecipants_count = predictions["partecipant"].nunique()
-        st.metric("Partecipanti", partecipants_count)
+        st.metric("Partecipanti", 0 if predictions.empty or "partecipant" not in predictions.columns else predictions["partecipant"].nunique())
     with c4:
-        if predictions.empty or "last_update" not in predictions.columns:
-            updated = 0
-        else:
-            updated = (predictions["last_update"].notna() & (predictions["last_update"].astype(str).str.strip() != "")).sum()
+        updated = 0 if predictions.empty or "last_update" not in predictions.columns else (predictions["last_update"].notna() & (predictions["last_update"].astype(str).str.strip() != "")).sum()
         st.metric("Pronostici compilati", int(updated))
     st.divider()
     safe_display_df(standings, "Classifica non ancora calcolata.")
 
 elif page == "📅 Calendario":
     st.header("📅 Calendario")
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
@@ -463,7 +461,7 @@ elif page == "📅 Calendario":
 elif page == "✏️ Pronostici":
     st.header("✏️ Inserimento pronostici")
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if predictions.empty:
         st.warning("predictions.csv non trovato o vuoto.")
         if st.button("Inizializza predictions.csv"):
@@ -478,8 +476,6 @@ elif page == "✏️ Pronostici":
     elif "partecipant" not in predictions.columns:
         st.error("predictions.csv deve contenere la colonna partecipant.")
     else:
-        predictions = normalize_predictions_df(predictions)
-        matches["match_id"] = matches["match_id"].astype(int)
         partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
         selected_partecipant = st.selectbox("Partecipante", partecipants)
         df_user = predictions[predictions["partecipant"].astype(str) == selected_partecipant].copy()
@@ -510,7 +506,7 @@ elif page == "✏️ Pronostici":
 
 elif page == "⚽ Risultati reali":
     st.header("⚽ Inserimento risultati reali")
-    matches = read_csv(MATCHES_PATH)
+    matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
@@ -518,16 +514,18 @@ elif page == "⚽ Risultati reali":
         view = prepare_results_editor_view(matches[edit_cols])
         edited = st.data_editor(view, width="stretch", num_rows="fixed", disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols], column_config={"home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"), "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"), "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ; e usa OG per autogol.")}, key="real_results_editor")
         def save_results_from_editor():
+            current_matches = normalize_matches_df(matches)
             for _, row in edited.iterrows():
                 match_id = int(row["match_id"])
-                mask = matches["match_id"].astype(int) == match_id
-                if "home_score" in matches.columns:
-                    matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
-                if "away_score" in matches.columns:
-                    matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
-                if "real_scorers" in matches.columns:
-                    matches.loc[mask, "real_scorers"] = normalize_scorers_list(row.get("real_scorers", ""))
-            save_csv_and_push(matches, MATCHES_PATH, f"Update match results - {commit_suffix()}")
+                mask = current_matches["match_id"].astype(int) == match_id
+                if "home_score" in current_matches.columns:
+                    current_matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
+                if "away_score" in current_matches.columns:
+                    current_matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
+                if "real_scorers" in current_matches.columns:
+                    current_matches.loc[mask, "real_scorers"] = normalize_scorers_list(row.get("real_scorers", ""))
+            current_matches = normalize_matches_df(current_matches)
+            save_csv_and_push(current_matches, MATCHES_PATH, f"Update match results - {commit_suffix()}")
         col1, col2 = st.columns(2)
         with col1:
             if st.button("💾 Salva risultati reali"):

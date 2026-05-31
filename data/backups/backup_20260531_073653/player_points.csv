@@ -1,0 +1,10 @@
+partecipant,match_id,datetime,group,home_team,away_team,home_score,away_score,real_scorers,pred_home_score,pred_away_score,pred_result,pred_scorer,exact_score_points,result_1x2_points,scorer_points,total_points
+Alessandro,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,1,1,X,Marquez,0.0,0.0,3.5,3.5
+Andrea,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Edoardo,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Ferdinando,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Gabriele,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Peppe,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Salvatore,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Simone,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0
+Vins,1,2026-06-11 21:00,A,Mexico,South Africa,2,3,Marquez,,,,,0.0,0.0,0.0,0.0

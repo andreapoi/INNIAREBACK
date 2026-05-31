@@ -22,14 +22,7 @@ POINTS_EXACT_SCORE = 5
 POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
-CSV_FILES = [
-    MATCHES_PATH,
-    PREDICTIONS_PATH,
-    PARTECIPANTS_PATH,
-    TEAM_MAPPING_PATH,
-    STANDINGS_PATH,
-    PLAYER_POINTS_PATH,
-]
+CSV_FILES = [MATCHES_PATH, PREDICTIONS_PATH, PARTECIPANTS_PATH, TEAM_MAPPING_PATH, STANDINGS_PATH, PLAYER_POINTS_PATH]
 
 st.set_page_config(page_title="INNIAREBACK Backend", page_icon="⚽", layout="wide")
 
@@ -191,6 +184,13 @@ def commit_suffix() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
+def safe_display_df(df: pd.DataFrame, message_if_empty: str) -> None:
+    if df is None or df.empty:
+        st.info(message_if_empty)
+    else:
+        st.dataframe(df, width="stretch")
+
+
 def exact_score_correct(row) -> bool:
     pred_home = to_int_or_none(row.get("pred_home_score"))
     pred_away = to_int_or_none(row.get("pred_away_score"))
@@ -221,11 +221,14 @@ def score_row(row) -> pd.Series:
     exact = exact_score_correct(row)
     result = result_1x2_correct(row)
     scorer = scorer_correct(row)
+    exact_points = POINTS_EXACT_SCORE if exact else 0
+    result_points = POINTS_1X2 if result else 0
+    scorer_points = POINTS_SCORER if scorer else 0
     return pd.Series({
-        "exact_score_points": POINTS_EXACT_SCORE if exact else 0,
-        "result_1x2_points": POINTS_1X2 if result else 0,
-        "scorer_points": POINTS_SCORER if scorer else 0,
-        "total_points": (POINTS_EXACT_SCORE if exact else 0) + (POINTS_1X2 if result else 0) + (POINTS_SCORER if scorer else 0),
+        "exact_score_points": exact_points,
+        "result_1x2_points": result_points,
+        "scorer_points": scorer_points,
+        "total_points": exact_points + result_points + scorer_points,
     })
 
 
@@ -245,7 +248,12 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     matches["match_id"] = matches["match_id"].astype(int)
     predictions["match_id"] = predictions["match_id"].astype(int)
     df = predictions.merge(matches, on="match_id", how="left", suffixes=("_pred", "_real"))
-    df = df[df["home_score"].notna() & df["away_score"].notna() & (df["home_score"].astype(str).str.strip() != "") & (df["away_score"].astype(str).str.strip() != "")].copy()
+    df = df[
+        df["home_score"].notna()
+        & df["away_score"].notna()
+        & (df["home_score"].astype(str).str.strip() != "")
+        & (df["away_score"].astype(str).str.strip() != "")
+    ].copy()
     if df.empty:
         empty_points = pd.DataFrame()
         empty_standings = pd.DataFrame()
@@ -332,8 +340,6 @@ def reset_tournament() -> None:
         save_csv_and_push(matches, MATCHES_PATH, f"Reset matches results - {commit_suffix()}")
     predictions = read_csv(PREDICTIONS_PATH)
     if not predictions.empty:
-        if "participant" in predictions.columns and "partecipant" not in predictions.columns:
-            predictions = predictions.rename(columns={"participant": "partecipant"})
         for col in ["pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
             if col in predictions.columns:
                 predictions[col] = ""
@@ -362,8 +368,6 @@ def init_predictions() -> pd.DataFrame:
     new_df = pd.DataFrame(rows)
     if PREDICTIONS_PATH.exists():
         old_df = read_csv(PREDICTIONS_PATH)
-        if "participant" in old_df.columns and "partecipant" not in old_df.columns:
-            old_df = old_df.rename(columns={"participant": "partecipant"})
         required = {"partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"}
         if required.issubset(old_df.columns):
             old_df["match_id"] = old_df["match_id"].astype(int)
@@ -389,6 +393,17 @@ def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
     return view
 
 
+def prepare_results_editor_view(view: pd.DataFrame) -> pd.DataFrame:
+    view = view.copy()
+    for col in ["real_scorers", "home_team", "away_team", "group", "datetime"]:
+        if col in view.columns:
+            view[col] = view[col].fillna("").astype(str).replace("nan", "")
+    for col in ["home_score", "away_score"]:
+        if col in view.columns:
+            view[col] = view[col].apply(to_int_or_none)
+    return view
+
+
 ensure_data_dir()
 if "synced_once" not in st.session_state:
     sync_core_files_from_github()
@@ -398,7 +413,10 @@ st.title("⚙️ INNIAREBACK - Backend Mondiali 2026")
 
 with st.sidebar:
     st.title("Menu")
-    st.success("GitHub persistence attiva") if github_enabled() else st.warning("GitHub persistence non configurata")
+    if github_enabled():
+        st.success("GitHub persistence attiva")
+    else:
+        st.warning("GitHub persistence non configurata")
     page = st.radio("Sezione", ["📊 Dashboard", "📅 Calendario", "✏️ Pronostici", "⚽ Risultati reali", "🏆 Classifica", "🛠️ Amministrazione"])
 
 if page == "📊 Dashboard":
@@ -410,15 +428,25 @@ if page == "📊 Dashboard":
     with c1:
         st.metric("Partite", 0 if matches.empty else len(matches))
     with c2:
-        finished = 0 if matches.empty or "home_score" not in matches.columns or "away_score" not in matches.columns else (matches["home_score"].notna() & matches["away_score"].notna() & (matches["home_score"].astype(str).str.strip() != "") & (matches["away_score"].astype(str).str.strip() != "")).sum()
+        if matches.empty or "home_score" not in matches.columns or "away_score" not in matches.columns:
+            finished = 0
+        else:
+            finished = (matches["home_score"].notna() & matches["away_score"].notna() & (matches["home_score"].astype(str).str.strip() != "") & (matches["away_score"].astype(str).str.strip() != "")).sum()
         st.metric("Partite concluse", int(finished))
     with c3:
-        st.metric("Partecipanti", 0 if predictions.empty or "partecipant" not in predictions.columns else predictions["partecipant"].nunique())
+        if predictions.empty or "partecipant" not in predictions.columns:
+            partecipants_count = 0
+        else:
+            partecipants_count = predictions["partecipant"].nunique()
+        st.metric("Partecipanti", partecipants_count)
     with c4:
-        updated = 0 if predictions.empty or "last_update" not in predictions.columns else (predictions["last_update"].notna() & (predictions["last_update"].astype(str).str.strip() != "")).sum()
+        if predictions.empty or "last_update" not in predictions.columns:
+            updated = 0
+        else:
+            updated = (predictions["last_update"].notna() & (predictions["last_update"].astype(str).str.strip() != "")).sum()
         st.metric("Pronostici compilati", int(updated))
     st.divider()
-    st.dataframe(standings, width="stretch") if not standings.empty else st.info("Classifica non ancora calcolata.")
+    safe_display_df(standings, "Classifica non ancora calcolata.")
 
 elif page == "📅 Calendario":
     st.header("📅 Calendario")
@@ -500,9 +528,20 @@ elif page == "⚽ Risultati reali":
         st.warning("matches.csv non trovato o vuoto.")
     else:
         edit_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers"] if c in matches.columns]
-        edited = st.data_editor(matches[edit_cols], width="stretch", num_rows="fixed", disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols], column_config={"real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ; e usa OG per autogol.")})
-        col1, col2 = st.columns(2)
-        def save_results():
+        view = prepare_results_editor_view(matches[edit_cols])
+        edited = st.data_editor(
+            view,
+            width="stretch",
+            num_rows="fixed",
+            disabled=[c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in edit_cols],
+            column_config={
+                "home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
+                "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
+                "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ; e usa OG per autogol."),
+            },
+            key="real_results_editor",
+        )
+        def save_results_from_editor():
             for _, row in edited.iterrows():
                 match_id = int(row["match_id"])
                 mask = matches["match_id"].astype(int) == match_id
@@ -513,18 +552,24 @@ elif page == "⚽ Risultati reali":
                 if "real_scorers" in matches.columns:
                     matches.loc[mask, "real_scorers"] = normalize_scorers_list(row.get("real_scorers", ""))
             save_csv_and_push(matches, MATCHES_PATH, f"Update match results - {commit_suffix()}")
+        col1, col2 = st.columns(2)
         with col1:
             if st.button("💾 Salva risultati reali"):
-                save_results()
-                st.success("Risultati reali salvati su GitHub.")
-                st.rerun()
+                try:
+                    save_results_from_editor()
+                    st.success("Risultati reali salvati su GitHub.")
+                    st.rerun()
+                except Exception as e:
+                    st.error(str(e))
         with col2:
             if st.button("🏆 Salva e calcola classifica"):
-                save_results()
                 try:
+                    save_results_from_editor()
                     _, standings = run_scoring()
-                    st.success("Classifica calcolata e salvata su GitHub.") if not standings.empty else st.warning("Nessuna partita con risultato reale completo.")
-                    if not standings.empty:
+                    if standings.empty:
+                        st.warning("Nessuna partita con risultato reale completo.")
+                    else:
+                        st.success("Classifica calcolata e salvata su GitHub.")
                         st.dataframe(standings, width="stretch")
                 except Exception as e:
                     st.error(str(e))
@@ -534,18 +579,24 @@ elif page == "🏆 Classifica":
     if st.button("🔄 Ricalcola classifica"):
         try:
             _, standings = run_scoring()
-            st.success("Classifica ricalcolata e salvata su GitHub.") if not standings.empty else st.warning("Nessuna partita con risultato reale completo.")
-            st.rerun()
+            if standings.empty:
+                st.warning("Nessuna partita con risultato reale completo.")
+            else:
+                st.success("Classifica ricalcolata e salvata su GitHub.")
+                st.rerun()
         except Exception as e:
             st.error(str(e))
     standings = read_csv(STANDINGS_PATH)
-    st.dataframe(standings, width="stretch") if not standings.empty else st.info("Classifica non ancora disponibile.")
+    safe_display_df(standings, "Classifica non ancora disponibile.")
     player_points = read_csv(PLAYER_POINTS_PATH)
     if not player_points.empty and "partecipant" in player_points.columns:
         st.subheader("Dettaglio punti partita per partita")
         partecipants = ["Tutti"] + sorted(player_points["partecipant"].dropna().astype(str).unique().tolist())
         selected = st.selectbox("Filtro partecipante", partecipants)
-        view = player_points if selected == "Tutti" else player_points[player_points["partecipant"].astype(str) == selected]
+        if selected == "Tutti":
+            view = player_points
+        else:
+            view = player_points[player_points["partecipant"].astype(str) == selected]
         st.dataframe(view, width="stretch")
 
 elif page == "🛠️ Amministrazione":

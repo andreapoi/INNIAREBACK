@@ -25,15 +25,12 @@ POINTS_EXACT_SCORE = 5
 POINTS_1X2 = 2
 POINTS_SCORER = 3.5
 
-CSV_FILES = [
-    MATCHES_PATH,
-    PREDICTIONS_PATH,
-    PARTECIPANTS_PATH,
-    TEAM_MAPPING_PATH,
-    STANDINGS_PATH,
-    PLAYER_POINTS_PATH,
-    USERS_PATH,
-]
+PRED_OG_1 = "pred_autogol_squadra_1"
+PRED_OG_2 = "pred_autogol_squadra_2"
+REAL_OG_1 = "real_autogol_squadra_1"
+REAL_OG_2 = "real_autogol_squadra_2"
+
+CSV_FILES = [MATCHES_PATH, PREDICTIONS_PATH, PARTECIPANTS_PATH, TEAM_MAPPING_PATH, STANDINGS_PATH, PLAYER_POINTS_PATH, USERS_PATH]
 
 st.set_page_config(page_title="INNIAREBACK Backend", page_icon="⚽", layout="wide")
 
@@ -47,11 +44,7 @@ def get_github_config():
 
 
 def github_headers(token: str) -> dict:
-    return {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
+    return {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
 
 
 def github_get_file(path_in_repo: str):
@@ -69,11 +62,7 @@ def github_put_file(path_in_repo: str, content: str, message: str) -> None:
     token, repo, branch = get_github_config()
     _, sha = github_get_file(path_in_repo)
     url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
-    payload = {
-        "message": message,
-        "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
-        "branch": branch,
-    }
+    payload = {"message": message, "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"), "branch": branch}
     if sha:
         payload["sha"] = sha
     r = requests.put(url, headers=github_headers(token), json=payload, timeout=30)
@@ -128,8 +117,7 @@ def save_csv_and_push(df: pd.DataFrame, path: Path, commit_message: str) -> None
 
 
 def save_empty_csv_and_push(path: Path, columns: list[str], commit_message: str) -> None:
-    df = pd.DataFrame(columns=columns)
-    save_csv_and_push(df, path, commit_message)
+    save_csv_and_push(pd.DataFrame(columns=columns), path, commit_message)
 
 
 def ensure_data_dir() -> None:
@@ -175,9 +163,36 @@ def clean_value(value) -> str:
     value = str(value).strip()
     if value.endswith(".0"):
         value = value[:-2]
-    if value.lower() == "nan" or value.lower() == "none":
+    if value.lower() in ["nan", "none"]:
         return ""
     return value
+
+
+def bool_value(value) -> bool:
+    return clean_value(value).lower() in ["true", "1", "yes", "y", "si", "sì", "x"]
+
+
+def clean_bool_series(series: pd.Series) -> pd.Series:
+    return series.apply(bool_value).astype(bool)
+
+
+def normalize_scorer(value) -> str:
+    value = clean_value(value)
+    if value.upper() in ["OG", "AUTOGOL", "OWN GOAL"]:
+        return ""
+    return value
+
+
+def normalize_scorers_list(value) -> str:
+    value = clean_value(value)
+    if value == "":
+        return ""
+    scorers = []
+    for item in value.split(";"):
+        scorer = normalize_scorer(item)
+        if scorer != "":
+            scorers.append(scorer)
+    return ";".join(scorers)
 
 
 def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -185,8 +200,13 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
     if "participant" in df.columns and "partecipant" not in df.columns:
         df = df.rename(columns={"participant": "partecipant"})
     for col in ["partecipant", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
-        if col in df.columns:
-            df[col] = df[col].apply(clean_value).astype("object")
+        if col not in df.columns:
+            df[col] = ""
+        df[col] = df[col].apply(clean_value).astype("object")
+    for col in [PRED_OG_1, PRED_OG_2]:
+        if col not in df.columns:
+            df[col] = False
+        df[col] = clean_bool_series(df[col])
     if "match_id" in df.columns and not df.empty:
         df["match_id"] = df["match_id"].astype(int)
     return df
@@ -195,8 +215,13 @@ def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
 def normalize_matches_df(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     for col in ["home_score", "away_score", "real_scorers"]:
-        if col in df.columns:
-            df[col] = df[col].apply(clean_value).astype("object")
+        if col not in df.columns:
+            df[col] = ""
+        df[col] = df[col].apply(clean_value).astype("object")
+    for col in [REAL_OG_1, REAL_OG_2]:
+        if col not in df.columns:
+            df[col] = False
+        df[col] = clean_bool_series(df[col])
     if "match_id" in df.columns and not df.empty:
         df["match_id"] = df["match_id"].astype(int)
     return df
@@ -222,18 +247,6 @@ def calc_result(home_score, away_score) -> str:
     if home is None or away is None:
         return ""
     return "1" if home > away else "2" if home < away else "X"
-
-
-def normalize_scorer(value) -> str:
-    value = clean_value(value)
-    return "OG" if value.upper() in ["OG", "AUTOGOL", "OWN GOAL"] else value
-
-
-def normalize_scorers_list(value) -> str:
-    value = clean_value(value)
-    if value == "":
-        return ""
-    return ";".join(normalize_scorer(x) for x in value.split(";") if clean_value(x) != "")
 
 
 def now_string() -> str:
@@ -267,7 +280,18 @@ def result_1x2_correct(row) -> bool:
     return pred_result != "" and pred_result == real_result
 
 
-def scorer_correct(row) -> bool:
+def scorer_or_own_goal_correct(row) -> bool:
+    pred_og_1 = bool_value(row.get(PRED_OG_1))
+    pred_og_2 = bool_value(row.get(PRED_OG_2))
+    real_og_1 = bool_value(row.get(REAL_OG_1))
+    real_og_2 = bool_value(row.get(REAL_OG_2))
+
+    if pred_og_1 or pred_og_2:
+        return (pred_og_1 and real_og_1) or (pred_og_2 and real_og_2)
+
+    if real_og_1 or real_og_2:
+        return False
+
     pred_scorer = normalize_scorer(row.get("pred_scorer"))
     real_scorers = normalize_scorers_list(row.get("real_scorers"))
     if pred_scorer == "" and real_scorers == "":
@@ -280,7 +304,7 @@ def scorer_correct(row) -> bool:
 def score_row(row) -> pd.Series:
     exact = exact_score_correct(row)
     result = result_1x2_correct(row)
-    scorer = scorer_correct(row)
+    scorer = scorer_or_own_goal_correct(row)
     exact_points = POINTS_EXACT_SCORE if exact else 0
     result_points = POINTS_1X2 if result else 0
     scorer_points = POINTS_SCORER if scorer else 0
@@ -292,6 +316,15 @@ def score_row(row) -> pd.Series:
     })
 
 
+def scoring_columns() -> list[str]:
+    return [
+        "partecipant", "match_id", "datetime", "group", "home_team", "away_team",
+        "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2,
+        "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2,
+        "exact_score_points", "result_1x2_points", "scorer_points", "total_points",
+    ]
+
+
 def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
@@ -299,12 +332,13 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
         raise ValueError("matches.csv non trovato o vuoto.")
     if predictions.empty:
         raise ValueError("predictions.csv non trovato o vuoto.")
-    required_matches = {"match_id", "home_score", "away_score", "real_scorers"}
-    required_predictions = {"partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer"}
+    required_matches = {"match_id", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2}
+    required_predictions = {"partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2}
     if required_matches - set(matches.columns):
         raise ValueError(f"matches.csv manca colonne: {required_matches - set(matches.columns)}")
     if required_predictions - set(predictions.columns):
         raise ValueError(f"predictions.csv manca colonne: {required_predictions - set(predictions.columns)}")
+
     df = predictions.merge(matches, on="match_id", how="left", suffixes=("_pred", "_real"))
     df = df[
         df["home_score"].notna()
@@ -313,14 +347,12 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
         & (df["away_score"].astype(str).str.strip() != "")
     ].copy()
     if df.empty:
-        empty_points_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
-        empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
-        save_empty_csv_and_push(PLAYER_POINTS_PATH, empty_points_cols, f"Reset player_points - {commit_suffix()}")
-        save_empty_csv_and_push(STANDINGS_PATH, empty_standings_cols, f"Reset standings - {commit_suffix()}")
-        return pd.DataFrame(columns=empty_points_cols), pd.DataFrame(columns=empty_standings_cols)
+        save_empty_csv_and_push(PLAYER_POINTS_PATH, scoring_columns(), f"Reset player_points - {commit_suffix()}")
+        save_empty_csv_and_push(STANDINGS_PATH, ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"], f"Reset standings - {commit_suffix()}")
+        return pd.DataFrame(columns=scoring_columns()), pd.DataFrame(columns=["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"])
+
     player_points = pd.concat([df, df.apply(score_row, axis=1)], axis=1)
-    keep_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
-    player_points = player_points[[c for c in keep_cols if c in player_points.columns]]
+    player_points = player_points[[c for c in scoring_columns() if c in player_points.columns]]
     standings = player_points.groupby("partecipant", as_index=False).agg(
         total_points=("total_points", "sum"),
         exact_scores=("exact_score_points", lambda x: (x > 0).sum()),
@@ -392,20 +424,18 @@ def restore_backup(backup_path: Path) -> int:
 def reset_tournament() -> None:
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
     if not matches.empty:
-        for col in ["home_score", "away_score", "real_scorers"]:
+        for col in ["home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2]:
             if col in matches.columns:
-                matches[col] = ""
+                matches[col] = False if col in [REAL_OG_1, REAL_OG_2] else ""
         save_csv_and_push(matches, MATCHES_PATH, f"Reset matches results - {commit_suffix()}")
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
     if not predictions.empty:
-        for col in ["pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
+        for col in ["pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update", PRED_OG_1, PRED_OG_2]:
             if col in predictions.columns:
-                predictions[col] = ""
+                predictions[col] = False if col in [PRED_OG_1, PRED_OG_2] else ""
         save_csv_and_push(predictions, PREDICTIONS_PATH, f"Reset predictions - {commit_suffix()}")
-    empty_points_cols = ["partecipant", "match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "exact_score_points", "result_1x2_points", "scorer_points", "total_points"]
-    empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
-    save_empty_csv_and_push(PLAYER_POINTS_PATH, empty_points_cols, f"Reset player_points - {commit_suffix()}")
-    save_empty_csv_and_push(STANDINGS_PATH, empty_standings_cols, f"Reset standings - {commit_suffix()}")
+    save_empty_csv_and_push(PLAYER_POINTS_PATH, scoring_columns(), f"Reset player_points - {commit_suffix()}")
+    save_empty_csv_and_push(STANDINGS_PATH, ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"], f"Reset standings - {commit_suffix()}")
 
 
 def init_predictions() -> pd.DataFrame:
@@ -423,26 +453,36 @@ def init_predictions() -> pd.DataFrame:
     rows = []
     for partecipant in names:
         for match_id in matches["match_id"].tolist():
-            rows.append({"partecipant": partecipant, "match_id": int(match_id), "pred_home_score": "", "pred_away_score": "", "pred_result": "", "pred_scorer": "", "last_update": ""})
+            rows.append({
+                "partecipant": partecipant,
+                "match_id": int(match_id),
+                "pred_home_score": "",
+                "pred_away_score": "",
+                "pred_result": "",
+                "pred_scorer": "",
+                PRED_OG_1: False,
+                PRED_OG_2: False,
+                "last_update": "",
+            })
     new_df = pd.DataFrame(rows)
     if PREDICTIONS_PATH.exists():
         old_df = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
-        required = {"partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"}
-        if required.issubset(old_df.columns):
-            merged = new_df.merge(old_df[list(required)], on=["partecipant", "match_id"], how="left", suffixes=("", "_old"))
-            for col in ["pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]:
+        keep = ["partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"]
+        if {"partecipant", "match_id"}.issubset(old_df.columns):
+            merged = new_df.merge(old_df[[c for c in keep if c in old_df.columns]], on=["partecipant", "match_id"], how="left", suffixes=("", "_old"))
+            for col in ["pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"]:
                 old_col = f"{col}_old"
                 if old_col in merged.columns:
                     merged[col] = merged[old_col].combine_first(merged[col])
                     merged = merged.drop(columns=[old_col])
-            new_df = merged[["partecipant", "match_id", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"]]
+            new_df = merged[keep]
     new_df = normalize_predictions_df(new_df)
     save_csv_and_push(new_df, PREDICTIONS_PATH, f"Initialize predictions - {commit_suffix()}")
     return new_df
 
 
 def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
-    view = view.copy()
+    view = normalize_predictions_df(view)
     for col in ["pred_result", "pred_scorer", "last_update", "home_team", "away_team", "group", "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
@@ -453,7 +493,7 @@ def prepare_predictions_editor_view(view: pd.DataFrame) -> pd.DataFrame:
 
 
 def prepare_results_editor_view(view: pd.DataFrame) -> pd.DataFrame:
-    view = view.copy()
+    view = normalize_matches_df(view)
     for col in ["real_scorers", "home_team", "away_team", "group", "datetime"]:
         if col in view.columns:
             view[col] = view[col].fillna("").astype(str).replace("nan", "")
@@ -461,6 +501,14 @@ def prepare_results_editor_view(view: pd.DataFrame) -> pd.DataFrame:
         if col in view.columns:
             view[col] = view[col].apply(to_int_or_none)
     return view
+
+
+def save_current_matches(matches: pd.DataFrame) -> None:
+    save_csv_and_push(normalize_matches_df(matches), MATCHES_PATH, f"Update match schema/results - {commit_suffix()}")
+
+
+def save_current_predictions(predictions: pd.DataFrame) -> None:
+    save_csv_and_push(normalize_predictions_df(predictions), PREDICTIONS_PATH, f"Update prediction schema/data - {commit_suffix()}")
 
 
 ensure_data_dir()
@@ -483,7 +531,6 @@ with st.sidebar:
         st.success("GitHub persistence attiva")
     else:
         st.warning("GitHub persistence non configurata")
-
     admin_pages = ["📊 Dashboard", "📅 Calendario", "✏️ Pronostici", "⚽ Risultati reali", "🏆 Classifica", "🛠️ Amministrazione"]
     user_pages = ["📊 Dashboard", "📅 Calendario", "✏️ Pronostici", "🏆 Classifica"]
     page = st.radio("Sezione", admin_pages if is_admin else user_pages)
@@ -497,15 +544,12 @@ if page == "📊 Dashboard":
     with c1:
         st.metric("Partite", 0 if matches.empty else len(matches))
     with c2:
-        if matches.empty or "home_score" not in matches.columns or "away_score" not in matches.columns:
-            finished = 0
-        else:
-            finished = (matches["home_score"].notna() & matches["away_score"].notna() & (matches["home_score"].astype(str).str.strip() != "") & (matches["away_score"].astype(str).str.strip() != "")).sum()
+        finished = 0 if matches.empty else (matches["home_score"].astype(str).str.strip().ne("") & matches["away_score"].astype(str).str.strip().ne("")).sum()
         st.metric("Partite concluse", int(finished))
     with c3:
         st.metric("Partecipanti", 0 if predictions.empty or "partecipant" not in predictions.columns else predictions["partecipant"].nunique())
     with c4:
-        updated = 0 if predictions.empty or "last_update" not in predictions.columns else (predictions["last_update"].notna() & (predictions["last_update"].astype(str).str.strip() != "")).sum()
+        updated = 0 if predictions.empty or "last_update" not in predictions.columns else (predictions["last_update"].astype(str).str.strip().ne("")).sum()
         st.metric("Pronostici compilati", int(updated))
     st.divider()
     safe_display_df(standings, "Classifica non ancora calcolata.")
@@ -542,22 +586,23 @@ elif page == "✏️ Pronostici":
     elif "partecipant" not in predictions.columns:
         st.error("predictions.csv deve contenere la colonna partecipant.")
     else:
+        if not {PRED_OG_1, PRED_OG_2}.issubset(predictions.columns):
+            save_current_predictions(predictions)
+            st.info("Schema predictions aggiornato con le colonne autogol. Ricarico la pagina.")
+            st.rerun()
         partecipants = sorted(predictions["partecipant"].dropna().astype(str).unique())
-        if is_admin:
-            selected_partecipant = st.selectbox("Partecipante", partecipants)
-        else:
-            selected_partecipant = current_partecipant
-            st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
-            if selected_partecipant not in partecipants:
-                st.error("Il tuo utente non è associato a un partecipante presente in predictions.csv.")
-                st.stop()
+        selected_partecipant = current_partecipant
+        st.info(f"Stai inserendo i pronostici come: {selected_partecipant}")
+        if selected_partecipant not in partecipants:
+            st.error("Il tuo utente non è associato a un partecipante presente in predictions.csv.")
+            st.stop()
 
         df_user = predictions[predictions["partecipant"].astype(str) == selected_partecipant].copy()
         match_info_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team"] if c in matches.columns]
         view = df_user.merge(matches[match_info_cols], on="match_id", how="left")
-        editable_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", "last_update"] if c in view.columns]
+        editable_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2, "last_update"] if c in view.columns]
         view = prepare_predictions_editor_view(view)
-        st.caption("Compila gol casa, gol trasferta e marcatore. Il segno 1/X/2 viene calcolato automaticamente.")
+        st.caption("Se flagghi un autogol, il marcatore viene svuotato. Nei pronostici puoi selezionare al massimo una tra Autogol squadra 1 e Autogol squadra 2.")
         edited = st.data_editor(
             view[editable_cols],
             width="stretch",
@@ -566,7 +611,9 @@ elif page == "✏️ Pronostici":
             column_config={
                 "pred_home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                 "pred_away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
-                "pred_scorer": st.column_config.TextColumn("Marcatore", help="Nome del marcatore oppure OG. Lascia vuoto per nessun marcatore."),
+                "pred_scorer": st.column_config.TextColumn("Marcatore", help="Non usare OG/autogol: usa i flag dedicati."),
+                PRED_OG_1: st.column_config.CheckboxColumn("Autogol squadra 1"),
+                PRED_OG_2: st.column_config.CheckboxColumn("Autogol squadra 2"),
                 "pred_result": st.column_config.TextColumn("1/X/2"),
                 "last_update": st.column_config.TextColumn("Ultimo aggiornamento"),
             },
@@ -575,19 +622,35 @@ elif page == "✏️ Pronostici":
         if st.button("💾 Salva pronostici"):
             now = now_string()
             predictions = normalize_predictions_df(predictions)
+            both_flags_count = 0
+            scorer_cleared_count = 0
             for _, row in edited.iterrows():
                 match_id = int(row["match_id"])
                 mask = (predictions["partecipant"].astype(str) == selected_partecipant) & (predictions["match_id"].astype(int) == match_id)
                 pred_home = clean_value(row.get("pred_home_score", ""))
                 pred_away = clean_value(row.get("pred_away_score", ""))
+                og1 = bool_value(row.get(PRED_OG_1))
+                og2 = bool_value(row.get(PRED_OG_2))
+                if og1 and og2:
+                    og2 = False
+                    both_flags_count += 1
                 pred_scorer = normalize_scorer(row.get("pred_scorer", ""))
+                if og1 or og2:
+                    if pred_scorer != "":
+                        scorer_cleared_count += 1
+                    pred_scorer = ""
                 predictions.loc[mask, "pred_home_score"] = pred_home
                 predictions.loc[mask, "pred_away_score"] = pred_away
                 predictions.loc[mask, "pred_scorer"] = pred_scorer
+                predictions.loc[mask, PRED_OG_1] = og1
+                predictions.loc[mask, PRED_OG_2] = og2
                 predictions.loc[mask, "pred_result"] = calc_result(pred_home, pred_away)
-                predictions.loc[mask, "last_update"] = now if (pred_home or pred_away or pred_scorer) else ""
-            predictions = normalize_predictions_df(predictions)
-            save_csv_and_push(predictions, PREDICTIONS_PATH, f"Update predictions - {commit_suffix()}")
+                predictions.loc[mask, "last_update"] = now if (pred_home or pred_away or pred_scorer or og1 or og2) else ""
+            save_current_predictions(predictions)
+            if both_flags_count:
+                st.warning(f"In {both_flags_count} riga/e erano flaggate entrambe le squadre: ho mantenuto solo Autogol squadra 1.")
+            if scorer_cleared_count:
+                st.warning(f"In {scorer_cleared_count} riga/e il marcatore è stato svuotato perché era presente un flag autogol.")
             st.success("Pronostici salvati su GitHub.")
             st.rerun()
 
@@ -600,7 +663,11 @@ elif page == "⚽ Risultati reali":
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
-        edit_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers"] if c in matches.columns]
+        if not {REAL_OG_1, REAL_OG_2}.issubset(matches.columns):
+            save_current_matches(matches)
+            st.info("Schema matches aggiornato con le colonne autogol reali. Ricarico la pagina.")
+            st.rerun()
+        edit_cols = [c for c in ["match_id", "datetime", "group", "home_team", "away_team", "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2] if c in matches.columns]
         view = prepare_results_editor_view(matches[edit_cols])
         edited = st.data_editor(
             view,
@@ -610,13 +677,16 @@ elif page == "⚽ Risultati reali":
             column_config={
                 "home_score": st.column_config.NumberColumn("Gol Casa", min_value=0, step=1, format="%d"),
                 "away_score": st.column_config.NumberColumn("Gol Trasferta", min_value=0, step=1, format="%d"),
-                "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ; e usa OG per autogol."),
+                "real_scorers": st.column_config.TextColumn("Marcatori reali", help="Separali con ;. Non usare OG/autogol: usa i flag dedicati."),
+                REAL_OG_1: st.column_config.CheckboxColumn("Autogol squadra 1 reale"),
+                REAL_OG_2: st.column_config.CheckboxColumn("Autogol squadra 2 reale"),
             },
             key="real_results_editor",
         )
 
         def save_results_from_editor():
             current_matches = normalize_matches_df(matches)
+            scorer_cleared_count = 0
             for _, row in edited.iterrows():
                 match_id = int(row["match_id"])
                 mask = current_matches["match_id"].astype(int) == match_id
@@ -624,10 +694,16 @@ elif page == "⚽ Risultati reali":
                     current_matches.loc[mask, "home_score"] = clean_value(row.get("home_score", ""))
                 if "away_score" in current_matches.columns:
                     current_matches.loc[mask, "away_score"] = clean_value(row.get("away_score", ""))
-                if "real_scorers" in current_matches.columns:
-                    current_matches.loc[mask, "real_scorers"] = normalize_scorers_list(row.get("real_scorers", ""))
-            current_matches = normalize_matches_df(current_matches)
-            save_csv_and_push(current_matches, MATCHES_PATH, f"Update match results - {commit_suffix()}")
+                real_scorers_raw = clean_value(row.get("real_scorers", ""))
+                real_scorers = normalize_scorers_list(real_scorers_raw)
+                if real_scorers_raw != "" and real_scorers == "":
+                    scorer_cleared_count += 1
+                current_matches.loc[mask, "real_scorers"] = real_scorers
+                current_matches.loc[mask, REAL_OG_1] = bool_value(row.get(REAL_OG_1))
+                current_matches.loc[mask, REAL_OG_2] = bool_value(row.get(REAL_OG_2))
+            save_current_matches(current_matches)
+            if scorer_cleared_count:
+                st.warning(f"In {scorer_cleared_count} riga/e OG/autogol è stato rimosso dai marcatori: usa i flag Autogol squadra 1/2 reale.")
 
         col1, col2 = st.columns(2)
         with col1:

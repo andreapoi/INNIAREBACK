@@ -24,6 +24,7 @@ USERS_PATH = DATA_DIR / "users.csv"
 POINTS_EXACT_SCORE = 5
 POINTS_1X2 = 2
 POINTS_SCORER = 3.5
+POINTS_OWN_GOAL = 2
 
 STAGE_COL = "stato_avanzamento_torneo"
 MATCH_DAY_COL = "match_day"
@@ -380,33 +381,50 @@ def result_1x2_correct(row) -> bool:
     real_result = calc_result(row.get("home_score"), row.get("away_score"))
     return pred_result != "" and pred_result == real_result
 
+def scorer_correct(row) -> bool:
+    pred_scorer = normalize_scorer(row.get("pred_scorer"))
+    real_scorers = normalize_scorers_list(row.get("real_scorers"))
 
-def scorer_or_own_goal_correct(row) -> bool:
+    if pred_scorer == "" and real_scorers == "":
+        return True
+
+    if pred_scorer == "" or real_scorers == "":
+        return False
+
+    return pred_scorer.lower() in [
+        clean_value(x).lower()
+        for x in real_scorers.split(";")
+        if clean_value(x) != ""
+    ]
+
+
+def own_goal_correct(row) -> bool:
     pred_og_1 = bool_value(row.get(PRED_OG_1))
     pred_og_2 = bool_value(row.get(PRED_OG_2))
     real_og_1 = bool_value(row.get(REAL_OG_1))
     real_og_2 = bool_value(row.get(REAL_OG_2))
-    if pred_og_1 or pred_og_2:
-        return (pred_og_1 and real_og_1) or (pred_og_2 and real_og_2)
-    if real_og_1 or real_og_2:
-        return False
-    pred_scorer = normalize_scorer(row.get("pred_scorer"))
-    real_scorers = normalize_scorers_list(row.get("real_scorers"))
-    if pred_scorer == "" and real_scorers == "":
-        return True
-    if pred_scorer == "" or real_scorers == "":
-        return False
-    return pred_scorer.lower() in [clean_value(x).lower() for x in real_scorers.split(";") if clean_value(x) != ""]
+
+    return (pred_og_1 and real_og_1) or (pred_og_2 and real_og_2)
 
 
 def score_row(row) -> pd.Series:
     exact = exact_score_correct(row)
     result = result_1x2_correct(row)
-    scorer = scorer_or_own_goal_correct(row)
+    scorer = scorer_correct(row)
+    own_goal = own_goal_correct(row)
+
     exact_points = POINTS_EXACT_SCORE if exact else 0
     result_points = POINTS_1X2 if result else 0
     scorer_points = POINTS_SCORER if scorer else 0
-    return pd.Series({"exact_score_points": exact_points, "result_1x2_points": result_points, "scorer_points": scorer_points, "total_points": exact_points + result_points + scorer_points})
+    own_goal_points = POINTS_OWN_GOAL if own_goal else 0
+
+    return pd.Series({
+        "exact_score_points": exact_points,
+        "result_1x2_points": result_points,
+        "scorer_points": scorer_points,
+        "own_goal_points": own_goal_points,
+        "total_points": exact_points + result_points + scorer_points + own_goal_points,
+    })
 
 
 def scoring_columns() -> list[str]:
@@ -414,7 +432,7 @@ def scoring_columns() -> list[str]:
         "partecipant", "match_id", "datetime", "group", STAGE_COL, MATCH_DAY_COL, LOCK_TIMESTAMP_COL, "home_team", "away_team",
         "home_score", "away_score", "real_scorers", REAL_OG_1, REAL_OG_2,
         "pred_home_score", "pred_away_score", "pred_result", "pred_scorer", PRED_OG_1, PRED_OG_2,
-        "exact_score_points", "result_1x2_points", "scorer_points", "total_points",
+        "exact_score_points", "result_1x2_points", "scorer_points", "own_goal_points", "total_points",
     ]
 
 
@@ -435,19 +453,23 @@ def run_scoring() -> tuple[pd.DataFrame, pd.DataFrame]:
     df = df[df["home_score"].astype(str).str.strip().ne("") & df["away_score"].astype(str).str.strip().ne("")].copy()
     if df.empty:
         save_empty_csv_and_push(PLAYER_POINTS_PATH, scoring_columns(), f"Reset player_points - {commit_suffix()}")
-        empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"]
+        empty_standings_cols = ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "correct_own_goals", "matches_scored"]
         save_empty_csv_and_push(STANDINGS_PATH, empty_standings_cols, f"Reset standings - {commit_suffix()}")
         return pd.DataFrame(columns=scoring_columns()), pd.DataFrame(columns=empty_standings_cols)
     player_points = pd.concat([df, df.apply(score_row, axis=1)], axis=1)
     player_points = player_points[[c for c in scoring_columns() if c in player_points.columns]]
     standings = player_points.groupby("partecipant", as_index=False).agg(
-        total_points=("total_points", "sum"),
-        exact_scores=("exact_score_points", lambda x: (x > 0).sum()),
-        correct_1x2=("result_1x2_points", lambda x: (x > 0).sum()),
-        correct_scorers=("scorer_points", lambda x: (x > 0).sum()),
-        matches_scored=("match_id", "count"),
-    )
-    standings = standings.sort_values(by=["total_points", "exact_scores", "correct_scorers", "correct_1x2"], ascending=[False, False, False, False]).reset_index(drop=True)
+              total_points=("total_points", "sum"),
+              exact_scores=("exact_score_points", lambda x: (x > 0).sum()),
+              correct_1x2=("result_1x2_points", lambda x: (x > 0).sum()),
+              correct_scorers=("scorer_points", lambda x: (x > 0).sum()),
+              correct_own_goals=("own_goal_points", lambda x: (x > 0).sum()),
+              matches_scored=("match_id", "count"),
+              )
+    standings = standings.sort_values(
+               by=["total_points", "exact_scores", "correct_scorers", "correct_own_goals", "correct_1x2"],
+               ascending=[False, False, False, False, False],
+               ).reset_index(drop=True)
     standings.insert(0, "rank", range(1, len(standings) + 1))
     save_csv_and_push(player_points, PLAYER_POINTS_PATH, f"Update player_points - {commit_suffix()}")
     save_csv_and_push(standings, STANDINGS_PATH, f"Update standings - {commit_suffix()}")
@@ -522,7 +544,7 @@ def reset_tournament() -> None:
                 predictions[col] = False if col in [PRED_OG_1, PRED_OG_2] else ""
         save_csv_and_push(predictions, PREDICTIONS_PATH, f"Reset predictions - {commit_suffix()}")
     save_empty_csv_and_push(PLAYER_POINTS_PATH, scoring_columns(), f"Reset player_points - {commit_suffix()}")
-    save_empty_csv_and_push(STANDINGS_PATH, ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "matches_scored"], f"Reset standings - {commit_suffix()}")
+    save_empty_csv_and_push(STANDINGS_PATH, ["rank", "partecipant", "total_points", "exact_scores", "correct_1x2", "correct_scorers", "correct_own_goals", "matches_scored"], f"Reset standings - {commit_suffix()}")
 
 
 def init_predictions() -> pd.DataFrame:

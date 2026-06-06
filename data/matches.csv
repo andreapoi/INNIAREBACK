@@ -1,6 +1,6 @@
 match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,home_score,away_score,real_scorers,lock_timestamp,real_autogol_squadra_1,real_autogol_squadra_2
 1,Group Stage,A,1,2026-06-11 21:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,2026-06-11 21:00:00,False,True
-2,Group Stage,A,1,2026-06-12 04:00,South Korea,Czechia,,,,2026-06-11 21:00:00,False,False
+2,Group Stage,A,1,2026-06-12 04:00,South Korea,Czechia,0,0,,2026-06-11 21:00:00,False,False
 3,Group Stage,B,1,2026-06-12 21:00,Canada,Bosnia and Herzegovina,,,,2026-06-11 21:00:00,False,False
 4,Group Stage,D,1,2026-06-13 03:00,USA,Paraguay,,,,2026-06-11 21:00:00,False,False
 5,Group Stage,B,1,2026-06-13 21:00,Qatar,Switzerland,,,,2026-06-11 21:00:00,False,False

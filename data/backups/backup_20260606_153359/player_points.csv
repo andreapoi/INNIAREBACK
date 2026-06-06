@@ -1,0 +1,51 @@
+partecipant,match_id,datetime,group,stato_avanzamento_torneo,match_day,lock_timestamp,home_team,away_team,home_score,away_score,real_scorers,real_autogol_squadra_1,real_autogol_squadra_2,pred_home_score,pred_away_score,pred_result,pred_scorer,pred_autogol_squadra_1,pred_autogol_squadra_2,exact_score_points,result_1x2_points,scorer_points,own_goal_points,total_points
+Alessandro,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Alessandro,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Alessandro,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Alessandro,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Alessandro,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Andrea,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,2,0,1,,False,True,0.0,2.0,0.0,2.0,4.0
+Andrea,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,2,1,1,SON Heungmin,False,False,0.0,0.0,0.0,0.0,0.0
+Andrea,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,3,1,1,DAVID Jonathan,False,False,0.0,0.0,3.5,0.0,3.5
+Andrea,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,1,0,1,BALOGUN Folarin,False,False,5.0,2.0,0.0,0.0,7.0
+Andrea,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,0,0,X,,False,False,0.0,0.0,0.0,0.0,0.0
+Edoardo,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Edoardo,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Edoardo,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Edoardo,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Edoardo,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Ferdinando,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Ferdinando,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Ferdinando,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Ferdinando,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Ferdinando,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Gabriele,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Gabriele,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Gabriele,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Gabriele,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Gabriele,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Peppe,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Peppe,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Peppe,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Peppe,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Peppe,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sca.,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sca.,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Salvatore Sca.,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sca.,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sca.,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sch.,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sch.,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Salvatore Sch.,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sch.,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sch.,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Simone,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Simone,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Simone,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Simone,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Simone,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Vins,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,1,CHAVEZ Luis;GOSS Ricardo,False,True,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Vins,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,0,0,,False,False,,,,,False,False,0.0,0.0,3.5,0.0,3.5
+Vins,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Vins,4,2026-06-13 03:00,D,Group Stage,1,2026-06-11 21:00:00,USA,Paraguay,1,0,BRADY Chris,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0
+Vins,5,2026-06-13 21:00,B,Group Stage,1,2026-06-11 21:00:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,False,False,,,,,False,False,0.0,0.0,0.0,0.0,0.0

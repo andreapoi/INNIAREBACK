@@ -1,11 +1,11 @@
 rank,partecipant,total_points,exact_scores,correct_1x2,correct_scorers,correct_own_goals,matches_scored
-1,Andrea,4,0,1,0,1,1
-2,Alessandro,0,0,0,0,0,1
-3,Edoardo,0,0,0,0,0,1
-4,Ferdinando,0,0,0,0,0,1
-5,Gabriele,0,0,0,0,0,1
-6,Peppe,0,0,0,0,0,1
-7,Salvatore Sca.,0,0,0,0,0,1
-8,Salvatore Sch.,0,0,0,0,0,1
-9,Simone,0,0,0,0,0,1
-10,Vins,0,0,0,0,0,1
+1,Andrea,4.0,0,1,0,1,2
+2,Alessandro,3.5,0,0,1,0,2
+3,Edoardo,3.5,0,0,1,0,2
+4,Ferdinando,3.5,0,0,1,0,2
+5,Gabriele,3.5,0,0,1,0,2
+6,Peppe,3.5,0,0,1,0,2
+7,Salvatore Sca.,3.5,0,0,1,0,2
+8,Salvatore Sch.,3.5,0,0,1,0,2
+9,Simone,3.5,0,0,1,0,2
+10,Vins,3.5,0,0,1,0,2

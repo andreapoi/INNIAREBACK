@@ -3,7 +3,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 2,Group Stage,A,1,2026-06-12 04:00,South Korea,Czechia,0,0,,2026-06-11 21:00:00,False,False
 3,Group Stage,B,1,2026-06-12 21:00,Canada,Bosnia and Herzegovina,1,2,DAVID Jonathan;BASIC Ivan;CELIK Nidal,2026-06-11 21:00:00,False,False
 4,Group Stage,D,1,2026-06-13 03:00,USA,Paraguay,1,0,BRADY Chris,2026-06-11 21:00:00,False,False
-5,Group Stage,B,1,2026-06-13 21:00,Qatar,Switzerland,,,COEMERT Eray;FASSNACHT Christian,2026-06-11 21:00:00,False,False
+5,Group Stage,B,1,2026-06-13 21:00,Qatar,Switzerland,0,2,COEMERT Eray;FASSNACHT Christian,2026-06-11 21:00:00,False,False
 6,Group Stage,C,1,2026-06-14 00:00,Brazil,Morocco,,,,2026-06-11 21:00:00,False,False
 7,Group Stage,C,1,2026-06-14 03:00,Haiti,Scotland,,,,2026-06-11 21:00:00,False,False
 8,Group Stage,D,1,2026-06-14 06:00,Australia,Türkiye,,,,2026-06-11 21:00:00,False,False

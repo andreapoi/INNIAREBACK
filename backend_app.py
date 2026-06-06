@@ -17,6 +17,7 @@ MATCHES_PATH = DATA_DIR / "matches.csv"
 PREDICTIONS_PATH = DATA_DIR / "predictions.csv"
 PARTECIPANTS_PATH = DATA_DIR / "partecipants.csv"
 TEAM_MAPPING_PATH = DATA_DIR / "team_mapping.csv"
+MD_PLAYERS_PATH = DATA_DIR / "md_players.csv"
 STANDINGS_PATH = DATA_DIR / "standings.csv"
 PLAYER_POINTS_PATH = DATA_DIR / "player_points.csv"
 USERS_PATH = DATA_DIR / "users.csv"
@@ -34,7 +35,7 @@ PRED_OG_2 = "pred_autogol_squadra_2"
 REAL_OG_1 = "real_autogol_squadra_1"
 REAL_OG_2 = "real_autogol_squadra_2"
 
-CSV_FILES = [MATCHES_PATH, PREDICTIONS_PATH, PARTECIPANTS_PATH, TEAM_MAPPING_PATH, STANDINGS_PATH, PLAYER_POINTS_PATH, USERS_PATH]
+CSV_FILES = [MATCHES_PATH, PREDICTIONS_PATH, PARTECIPANTS_PATH, TEAM_MAPPING_PATH, MD_PLAYERS_PATH, STANDINGS_PATH, PLAYER_POINTS_PATH, USERS_PATH]
 
 st.set_page_config(page_title="INNIAREBACK Backend", page_icon="⚽", layout="wide")
 
@@ -268,6 +269,80 @@ def normalize_scorers_list(value) -> str:
         if scorer != "":
             scorers.append(scorer)
     return ";".join(scorers)
+
+def read_md_players() -> pd.DataFrame:
+    players = read_csv(MD_PLAYERS_PATH)
+
+    required_cols = {"team", "player_id", "player_name"}
+    if players.empty or not required_cols.issubset(players.columns):
+        return pd.DataFrame(columns=["team", "player_id", "player_name"])
+
+    players = players[["team", "player_id", "player_name"]].copy()
+    players["team"] = players["team"].apply(clean_value)
+    players["player_id"] = players["player_id"].apply(clean_value)
+    players["player_name"] = players["player_name"].apply(clean_value)
+
+    players = players[
+        players["team"].ne("")
+        & players["player_id"].ne("")
+        & players["player_name"].ne("")
+    ].copy()
+
+    return players.sort_values(["team", "player_name"]).reset_index(drop=True)
+
+
+def get_match_teams(matches: pd.DataFrame, match_id) -> tuple[str, str]:
+    if matches.empty or "match_id" not in matches.columns:
+        return "", ""
+
+    row = matches[matches["match_id"].astype(int) == int(match_id)]
+
+    if row.empty:
+        return "", ""
+
+    home_team = clean_value(row.iloc[0].get("home_team", ""))
+    away_team = clean_value(row.iloc[0].get("away_team", ""))
+
+    return home_team, away_team
+
+
+def player_options_for_team(md_players: pd.DataFrame, team: str) -> list[str]:
+    team = clean_value(team)
+
+    if md_players.empty or team == "":
+        return []
+
+    options = (
+        md_players[md_players["team"] == team]["player_name"]
+        .dropna()
+        .astype(str)
+        .str.strip()
+        .replace("", pd.NA)
+        .dropna()
+        .sort_values()
+        .tolist()
+    )
+
+    return options
+
+
+def append_scorer_to_list(current_scorers: str, new_scorer: str) -> str:
+    current_scorers = normalize_scorers_list(current_scorers)
+    new_scorer = normalize_scorer(new_scorer)
+
+    if new_scorer == "":
+        return current_scorers
+
+    existing = [
+        clean_value(x)
+        for x in current_scorers.split(";")
+        if clean_value(x) != ""
+    ]
+
+    if new_scorer not in existing:
+        existing.append(new_scorer)
+
+    return ";".join(existing)
 
 
 def normalize_predictions_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -742,6 +817,7 @@ elif page == "✏️ Pronostici":
     st.header("✏️ Inserimento pronostici")
     predictions = normalize_predictions_df(read_csv(PREDICTIONS_PATH))
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
+    md_players = read_md_players()
     if predictions.empty:
         st.warning("predictions.csv non trovato o vuoto.")
         if is_admin and st.button("Inizializza predictions.csv"):
@@ -785,6 +861,80 @@ elif page == "✏️ Pronostici":
         locked_view = add_team_flags(locked_view)
 
         st.caption("Il lock_timestamp è calcolato per match_day: tutte le righe con lo stesso match_day si bloccano all'inizio della prima partita di quel match day.")
+        if md_players.empty:
+    st.warning("md_players.csv non trovato o non valido: il marcatore resta inseribile manualmente.")
+else:
+    with st.expander("🎯 Selezione marcatore da rosa", expanded=False):
+        st.caption("Seleziona partita, squadra e giocatore. La scelta aggiorna il campo pred_scorer del pronostico.")
+
+        available_matches = unlocked_view.copy()
+
+        if available_matches.empty:
+            st.info("Nessuna partita modificabile per il drilldown marcatori.")
+        else:
+            available_matches["match_label"] = available_matches.apply(
+                lambda r: f'{int(r["match_id"])} - {clean_value(r.get("home_team", ""))} vs {clean_value(r.get("away_team", ""))}',
+                axis=1,
+            )
+
+            match_labels = available_matches["match_label"].tolist()
+            selected_match_label = st.selectbox(
+                "Partita",
+                match_labels,
+                key=f"pred_scorer_match_{selected_partecipant}",
+            )
+
+            selected_match_id = int(selected_match_label.split(" - ")[0])
+            home_team, away_team = get_match_teams(matches, selected_match_id)
+
+            team_choice = st.radio(
+                "Squadra",
+                [home_team, away_team],
+                horizontal=True,
+                key=f"pred_scorer_team_{selected_partecipant}_{selected_match_id}",
+            )
+
+            player_options = ["-- Nessun marcatore --"] + player_options_for_team(md_players, team_choice)
+
+            selected_player = st.selectbox(
+                "Marcatore",
+                player_options,
+                key=f"pred_scorer_player_{selected_partecipant}_{selected_match_id}",
+            )
+
+            c1, c2 = st.columns(2)
+
+            with c1:
+                if st.button("✅ Applica marcatore al pronostico", key=f"apply_pred_scorer_{selected_partecipant}_{selected_match_id}"):
+                    mask = (
+                        (predictions["partecipant"].astype(str) == selected_partecipant)
+                        & (predictions["match_id"].astype(int) == selected_match_id)
+                    )
+
+                    if selected_player == "-- Nessun marcatore --":
+                        predictions.loc[mask, "pred_scorer"] = ""
+                    else:
+                        predictions.loc[mask, "pred_scorer"] = selected_player
+                        predictions.loc[mask, PRED_OG_1] = False
+                        predictions.loc[mask, PRED_OG_2] = False
+
+                    predictions.loc[mask, "last_update"] = now_string()
+                    save_current_predictions(predictions)
+                    st.success("Marcatore pronostico aggiornato.")
+                    st.rerun()
+
+            with c2:
+                if st.button("🧹 Svuota marcatore", key=f"clear_pred_scorer_{selected_partecipant}_{selected_match_id}"):
+                    mask = (
+                        (predictions["partecipant"].astype(str) == selected_partecipant)
+                        & (predictions["match_id"].astype(int) == selected_match_id)
+                    )
+
+                    predictions.loc[mask, "pred_scorer"] = ""
+                    predictions.loc[mask, "last_update"] = now_string()
+                    save_current_predictions(predictions)
+                    st.success("Marcatore pronostico svuotato.")
+                    st.rerun()
         if not unlocked_view.empty:
             edited = st.data_editor(
                 unlocked_view[[c for c in editable_cols if c in unlocked_view.columns]],
@@ -864,6 +1014,7 @@ elif page == "⚽ Risultati reali":
         st.stop()
     st.header("⚽ Inserimento risultati reali")
     matches = normalize_matches_df(read_csv(MATCHES_PATH))
+    md_players = read_md_players()
     if matches.empty:
         st.warning("matches.csv non trovato o vuoto.")
     else:
@@ -893,6 +1044,74 @@ elif page == "⚽ Risultati reali":
             },
             key="real_results_editor",
         )
+
+        if md_players.empty:
+            st.warning("md_players.csv non trovato o non valido: i marcatori reali restano inseribili manualmente.")
+        else:
+            with st.expander("⚽ Inserimento marcatori reali da rosa", expanded=False):
+            st.caption("Seleziona partita, squadra e giocatore. Puoi aggiungere più marcatori: verranno separati con ;")
+
+            scorer_matches = view.copy()
+
+        if scorer_matches.empty:
+            st.info("Nessuna partita disponibile per il drilldown marcatori reali.")
+        else:
+            scorer_matches["match_label"] = scorer_matches.apply(
+                lambda r: f'{int(r["match_id"])} - {clean_value(r.get("home_team", ""))} vs {clean_value(r.get("away_team", ""))}',
+                axis=1,
+            )
+
+            match_labels = scorer_matches["match_label"].tolist()
+
+            selected_real_match_label = st.selectbox(
+                "Partita",
+                match_labels,
+                key="real_scorer_match",
+            )
+
+            selected_real_match_id = int(selected_real_match_label.split(" - ")[0])
+            home_team, away_team = get_match_teams(matches, selected_real_match_id)
+
+            real_team_choice = st.radio(
+                "Squadra marcatrice",
+                [home_team, away_team],
+                horizontal=True,
+                key=f"real_scorer_team_{selected_real_match_id}",
+            )
+
+            real_player_options = ["-- Nessun marcatore --"] + player_options_for_team(md_players, real_team_choice)
+
+            selected_real_player = st.selectbox(
+                "Marcatore reale",
+                real_player_options,
+                key=f"real_scorer_player_{selected_real_match_id}",
+            )
+
+            c1, c2 = st.columns(2)
+
+            with c1:
+                if st.button("➕ Aggiungi marcatore reale", key=f"add_real_scorer_{selected_real_match_id}"):
+                    current_matches = normalize_matches_df(matches)
+                    mask = current_matches["match_id"].astype(int) == selected_real_match_id
+
+                    if selected_real_player != "-- Nessun marcatore --":
+                        current_value = current_matches.loc[mask, "real_scorers"].iloc[0]
+                        new_value = append_scorer_to_list(current_value, selected_real_player)
+                        current_matches.loc[mask, "real_scorers"] = new_value
+                        save_current_matches(current_matches)
+                        st.success("Marcatore reale aggiunto.")
+                        st.rerun()
+                    else:
+                        st.info("Nessun marcatore selezionato.")
+
+            with c2:
+                if st.button("🧹 Svuota marcatori reali partita", key=f"clear_real_scorers_{selected_real_match_id}"):
+                    current_matches = normalize_matches_df(matches)
+                    mask = current_matches["match_id"].astype(int) == selected_real_match_id
+                    current_matches.loc[mask, "real_scorers"] = ""
+                    save_current_matches(current_matches)
+                    st.success("Marcatori reali svuotati per la partita selezionata.")
+                    st.rerun()
 
         def save_results_from_editor():
             current_matches = normalize_matches_df(matches)

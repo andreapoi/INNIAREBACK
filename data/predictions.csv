@@ -359,30 +359,30 @@ Gabriele,69,,,,,False,False,
 Gabriele,70,,,,,False,False,
 Gabriele,71,,,,,False,False,
 Gabriele,72,,,,,False,False,
-Peppe,1,,,,VARGAS Obed,False,False,2026-06-07 17:53:17
-Peppe,2,,,,BAE Junho,False,False,2026-06-07 17:53:38
-Peppe,3,,,,KONE Ismael,False,False,2026-06-07 17:53:56
-Peppe,4,,,,,False,False,
-Peppe,5,,,,NDOYE Dan,False,False,2026-06-07 17:54:38
-Peppe,6,,,,VINICIUS JUNIOR,False,False,2026-06-07 17:55:00
-Peppe,7,,,,ADAMS Che,False,False,2026-06-07 17:55:24
-Peppe,8,,,,GULER Arda,False,False,2026-06-07 17:55:44
-Peppe,9,,,,WIRTZ Florian,False,False,2026-06-07 17:56:06
-Peppe,10,,,,MALEN Donyell,False,False,2026-06-07 17:56:18
-Peppe,11,,,,VALENCIA Enner,False,False,2026-06-07 17:58:20
-Peppe,12,,,,GYOKERES Viktor,False,False,2026-06-07 17:58:32
-Peppe,13,,,,WILLIAMS Nico,False,False,2026-06-07 17:58:49
-Peppe,14,,,,DE KETELAERE Charles,False,False,2026-06-07 17:59:00
-Peppe,15,,,,VALVERDE Federico,False,False,2026-06-07 17:59:14
-Peppe,16,,,,,False,False,
-Peppe,17,,,,MBAPPE Kylian,False,False,2026-06-07 17:59:42
-Peppe,18,,,,HAALAND Erling,False,False,2026-06-07 17:59:55
-Peppe,19,,,,MARTINEZ Lautaro,False,False,2026-06-07 18:00:13
-Peppe,20,,,,SABITZER Marcel,False,False,2026-06-07 18:00:28
-Peppe,21,,,,CRISTIANO RONALDO,False,False,2026-06-07 18:00:40
-Peppe,22,,,,KANE Harry,False,False,2026-06-07 18:00:49
-Peppe,23,,,,AYEW Jordan,False,False,2026-06-07 18:01:06
-Peppe,24,,,,DIAZ Luis,False,False,2026-06-07 18:01:21
+Peppe,1,1,0,1,VARGAS Obed,False,False,2026-06-07 18:10:08
+Peppe,2,1,1,X,BAE Junho,False,False,2026-06-07 18:10:08
+Peppe,3,1,1,X,KONE Ismael,False,False,2026-06-07 18:10:08
+Peppe,4,1,1,X,,False,True,2026-06-07 18:10:08
+Peppe,5,0,2,2,NDOYE Dan,False,False,2026-06-07 18:10:08
+Peppe,6,3,1,1,VINICIUS JUNIOR,False,False,2026-06-07 18:10:08
+Peppe,7,0,2,2,ADAMS Che,False,False,2026-06-07 18:10:08
+Peppe,8,1,2,2,GULER Arda,False,False,2026-06-07 18:10:08
+Peppe,9,5,0,1,WIRTZ Florian,False,False,2026-06-07 18:10:08
+Peppe,10,1,0,1,MALEN Donyell,False,False,2026-06-07 18:10:08
+Peppe,11,1,1,X,VALENCIA Enner,False,False,2026-06-07 18:10:08
+Peppe,12,1,0,1,GYOKERES Viktor,False,False,2026-06-07 18:10:08
+Peppe,13,6,0,1,WILLIAMS Nico,False,False,2026-06-07 18:10:08
+Peppe,14,3,0,1,DE KETELAERE Charles,False,False,2026-06-07 18:10:08
+Peppe,15,0,1,2,VALVERDE Federico,False,False,2026-06-07 18:10:08
+Peppe,16,0,0,X,,False,False,2026-06-07 18:10:08
+Peppe,17,4,0,1,MBAPPE Kylian,False,False,2026-06-07 18:10:08
+Peppe,18,0,3,2,HAALAND Erling,False,False,2026-06-07 18:10:08
+Peppe,19,3,0,1,MARTINEZ Lautaro,False,False,2026-06-07 18:10:08
+Peppe,20,2,0,1,SABITZER Marcel,False,False,2026-06-07 18:10:08
+Peppe,21,3,0,1,CRISTIANO RONALDO,False,False,2026-06-07 18:10:08
+Peppe,22,2,2,X,KANE Harry,False,False,2026-06-07 18:10:08
+Peppe,23,2,0,1,AYEW Jordan,False,False,2026-06-07 18:10:08
+Peppe,24,0,1,2,DIAZ Luis,False,False,2026-06-07 18:10:08
 Peppe,25,,,,,False,False,
 Peppe,26,,,,,False,False,
 Peppe,27,,,,,False,False,

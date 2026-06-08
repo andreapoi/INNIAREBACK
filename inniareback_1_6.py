@@ -896,7 +896,7 @@ current_user = login_box(USERS_PATH)
 is_admin = user_is_admin(current_user)
 current_partecipant = clean_value(current_user.get("partecipant", "")) if current_user else ""
 
-st.title("⚙️ INNIAREBACK - Backend Mondiali 2026")
+st.title("⚙️ INNIAREBACK - Mondiali 2026")
 
 with st.sidebar:
     st.title("Menu")

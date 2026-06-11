@@ -1,28 +1,28 @@
 partecipant,match_id,pred_home_score,pred_away_score,pred_result,pred_scorer,pred_autogol_squadra_1,pred_autogol_squadra_2,last_update
-Alessandro,1,,,,JIMENEZ Raul,False,False,2026-06-11 06:47:47
-Alessandro,2,,,,SCHICK Patrik,False,False,2026-06-11 06:48:39
-Alessandro,3,,,,DZEKO Edin,False,False,2026-06-11 06:49:24
-Alessandro,4,,,,SANABRIA Antonio,False,False,2026-06-11 06:49:56
-Alessandro,5,,,,EMBOLO Breel,False,False,2026-06-11 06:50:57
-Alessandro,6,,,,RAPHINHA,False,False,2026-06-11 06:51:20
-Alessandro,7,,,,McTOMINAY Scott,False,False,2026-06-11 06:51:46
-Alessandro,8,,,,UZUN Can,False,False,2026-06-11 06:52:37
-Alessandro,9,,,,WIRTZ Florian,False,False,2026-06-11 06:53:08
-Alessandro,10,,,,MALEN Donyell,False,False,2026-06-11 06:54:58
-Alessandro,11,,,,PLATA Gonzalo,False,False,2026-06-11 06:55:21
-Alessandro,12,,,,ISAK Alexander,False,False,2026-06-11 06:55:58
-Alessandro,13,,,,WILLIAMS Nico,False,False,2026-06-11 06:56:30
-Alessandro,14,,,,DE KETELAERE Charles,False,False,2026-06-11 06:57:05
-Alessandro,15,,,,NUNEZ Darwin,False,False,2026-06-11 06:57:54
-Alessandro,16,,,,WOOD Chris,False,False,2026-06-11 06:59:58
-Alessandro,17,,,,OLISE Michael,False,False,2026-06-11 07:00:55
-Alessandro,18,,,,HAALAND Erling,False,False,2026-06-11 07:01:40
-Alessandro,19,,,,MARTINEZ Lautaro,False,False,2026-06-11 07:02:09
-Alessandro,20,,,,ARNAUTOVIC Marko,False,False,2026-06-11 07:02:34
-Alessandro,21,,,,FRANCISCO CONCEICAO,False,False,2026-06-11 07:04:03
-Alessandro,22,,,,BELLINGHAM Jude,False,False,2026-06-11 07:04:18
-Alessandro,23,,,,MURILLO Amir,False,False,2026-06-11 07:04:43
-Alessandro,24,,,,SUAREZ Luis,False,False,2026-06-11 07:05:17
+Alessandro,1,2,0,1,JIMENEZ Raul,False,False,2026-06-11 07:35:12
+Alessandro,2,0,1,2,SCHICK Patrik,False,False,2026-06-11 07:35:12
+Alessandro,3,1,1,X,DZEKO Edin,False,False,2026-06-11 07:35:12
+Alessandro,4,1,1,X,SANABRIA Antonio,False,False,2026-06-11 07:35:12
+Alessandro,5,0,1,2,EMBOLO Breel,False,False,2026-06-11 07:35:12
+Alessandro,6,3,2,1,RAPHINHA,False,False,2026-06-11 07:35:12
+Alessandro,7,0,2,2,McTOMINAY Scott,False,False,2026-06-11 07:35:12
+Alessandro,8,1,1,X,UZUN Can,False,False,2026-06-11 07:35:12
+Alessandro,9,3,0,1,WIRTZ Florian,False,False,2026-06-11 07:35:12
+Alessandro,10,2,0,1,MALEN Donyell,False,False,2026-06-11 07:35:12
+Alessandro,11,1,1,X,PLATA Gonzalo,False,False,2026-06-11 07:35:12
+Alessandro,12,2,2,X,ISAK Alexander,False,False,2026-06-11 07:35:12
+Alessandro,13,2,0,1,WILLIAMS Nico,False,False,2026-06-11 07:35:12
+Alessandro,14,2,2,X,DE KETELAERE Charles,False,False,2026-06-11 07:35:12
+Alessandro,15,0,1,2,NUNEZ Darwin,False,False,2026-06-11 07:35:12
+Alessandro,16,0,1,2,WOOD Chris,False,False,2026-06-11 07:35:12
+Alessandro,17,2,1,1,OLISE Michael,False,False,2026-06-11 07:35:12
+Alessandro,18,0,3,2,HAALAND Erling,False,False,2026-06-11 07:35:12
+Alessandro,19,2,1,1,MARTINEZ Lautaro,False,False,2026-06-11 07:35:12
+Alessandro,20,2,0,1,ARNAUTOVIC Marko,False,False,2026-06-11 07:35:12
+Alessandro,21,1,1,X,FRANCISCO CONCEICAO,False,False,2026-06-11 07:35:12
+Alessandro,22,2,2,X,BELLINGHAM Jude,False,False,2026-06-11 07:35:12
+Alessandro,23,1,1,X,MURILLO Amir,False,False,2026-06-11 07:35:12
+Alessandro,24,0,1,2,SUAREZ Luis,False,False,2026-06-11 07:35:12
 Alessandro,25,,,,,False,False,
 Alessandro,26,,,,,False,False,
 Alessandro,27,,,,,False,False,

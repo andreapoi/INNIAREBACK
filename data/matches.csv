@@ -4,7 +4,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 3,Group Stage,B,1,2026-06-12 21:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,2026-06-11 21:00:00,False,False
 4,Group Stage,D,1,2026-06-13 03:00,USA,Paraguay,4,1,BALOGUN Folarin;REYNA Giovanni;MAURICIO,2026-06-11 21:00:00,False,True
 5,Group Stage,B,1,2026-06-13 21:00,Qatar,Switzerland,1,1,BOUALEM KHOUKHI;EMBOLO Breel,2026-06-11 21:00:00,False,False
-6,Group Stage,C,1,2026-06-14 00:00,Brazil,Morocco,,,VINICIUS JUNIOR;SAIBARI Ismael,2026-06-11 21:00:00,False,False
+6,Group Stage,C,1,2026-06-14 00:00,Brazil,Morocco,1,1,VINICIUS JUNIOR;SAIBARI Ismael,2026-06-11 21:00:00,False,False
 7,Group Stage,C,1,2026-06-14 03:00,Haiti,Scotland,,,,2026-06-11 21:00:00,False,False
 8,Group Stage,D,1,2026-06-14 06:00,Australia,Türkiye,,,,2026-06-11 21:00:00,False,False
 9,Group Stage,E,1,2026-06-14 19:00,Germany,Curaçao,,,,2026-06-11 21:00:00,False,False

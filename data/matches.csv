@@ -10,7 +10,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 9,Group Stage,E,1,2026-06-14 19:00,Germany,Curaçao,7,1,BROWN Nathaniel;HAVERTZ Kai;MUSIALA Jamal;NMECHA Felix;SCHLOTTERBECK Nico;UNDAV Deniz;COMENENCIA Livano,2026-06-11 21:00:00,False,False
 10,Group Stage,F,1,2026-06-14 22:00,Netherlands,Japan,2,2,SUMMERVILLE Crysencio;VAN DIJK Virgil;KAMADA Daichi;NAKAMURA Keito,2026-06-11 21:00:00,False,False
 11,Group Stage,E,1,2026-06-15 01:00,Côte d'Ivoire,Ecuador,1,0,DIALLO Amad,2026-06-11 21:00:00,False,False
-12,Group Stage,F,1,2026-06-15 04:00,Sweden,Tunisia,,,AYARI Yasin;GYOKERES Viktor;ISAK Alexander,2026-06-11 21:00:00,False,False
+12,Group Stage,F,1,2026-06-15 04:00,Sweden,Tunisia,,,AYARI Yasin;GYOKERES Viktor;ISAK Alexander;SVANBERG Mattias,2026-06-11 21:00:00,False,False
 13,Group Stage,H,1,2026-06-15 18:00,Spain,Cabo Verde,,,,2026-06-11 21:00:00,False,False
 14,Group Stage,G,1,2026-06-15 21:00,Belgium,Egypt,,,,2026-06-11 21:00:00,False,False
 15,Group Stage,H,1,2026-06-16 00:00,Saudi Arabia,Uruguay,,,,2026-06-11 21:00:00,False,False

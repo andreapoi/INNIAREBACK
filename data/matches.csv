@@ -13,7 +13,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 12,Group Stage,F,1,2026-06-15 04:00,Sweden,Tunisia,5,1,AYARI Yasin;GYOKERES Viktor;ISAK Alexander;SVANBERG Mattias;REKIK Omar,2026-06-11 21:00:00,False,False
 13,Group Stage,H,1,2026-06-15 18:00,Spain,Cabo Verde,0,0,,2026-06-11 21:00:00,False,False
 14,Group Stage,G,1,2026-06-15 21:00,Belgium,Egypt,1,1,EMAM ASHOUR,2026-06-11 21:00:00,False,True
-15,Group Stage,H,1,2026-06-16 00:00,Saudi Arabia,Uruguay,,,,2026-06-11 21:00:00,False,False
+15,Group Stage,H,1,2026-06-16 00:00,Saudi Arabia,Uruguay,,,ABDULELAH ALAMRI,2026-06-11 21:00:00,False,False
 16,Group Stage,G,1,2026-06-16 03:00,Iran,New Zealand,,,,2026-06-11 21:00:00,False,False
 17,Group Stage,I,1,2026-06-16 21:00,France,Senegal,,,,2026-06-11 21:00:00,False,False
 18,Group Stage,I,1,2026-06-17 00:00,Iraq,Norway,,,,2026-06-11 21:00:00,False,False

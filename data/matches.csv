@@ -15,7 +15,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 14,Group Stage,G,1,2026-06-15 21:00,Belgium,Egypt,1,1,EMAM ASHOUR,2026-06-11 21:00:00,False,True
 15,Group Stage,H,1,2026-06-16 00:00,Saudi Arabia,Uruguay,1,1,ABDULELAH ALAMRI;ARAUJO Maxi,2026-06-11 21:00:00,False,False
 16,Group Stage,G,1,2026-06-16 03:00,Iran,New Zealand,2,2,MOHEBBI Mohammad;REZAEIAN Ramin;JUST Elijah,2026-06-11 21:00:00,False,False
-17,Group Stage,I,1,2026-06-16 21:00,France,Senegal,,,MBAPPE Kylian;BARCOLA Bradley;MBAYE Ibrahim,2026-06-11 21:00:00,False,False
+17,Group Stage,I,1,2026-06-16 21:00,France,Senegal,3,1,MBAPPE Kylian;BARCOLA Bradley;MBAYE Ibrahim,2026-06-11 21:00:00,False,False
 18,Group Stage,I,1,2026-06-17 00:00,Iraq,Norway,,,,2026-06-11 21:00:00,False,False
 19,Group Stage,J,1,2026-06-17 03:00,Argentina,Algeria,,,,2026-06-11 21:00:00,False,False
 20,Group Stage,J,1,2026-06-17 06:00,Austria,Jordan,,,,2026-06-11 21:00:00,False,False

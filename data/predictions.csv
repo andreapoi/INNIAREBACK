@@ -383,30 +383,30 @@ Peppe,21,3,0,1,CRISTIANO RONALDO,False,False,2026-06-11 20:01:50
 Peppe,22,2,2,X,KANE Harry,False,False,2026-06-11 20:01:50
 Peppe,23,2,0,1,AYEW Jordan,False,False,2026-06-11 20:01:50
 Peppe,24,0,1,2,DIAZ Luis,False,False,2026-06-11 20:01:50
-Peppe,25,,,,SCHICK Patrik,False,False,2026-06-17 13:35:33
-Peppe,26,,,,EMBOLO Breel,False,False,2026-06-17 13:35:46
-Peppe,27,,,,DAVID Jonathan,False,False,2026-06-17 13:35:58
-Peppe,28,,,,JIMENEZ Raul,False,False,2026-06-17 13:39:16
-Peppe,29,,,,PULISIC Christian,False,False,2026-06-17 13:36:29
-Peppe,30,,,,DIAZ Brahim,False,False,2026-06-17 13:37:08
-Peppe,31,,,,VINICIUS JUNIOR,False,False,2026-06-17 13:37:43
-Peppe,32,,,,YILDIZ Kenan,False,False,2026-06-17 13:38:11
-Peppe,33,,,,GAKPO Cody,False,False,2026-06-17 13:38:31
-Peppe,34,,,,HAVERTZ Kai,False,False,2026-06-17 13:38:48
-Peppe,35,,,,,False,False,
-Peppe,36,,,,NAKAMURA Keito,False,False,2026-06-17 13:41:21
-Peppe,37,,,,YAMAL Lamine,False,False,2026-06-17 13:42:15
-Peppe,38,,,,LUKAKU Romelu,False,False,2026-06-17 13:42:32
-Peppe,39,,,,VALVERDE Federico,False,False,2026-06-17 13:42:57
-Peppe,40,,,,MOHAMED SALAH,False,False,2026-06-17 13:43:26
-Peppe,41,,,,MESSI Lionel,False,False,2026-06-17 13:43:44
-Peppe,42,,,,MBAPPE Kylian,False,False,2026-06-17 13:44:04
-Peppe,43,,,,HAALAND Erling,False,False,2026-06-17 13:44:29
-Peppe,44,,,,,False,False,
-Peppe,45,,,,CRISTIANO RONALDO,False,False,2026-06-17 13:45:35
-Peppe,46,,,,BELLINGHAM Jude,False,False,2026-06-17 13:45:48
-Peppe,47,,,,SUCIC Petar,False,False,2026-06-17 13:46:19
-Peppe,48,,,,,False,False,
+Peppe,25,1,1,X,SCHICK Patrik,False,False,2026-06-17 13:52:46
+Peppe,26,2,1,1,EMBOLO Breel,False,False,2026-06-17 13:52:46
+Peppe,27,1,1,X,DAVID Jonathan,False,False,2026-06-17 13:52:46
+Peppe,28,2,2,X,JIMENEZ Raul,False,False,2026-06-17 13:52:46
+Peppe,29,2,1,1,PULISIC Christian,False,False,2026-06-17 13:52:46
+Peppe,30,1,2,2,DIAZ Brahim,False,False,2026-06-17 13:52:46
+Peppe,31,5,0,1,VINICIUS JUNIOR,False,False,2026-06-17 13:52:46
+Peppe,32,2,1,1,YILDIZ Kenan,False,False,2026-06-17 13:52:46
+Peppe,33,2,2,X,GAKPO Cody,False,False,2026-06-17 13:52:46
+Peppe,34,3,0,1,HAVERTZ Kai,False,False,2026-06-17 13:52:46
+Peppe,35,2,0,1,,False,True,2026-06-17 13:52:46
+Peppe,36,0,1,2,NAKAMURA Keito,False,False,2026-06-17 13:52:46
+Peppe,37,3,0,1,YAMAL Lamine,False,False,2026-06-17 13:52:46
+Peppe,38,2,0,1,LUKAKU Romelu,False,False,2026-06-17 13:52:46
+Peppe,39,2,0,1,VALVERDE Federico,False,False,2026-06-17 13:52:46
+Peppe,40,1,2,2,MOHAMED SALAH,False,False,2026-06-17 13:52:46
+Peppe,41,2,1,1,MESSI Lionel,False,False,2026-06-17 13:52:46
+Peppe,42,4,0,1,MBAPPE Kylian,False,False,2026-06-17 13:52:46
+Peppe,43,3,1,1,HAALAND Erling,False,False,2026-06-17 13:52:46
+Peppe,44,0,2,2,,True,False,2026-06-17 13:52:46
+Peppe,45,3,0,1,CRISTIANO RONALDO,False,False,2026-06-17 13:52:46
+Peppe,46,2,1,1,BELLINGHAM Jude,False,False,2026-06-17 13:52:46
+Peppe,47,0,2,2,SUCIC Petar,False,False,2026-06-17 13:52:46
+Peppe,48,2,0,1,,False,True,2026-06-17 13:52:46
 Peppe,49,,,,,False,False,
 Peppe,50,,,,,False,False,
 Peppe,51,,,,,False,False,

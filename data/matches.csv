@@ -18,7 +18,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 17,Group Stage,I,1,2026-06-16 21:00,France,Senegal,3,1,MBAPPE Kylian;BARCOLA Bradley;MBAYE Ibrahim,2026-06-11 21:00:00,False,False
 18,Group Stage,I,1,2026-06-17 00:00,Iraq,Norway,1,4,AYMEN HUSSEIN;HAALAND Erling;OSTIGARD Leo,2026-06-11 21:00:00,True,False
 19,Group Stage,J,1,2026-06-17 03:00,Argentina,Algeria,3,0,MESSI Lionel,2026-06-11 21:00:00,False,False
-20,Group Stage,J,1,2026-06-17 06:00,Austria,Jordan,,,SCHMID Romano;ARNAUTOVIC Marko,2026-06-11 21:00:00,False,False
+20,Group Stage,J,1,2026-06-17 06:00,Austria,Jordan,,,SCHMID Romano;ARNAUTOVIC Marko;ALI OLWAN,2026-06-11 21:00:00,False,False
 21,Group Stage,K,1,2026-06-17 19:00,Portugal,Congo,,,,2026-06-11 21:00:00,False,False
 22,Group Stage,L,1,2026-06-17 22:00,England,Croatia,,,,2026-06-11 21:00:00,False,False
 23,Group Stage,L,1,2026-06-18 01:00,Ghana,Panama,,,,2026-06-11 21:00:00,False,False

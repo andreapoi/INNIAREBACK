@@ -22,7 +22,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 21,Group Stage,K,1,2026-06-17 19:00,Portugal,Congo,1,1,JOAO NEVES;WISSA Yoane,2026-06-11 21:00:00,False,False
 22,Group Stage,L,1,2026-06-17 22:00,England,Croatia,4,2,BELLINGHAM Jude;KANE Harry;RASHFORD Marcus;BATURINA Martin;MUSA Petar,2026-06-11 21:00:00,False,False
 23,Group Stage,L,1,2026-06-18 01:00,Ghana,Panama,1,0,YIRENKYI Caleb,2026-06-11 21:00:00,False,False
-24,Group Stage,K,1,2026-06-18 04:00,Uzbekistan,Colombia,,,,2026-06-11 21:00:00,False,False
+24,Group Stage,K,1,2026-06-18 04:00,Uzbekistan,Colombia,,,FAYZULLAEV Abbosbek,2026-06-11 21:00:00,False,False
 25,Group Stage,A,2,2026-06-18 18:00,Czechia,South Africa,,,,2026-06-18 18:00:00,False,False
 26,Group Stage,B,2,2026-06-18 21:00,Switzerland,Bosnia and Herzegovina,,,,2026-06-18 18:00:00,False,False
 27,Group Stage,B,2,2026-06-19 00:00,Canada,Qatar,,,,2026-06-18 18:00:00,False,False

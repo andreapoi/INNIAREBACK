@@ -28,7 +28,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 27,Group Stage,B,2,2026-06-19 00:00,Canada,Qatar,6,0,DAVID Jonathan;LARIN Cyle;SALIBA Nathan,2026-06-18 18:00:00,False,True
 28,Group Stage,A,2,2026-06-19 03:00,Mexico,South Korea,1,0,ROMO Luis,2026-06-18 18:00:00,False,False
 29,Group Stage,D,2,2026-06-19 21:00,USA,Australia,2,0,FREEMAN Alex,2026-06-18 18:00:00,False,True
-30,Group Stage,C,2,2026-06-20 00:00,Scotland,Morocco,,,SAIBARI Ismael,2026-06-18 18:00:00,False,False
+30,Group Stage,C,2,2026-06-20 00:00,Scotland,Morocco,0,1,SAIBARI Ismael,2026-06-18 18:00:00,False,False
 31,Group Stage,C,2,2026-06-20 02:30,Brazil,Haiti,,,,2026-06-18 18:00:00,False,False
 32,Group Stage,D,2,2026-06-20 05:00,Türkiye,Paraguay,,,,2026-06-18 18:00:00,False,False
 33,Group Stage,F,2,2026-06-20 19:00,Netherlands,Sweden,,,,2026-06-18 18:00:00,False,False

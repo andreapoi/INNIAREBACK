@@ -32,7 +32,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 31,Group Stage,C,2,2026-06-20 02:30,Brazil,Haiti,3,0,MATHEUS CUNHA;VINICIUS JUNIOR,2026-06-18 18:00:00,False,False
 32,Group Stage,D,2,2026-06-20 05:00,Türkiye,Paraguay,0,1,GALARZA Matias,2026-06-18 18:00:00,False,False
 33,Group Stage,F,2,2026-06-20 19:00,Netherlands,Sweden,5,1,BROBBEY Brian;GAKPO Cody;SUMMERVILLE Crysencio;ELANGA Anthony,2026-06-18 18:00:00,False,False
-34,Group Stage,E,2,2026-06-20 22:00,Germany,Côte d'Ivoire,,,,2026-06-18 18:00:00,False,False
+34,Group Stage,E,2,2026-06-20 22:00,Germany,Côte d'Ivoire,,,KESSIE Franck,2026-06-18 18:00:00,False,False
 35,Group Stage,E,2,2026-06-21 02:00,Ecuador,Curaçao,,,,2026-06-18 18:00:00,False,False
 36,Group Stage,F,2,2026-06-21 06:00,Tunisia,Japan,,,,2026-06-18 18:00:00,False,False
 37,Group Stage,H,2,2026-06-21 18:00,Spain,Saudi Arabia,,,,2026-06-18 18:00:00,False,False

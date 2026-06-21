@@ -34,7 +34,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 33,Group Stage,F,2,2026-06-20 19:00,Netherlands,Sweden,5,1,BROBBEY Brian;GAKPO Cody;SUMMERVILLE Crysencio;ELANGA Anthony,2026-06-18 18:00:00,False,False
 34,Group Stage,E,2,2026-06-20 22:00,Germany,Côte d'Ivoire,2,1,KESSIE Franck;UNDAV Deniz,2026-06-18 18:00:00,False,False
 35,Group Stage,E,2,2026-06-21 02:00,Ecuador,Curaçao,0,0,,2026-06-18 18:00:00,False,False
-36,Group Stage,F,2,2026-06-21 06:00,Tunisia,Japan,,,ITO Junya;KAMADA Daichi;UEDA Ayase,2026-06-18 18:00:00,False,False
+36,Group Stage,F,2,2026-06-21 06:00,Tunisia,Japan,0,4,ITO Junya;KAMADA Daichi;UEDA Ayase,2026-06-18 18:00:00,False,False
 37,Group Stage,H,2,2026-06-21 18:00,Spain,Saudi Arabia,,,,2026-06-18 18:00:00,False,False
 38,Group Stage,G,2,2026-06-21 21:00,Belgium,Iran,,,,2026-06-18 18:00:00,False,False
 39,Group Stage,H,2,2026-06-22 00:00,Uruguay,Cabo Verde,,,,2026-06-18 18:00:00,False,False

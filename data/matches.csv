@@ -37,7 +37,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 36,Group Stage,F,2,2026-06-21 06:00,Tunisia,Japan,0,4,ITO Junya;KAMADA Daichi;UEDA Ayase,2026-06-18 18:00:00,False,False
 37,Group Stage,H,2,2026-06-21 18:00,Spain,Saudi Arabia,4,0,OYARZABAL Mikel;YAMAL Lamine,2026-06-18 18:00:00,False,True
 38,Group Stage,G,2,2026-06-21 21:00,Belgium,Iran,0,0,,2026-06-18 18:00:00,False,False
-39,Group Stage,H,2,2026-06-22 00:00,Uruguay,Cabo Verde,,,KEVIN PINA;HELIO VARELA;ARAUJO Maxi;CANOBBIO Agustin,2026-06-18 18:00:00,False,False
+39,Group Stage,H,2,2026-06-22 00:00,Uruguay,Cabo Verde,2,2,KEVIN PINA;HELIO VARELA;ARAUJO Maxi;CANOBBIO Agustin,2026-06-18 18:00:00,False,False
 40,Group Stage,G,2,2026-06-22 03:00,New Zealand,Egypt,,,,2026-06-18 18:00:00,False,False
 41,Group Stage,J,2,2026-06-22 19:00,Argentina,Austria,,,,2026-06-18 18:00:00,False,False
 42,Group Stage,I,2,2026-06-22 23:00,France,Iraq,,,,2026-06-18 18:00:00,False,False

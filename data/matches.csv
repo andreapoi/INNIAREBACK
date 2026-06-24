@@ -46,7 +46,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 45,Group Stage,K,2,2026-06-23 19:00,Portugal,Uzbekistan,5,0,CRISTIANO RONALDO;NUNO MENDES;RAFAEL LEAO,2026-06-18 18:00:00,False,True
 46,Group Stage,L,2,2026-06-23 22:00,England,Ghana,0,0,,2026-06-18 18:00:00,False,False
 47,Group Stage,L,2,2026-06-24 01:00,Panama,Croatia,0,1,BUDIMIR Ante,2026-06-18 18:00:00,False,False
-48,Group Stage,K,2,2026-06-24 04:00,Colombia,Congo,,,,2026-06-18 18:00:00,False,False
+48,Group Stage,K,2,2026-06-24 04:00,Colombia,Congo,,,MUNOZ Daniel,2026-06-18 18:00:00,False,False
 49,Group Stage,B,3,2026-06-24 21:00,Bosnia and Herzegovina,Qatar,,,,2026-06-24 21:00:00,False,False
 50,Group Stage,B,3,2026-06-24 21:00,Switzerland,Canada,,,,2026-06-24 21:00:00,False,False
 51,Group Stage,C,3,2026-06-25 00:00,Morocco,Haiti,,,,2026-06-24 21:00:00,False,False

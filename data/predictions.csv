@@ -191,30 +191,30 @@ Edoardo,45,2,0,1,CRISTIANO RONALDO,False,False,2026-06-18 16:44:19
 Edoardo,46,2,1,1,KANE Harry,False,False,2026-06-18 16:44:19
 Edoardo,47,0,2,2,MODRIC Luka,False,False,2026-06-18 16:44:19
 Edoardo,48,1,0,1,SUAREZ Luis,False,False,2026-06-18 16:44:19
-Edoardo,49,,,,MOHAMMED MUNTARI,False,False,2026-06-24 17:26:03
-Edoardo,50,,,,DAVID Jonathan,False,False,2026-06-24 17:26:38
-Edoardo,51,,,,HAKIMI Achraf,False,False,2026-06-24 17:26:59
-Edoardo,52,,,,NEYMAR JR,False,False,2026-06-24 17:27:19
-Edoardo,53,,,,SCHICK Patrik,False,False,2026-06-24 17:27:44
-Edoardo,54,,,,SON Heungmin,False,False,2026-06-24 17:28:06
-Edoardo,55,,,,,False,False,
-Edoardo,56,,,,HAVERTZ Kai,False,False,2026-06-24 17:28:45
-Edoardo,57,,,,KUBO Takefusa,False,False,2026-06-24 17:29:20
-Edoardo,58,,,,DUMFRIES Denzel,False,False,2026-06-24 17:29:44
-Edoardo,59,,,,,False,False,
-Edoardo,60,,,,YILDIZ Kenan,False,False,2026-06-24 17:30:11
-Edoardo,61,,,,MBAPPE Kylian,False,False,2026-06-24 17:30:35
-Edoardo,62,,,,MBAYE Ibrahim,False,False,2026-06-24 17:30:56
-Edoardo,63,,,,,False,False,
-Edoardo,64,,,,YAMAL Lamine,False,False,2026-06-24 17:31:29
-Edoardo,65,,,,MOHAMED ALAA,False,False,2026-06-24 17:31:51
-Edoardo,66,,,,DE BRUYNE Kevin,False,False,2026-06-24 17:32:10
-Edoardo,67,,,,SUCIC Luka,False,False,2026-06-24 17:32:26
-Edoardo,68,,,,KANE Harry,False,False,2026-06-24 17:32:48
-Edoardo,69,,,,CRISTIANO RONALDO,False,False,2026-06-24 17:33:16
-Edoardo,70,,,,,False,False,
-Edoardo,71,,,,,False,False,
-Edoardo,72,,,,MESSI Lionel,False,False,2026-06-24 17:33:35
+Edoardo,49,1,1,X,MOHAMMED MUNTARI,False,False,2026-06-24 17:39:51
+Edoardo,50,2,2,X,DAVID Jonathan,False,False,2026-06-24 17:39:51
+Edoardo,51,3,0,1,HAKIMI Achraf,False,False,2026-06-24 17:39:51
+Edoardo,52,1,3,2,NEYMAR JR,False,False,2026-06-24 17:39:51
+Edoardo,53,2,1,1,SCHICK Patrik,False,False,2026-06-24 17:39:51
+Edoardo,54,0,2,2,SON Heungmin,False,False,2026-06-24 17:39:51
+Edoardo,55,1,2,2,,True,False,2026-06-24 17:39:51
+Edoardo,56,0,2,2,HAVERTZ Kai,False,False,2026-06-24 17:39:51
+Edoardo,57,1,1,X,KUBO Takefusa,False,False,2026-06-24 17:39:51
+Edoardo,58,1,2,2,DUMFRIES Denzel,False,False,2026-06-24 17:39:51
+Edoardo,59,0,1,2,,True,False,2026-06-24 17:39:51
+Edoardo,60,2,2,X,YILDIZ Kenan,False,False,2026-06-24 17:39:51
+Edoardo,61,1,2,2,MBAPPE Kylian,False,False,2026-06-24 17:39:51
+Edoardo,62,2,0,1,MBAYE Ibrahim,False,False,2026-06-24 17:39:51
+Edoardo,63,0,1,2,,True,False,2026-06-24 17:39:51
+Edoardo,64,1,2,2,YAMAL Lamine,False,False,2026-06-24 17:39:51
+Edoardo,65,2,0,1,MOHAMED ALAA,False,False,2026-06-24 17:39:51
+Edoardo,66,0,3,2,DE BRUYNE Kevin,False,False,2026-06-24 17:39:51
+Edoardo,67,2,0,1,SUCIC Luka,False,False,2026-06-24 17:39:51
+Edoardo,68,0,2,2,KANE Harry,False,False,2026-06-24 17:39:51
+Edoardo,69,2,2,X,CRISTIANO RONALDO,False,False,2026-06-24 17:39:51
+Edoardo,70,1,0,1,,False,True,2026-06-24 17:39:51
+Edoardo,71,1,1,X,,True,False,2026-06-24 17:39:51
+Edoardo,72,0,3,2,MESSI Lionel,False,False,2026-06-24 17:39:51
 Ferdinando,1,2,1,1,JIMENEZ Raul,False,False,2026-06-10 14:36:47
 Ferdinando,2,1,1,X,SON Heungmin,False,False,2026-06-10 14:36:47
 Ferdinando,3,1,1,X,DZEKO Edin,False,False,2026-06-10 14:36:47

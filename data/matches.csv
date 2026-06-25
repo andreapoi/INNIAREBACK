@@ -86,4 +86,4 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 85,Group Stage,KOUT,R32,2026-07-03 05:00,Switzerland,,,,,2026-06-28 21:00:00,False,False
 86,Group Stage,KOUT,R32,2026-07-03 20:00,,,,,,2026-06-28 21:00:00,False,False
 87,Group Stage,KOUT,R32,2026-07-04 00:00,Argentina,,,,,2026-06-28 21:00:00,False,False
-88,Group Stage,KOUT,R32,2026-07-04 03:30,Jordan,Argentina,,,,2026-06-28 21:00:00,False,False
+88,Group Stage,KOUT,R32,2026-07-04 03:30,,,,,,2026-06-28 21:00:00,False,False

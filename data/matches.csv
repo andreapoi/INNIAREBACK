@@ -49,7 +49,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 48,Group Stage,K,2,2026-06-24 04:00,Colombia,Congo,1,0,MUNOZ Daniel,2026-06-18 18:00:00,False,False
 49,Group Stage,B,3,2026-06-24 21:00,Bosnia and Herzegovina,Qatar,3,1,ALAJBEGOVIC Kerim;BAJRAKTAREVIC Esmir;HASSAN ALHAYDOS,2026-06-24 21:00:00,False,True
 50,Group Stage,B,3,2026-06-24 21:00,Switzerland,Canada,2,1,MANZAMBI Johan;VARGAS Ruben;DAVID Promise,2026-06-24 21:00:00,False,False
-51,Group Stage,C,3,2026-06-25 00:00,Morocco,Haiti,,,ISIDOR Wilson;SAIBARI Ismael,2026-06-24 21:00:00,False,False
+51,Group Stage,C,3,2026-06-25 00:00,Morocco,Haiti,,,ISIDOR Wilson;SAIBARI Ismael;HAKIMI Achraf,2026-06-24 21:00:00,False,False
 52,Group Stage,C,3,2026-06-25 00:00,Scotland,Brazil,,,,2026-06-24 21:00:00,False,False
 53,Group Stage,A,3,2026-06-25 03:00,Czechia,Mexico,,,,2026-06-24 21:00:00,False,False
 54,Group Stage,A,3,2026-06-25 03:00,South Africa,South Korea,,,,2026-06-24 21:00:00,False,False

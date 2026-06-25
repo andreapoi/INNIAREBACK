@@ -71,3 +71,19 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 70,Group Stage,K,3,2026-06-28 01:30,Congo,Uzbekistan,,,,2026-06-24 21:00:00,False,False
 71,Group Stage,J,3,2026-06-28 04:00,Algeria,Austria,,,,2026-06-24 21:00:00,False,False
 72,Group Stage,J,3,2026-06-28 04:00,Jordan,Argentina,,,,2026-06-24 21:00:00,False,False
+73,Group Stage,KOUT,R32,2026-06-28 21:00,South Africa,Canada,,,,2026-06-28 21:00:00,False,False
+74,Group Stage,KOUT,R32,2026-06-29 19:00,Brazil,,,,,2026-06-28 21:00:00,False,False
+75,Group Stage,KOUT,R32,2026-06-29 22:30,Germany,,,,,2026-06-28 21:00:00,False,False
+76,Group Stage,KOUT,R32,2026-06-30 03:00,,Morocco,,,,2026-06-28 21:00:00,False,False
+77,Group Stage,KOUT,R32,2026-06-30 19:00,,,,,,2026-06-28 21:00:00,False,False
+78,Group Stage,KOUT,R32,2026-06-30 23:00,,,,,,2026-06-28 21:00:00,False,False
+79,Group Stage,KOUT,R32,2026-07-01 03:00,Mexico,,,,,2026-06-28 21:00:00,False,False
+80,Group Stage,KOUT,R32,2026-07-01 18:00,,,,,,2026-06-28 21:00:00,False,False
+81,Group Stage,KOUT,R32,2026-07-01 22:00,,,,,,2026-06-28 21:00:00,False,False
+82,Group Stage,KOUT,R32,2026-07-02 02:00,USA,,,,,2026-06-28 21:00:00,False,False
+83,Group Stage,KOUT,R32,2026-07-02 21:00,,,,,,2026-06-28 21:00:00,False,False
+84,Group Stage,KOUT,R32,2026-07-03 01:00,,,,,,2026-06-28 21:00:00,False,False
+85,Group Stage,KOUT,R32,2026-07-03 05:00,Switzerland,,,,,2026-06-28 21:00:00,False,False
+86,Group Stage,KOUT,R32,2026-07-03 20:00,,,,,,2026-06-28 21:00:00,False,False
+87,Group Stage,KOUT,R32,2026-07-04 00:00,Argentina,,,,,2026-06-28 21:00:00,False,False
+88,Group Stage,KOUT,R32,2026-07-04 03:30,Jordan,Argentina,,,,2026-06-28 21:00:00,False,False

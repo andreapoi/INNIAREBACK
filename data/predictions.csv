@@ -71,6 +71,7 @@ Alessandro,69,1,1,X,DIAZ Luis,False,False,2026-06-23 11:13:59
 Alessandro,70,2,1,1,BAKAMBU Cedric,False,False,2026-06-23 11:13:59
 Alessandro,71,1,1,X,AMOURA Mohamed,False,False,2026-06-23 11:13:59
 Alessandro,72,0,3,2,MESSI Lionel,False,False,2026-06-23 11:13:59
+Alessandro,73,,,,,False,False,
 Andrea,1,2,0,1,JIMENEZ Raul,False,False,2026-06-11 20:39:23
 Andrea,2,1,2,2,SCHICK Patrik,False,False,2026-06-11 20:39:23
 Andrea,3,1,1,X,DZEKO Edin,False,False,2026-06-11 20:39:23
@@ -143,6 +144,7 @@ Andrea,69,1,2,2,CRISTIANO RONALDO,False,False,2026-06-24 20:38:07
 Andrea,70,1,2,2,SHOMURODOV Eldor,False,False,2026-06-24 20:38:07
 Andrea,71,2,2,X,SABITZER Marcel,False,False,2026-06-24 20:38:07
 Andrea,72,0,3,2,MARTINEZ Lautaro,False,False,2026-06-24 20:38:07
+Andrea,73,,,,,False,False,
 Edoardo,1,1,0,1,VEGA Alexis,False,False,2026-06-10 21:34:59
 Edoardo,2,1,3,2,SCHICK Patrik,False,False,2026-06-10 21:34:59
 Edoardo,3,1,1,X,DZEKO Edin,False,False,2026-06-10 21:34:59
@@ -215,6 +217,7 @@ Edoardo,69,2,2,X,CRISTIANO RONALDO,False,False,2026-06-24 17:39:51
 Edoardo,70,1,0,1,,False,True,2026-06-24 17:39:51
 Edoardo,71,1,1,X,,True,False,2026-06-24 17:39:51
 Edoardo,72,0,3,2,MESSI Lionel,False,False,2026-06-24 17:39:51
+Edoardo,73,,,,,False,False,
 Ferdinando,1,2,1,1,JIMENEZ Raul,False,False,2026-06-10 14:36:47
 Ferdinando,2,1,1,X,SON Heungmin,False,False,2026-06-10 14:36:47
 Ferdinando,3,1,1,X,DZEKO Edin,False,False,2026-06-10 14:36:47
@@ -287,6 +290,7 @@ Ferdinando,69,1,1,X,CRISTIANO RONALDO,False,False,2026-06-24 18:24:51
 Ferdinando,70,1,1,X,SHOMURODOV Eldor,False,False,2026-06-24 18:24:51
 Ferdinando,71,0,1,2,SABITZER Marcel,False,False,2026-06-24 18:24:51
 Ferdinando,72,1,4,2,MESSI Lionel,False,False,2026-06-24 18:24:51
+Ferdinando,73,,,,,False,False,
 Gabriele,1,3,0,1,QUINONES Julian,False,False,2026-06-09 09:06:21
 Gabriele,2,0,2,2,,True,False,2026-06-09 09:06:21
 Gabriele,3,1,1,X,DEMIROVIC Ermedin,False,False,2026-06-09 09:06:21
@@ -359,6 +363,7 @@ Gabriele,69,2,4,2,RAFAEL LEAO,False,False,2026-06-24 08:16:29
 Gabriele,70,0,0,X,,False,False,2026-06-24 08:16:29
 Gabriele,71,1,1,X,MAHREZ Riyad,False,False,2026-06-24 08:16:29
 Gabriele,72,0,5,2,MARTINEZ Lautaro,False,False,2026-06-24 08:16:29
+Gabriele,73,,,,,False,False,
 Peppe,1,1,0,1,ALVARADO Roberto,False,False,2026-06-11 20:01:50
 Peppe,2,1,1,X,BAE Junho,False,False,2026-06-11 20:01:50
 Peppe,3,1,1,X,KONE Ismael,False,False,2026-06-11 20:01:50
@@ -431,6 +436,7 @@ Peppe,69,1,3,2,CRISTIANO RONALDO,False,False,2026-06-24 20:59:50
 Peppe,70,1,1,X,WISSA Yoane,False,False,2026-06-24 20:59:50
 Peppe,71,0,3,2,ARNAUTOVIC Marko,False,False,2026-06-24 20:59:50
 Peppe,72,0,6,2,MARTINEZ Lautaro,False,False,2026-06-24 20:59:50
+Peppe,73,,,,,False,False,
 Salvatore Sca.,1,2,0,1,GIMENEZ Santiago,False,False,2026-06-11 15:09:16
 Salvatore Sca.,2,1,1,X,SON Heungmin,False,False,2026-06-11 15:09:16
 Salvatore Sca.,3,2,1,1,DAVID Jonathan,False,False,2026-06-11 15:09:16
@@ -503,6 +509,7 @@ Salvatore Sca.,69,1,2,2,BRUNO FERNANDES,False,False,2026-06-24 17:26:33
 Salvatore Sca.,70,0,0,X,,False,False,2026-06-24 17:26:33
 Salvatore Sca.,71,1,2,2,SABITZER Marcel,False,False,2026-06-24 17:26:33
 Salvatore Sca.,72,0,4,2,MESSI Lionel,False,False,2026-06-24 17:26:33
+Salvatore Sca.,73,,,,,False,False,
 Salvatore Sch.,1,2,0,1,VEGA Alexis,False,False,2026-06-08 16:45:52
 Salvatore Sch.,2,1,0,1,SON Heungmin,False,False,2026-06-08 16:45:52
 Salvatore Sch.,3,1,2,2,DAVID Jonathan,False,False,2026-06-08 16:45:52
@@ -575,6 +582,7 @@ Salvatore Sch.,69,1,3,2,CRISTIANO RONALDO,False,False,2026-06-24 09:46:03
 Salvatore Sch.,70,0,0,X,,False,False,2026-06-24 09:46:03
 Salvatore Sch.,71,1,1,X,SCHMID Romano,False,False,2026-06-24 09:46:03
 Salvatore Sch.,72,0,4,2,MESSI Lionel,False,False,2026-06-24 09:46:03
+Salvatore Sch.,73,,,,,False,False,
 Simone,1,2,1,1,GIMENEZ Santiago,False,False,2026-06-10 14:11:02
 Simone,2,0,3,2,SCHICK Patrik,False,False,2026-06-10 14:11:02
 Simone,3,2,1,1,DZEKO Edin,False,False,2026-06-10 14:11:02
@@ -647,6 +655,7 @@ Simone,69,1,2,2,JOAO FELIX,False,False,2026-06-24 11:34:30
 Simone,70,1,2,2,SHOMURODOV Eldor,False,False,2026-06-24 11:34:30
 Simone,71,0,2,2,SABITZER Marcel,False,False,2026-06-24 11:34:30
 Simone,72,0,4,2,MARTINEZ Lautaro,False,False,2026-06-24 11:34:30
+Simone,73,,,,,False,False,
 Vins,1,2,0,1,ALVARADO Roberto,False,False,2026-06-11 20:11:03
 Vins,2,1,3,2,SCHICK Patrik,False,False,2026-06-09 17:05:25
 Vins,3,1,1,X,DAVID Jonathan,False,False,2026-06-09 17:05:25
@@ -719,3 +728,4 @@ Vins,69,2,2,X,CRISTIANO RONALDO,False,False,2026-06-24 15:57:34
 Vins,70,2,0,1,MBUKU Nathanael,False,False,2026-06-24 15:57:34
 Vins,71,1,2,2,SABITZER Marcel,False,False,2026-06-24 15:57:34
 Vins,72,0,3,2,MESSI Lionel,False,False,2026-06-24 15:57:34
+Vins,73,,,,,False,False,

@@ -54,7 +54,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 53,Group Stage,A,3,2026-06-25 03:00,Czechia,Mexico,0,3,CHAVEZ Mateo;FIDALGO Alvaro;QUINONES Julian,2026-06-24 21:00:00,False,False
 54,Group Stage,A,3,2026-06-25 03:00,South Africa,South Korea,1,0,MASEKO Thapelo,2026-06-24 21:00:00,False,False
 55,Group Stage,E,3,2026-06-25 22:00,Curaçao,Côte d'Ivoire,0,2,PEPE Nicolas,2026-06-24 21:00:00,False,False
-56,Group Stage,E,3,2026-06-25 22:00,Ecuador,Germany,,,SANE Leroy;ANGULO Nilson;PLATA Gonzalo,2026-06-24 21:00:00,False,False
+56,Group Stage,E,3,2026-06-25 22:00,Ecuador,Germany,2,1,SANE Leroy;ANGULO Nilson;PLATA Gonzalo,2026-06-24 21:00:00,False,False
 57,Group Stage,F,3,2026-06-26 01:00,Japan,Sweden,,,,2026-06-24 21:00:00,False,False
 58,Group Stage,F,3,2026-06-26 01:00,Tunisia,Netherlands,,,,2026-06-24 21:00:00,False,False
 59,Group Stage,D,3,2026-06-26 04:00,Paraguay,Australia,,,,2026-06-24 21:00:00,False,False

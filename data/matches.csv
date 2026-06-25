@@ -52,7 +52,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 51,Group Stage,C,3,2026-06-25 00:00,Morocco,Haiti,4,2,ISIDOR Wilson;SAIBARI Ismael;HAKIMI Achraf;RAHIMI Sou;YASSINE Gessime,2026-06-24 21:00:00,True,False
 52,Group Stage,C,3,2026-06-25 00:00,Scotland,Brazil,0,3,MATHEUS CUNHA;VINICIUS JUNIOR,2026-06-24 21:00:00,False,False
 53,Group Stage,A,3,2026-06-25 03:00,Czechia,Mexico,0,3,CHAVEZ Mateo;FIDALGO Alvaro;QUINONES Julian,2026-06-24 21:00:00,False,False
-54,Group Stage,A,3,2026-06-25 03:00,South Africa,South Korea,,,,2026-06-24 21:00:00,False,False
+54,Group Stage,A,3,2026-06-25 03:00,South Africa,South Korea,,,MASEKO Thapelo,2026-06-24 21:00:00,False,False
 55,Group Stage,E,3,2026-06-25 22:00,Curaçao,Côte d'Ivoire,,,,2026-06-24 21:00:00,False,False
 56,Group Stage,E,3,2026-06-25 22:00,Ecuador,Germany,,,,2026-06-24 21:00:00,False,False
 57,Group Stage,F,3,2026-06-26 01:00,Japan,Sweden,,,,2026-06-24 21:00:00,False,False

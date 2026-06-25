@@ -75,7 +75,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 74,Knock Out,KOUT,R32,2026-06-29 19:00,Brazil,,,,,2026-06-28 21:00:00,False,False
 75,Knock Out,KOUT,R32,2026-06-29 22:30,Germany,,,,,2026-06-28 21:00:00,False,False
 76,Knock Out,KOUT,R32,2026-06-30 03:00,,Morocco,,,,2026-06-28 21:00:00,False,False
-77,Knock Out,KOUT,R32,2026-06-30 19:00,,,,,,2026-06-28 21:00:00,False,False
+77,Knock Out,KOUT,R32,2026-06-30 19:00,Côte d'Ivoire,,,,,2026-06-28 21:00:00,False,False
 78,Knock Out,KOUT,R32,2026-06-30 23:00,,,,,,2026-06-28 21:00:00,False,False
 79,Knock Out,KOUT,R32,2026-07-01 03:00,Mexico,,,,,2026-06-28 21:00:00,False,False
 80,Knock Out,KOUT,R32,2026-07-01 18:00,,,,,,2026-06-28 21:00:00,False,False

@@ -60,7 +60,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 59,Group Stage,D,3,2026-06-26 04:00,Paraguay,Australia,0,0,,2026-06-24 21:00:00,False,False
 60,Group Stage,D,3,2026-06-26 04:00,Türkiye,USA,3,2,AYHAN Kaan;GULER Arda;YILMAZ Baris Alper;BERHALTER Sebastian;TRUSTY Auston,2026-06-24 21:00:00,False,False
 61,Group Stage,I,3,2026-06-26 21:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,2026-06-24 21:00:00,False,False
-62,Group Stage,I,3,2026-06-26 21:00,Senegal,Iraq,,,DIARRA Habib;GUEYE Pape,2026-06-24 21:00:00,False,False
+62,Group Stage,I,3,2026-06-26 21:00,Senegal,Iraq,,,DIARRA Habib;GUEYE Pape;NDIAYE Iliman,2026-06-24 21:00:00,False,False
 63,Group Stage,H,3,2026-06-27 02:00,Cabo Verde,Saudi Arabia,,,,2026-06-24 21:00:00,False,False
 64,Group Stage,H,3,2026-06-27 02:00,Uruguay,Spain,,,,2026-06-24 21:00:00,False,False
 65,Group Stage,G,3,2026-06-27 05:00,Egypt,Iran,,,,2026-06-24 21:00:00,False,False

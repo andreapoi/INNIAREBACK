@@ -57,7 +57,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 56,Group Stage,E,3,2026-06-25 22:00,Ecuador,Germany,2,1,SANE Leroy;ANGULO Nilson;PLATA Gonzalo,2026-06-24 21:00:00,False,False
 57,Group Stage,F,3,2026-06-26 01:00,Japan,Sweden,1,1,MAEDA Daizen;ELANGA Anthony,2026-06-24 21:00:00,False,False
 58,Group Stage,F,3,2026-06-26 01:00,Tunisia,Netherlands,1,3,BROBBEY Brian;VAN HECKE Jan Paul;MASTOURI Hazem,2026-06-24 21:00:00,True,False
-59,Group Stage,D,3,2026-06-26 04:00,Paraguay,Australia,,,,2026-06-24 21:00:00,False,False
+59,Group Stage,D,3,2026-06-26 04:00,Paraguay,Australia,0,0,,2026-06-24 21:00:00,False,False
 60,Group Stage,D,3,2026-06-26 04:00,Türkiye,USA,,,,2026-06-24 21:00:00,False,False
 61,Group Stage,I,3,2026-06-26 21:00,Norway,France,,,,2026-06-24 21:00:00,False,False
 62,Group Stage,I,3,2026-06-26 21:00,Senegal,Iraq,,,,2026-06-24 21:00:00,False,False

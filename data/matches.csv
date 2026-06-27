@@ -62,7 +62,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 61,Group Stage,I,3,2026-06-26 21:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,2026-06-24 21:00:00,False,False
 62,Group Stage,I,3,2026-06-26 21:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,2026-06-24 21:00:00,False,False
 63,Group Stage,H,3,2026-06-27 02:00,Cabo Verde,Saudi Arabia,0,0,,2026-06-24 21:00:00,False,False
-64,Group Stage,H,3,2026-06-27 02:00,Uruguay,Spain,,,BAENA Alex,2026-06-24 21:00:00,False,False
+64,Group Stage,H,3,2026-06-27 02:00,Uruguay,Spain,0,1,BAENA Alex,2026-06-24 21:00:00,False,False
 65,Group Stage,G,3,2026-06-27 05:00,Egypt,Iran,,,,2026-06-24 21:00:00,False,False
 66,Group Stage,G,3,2026-06-27 05:00,New Zealand,Belgium,,,,2026-06-24 21:00:00,False,False
 67,Group Stage,L,3,2026-06-27 23:00,Croatia,Ghana,,,,2026-06-24 21:00:00,False,False

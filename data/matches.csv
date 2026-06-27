@@ -64,7 +64,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 63,Group Stage,H,3,2026-06-27 02:00,Cabo Verde,Saudi Arabia,0,0,,2026-06-24 21:00:00,False,False
 64,Group Stage,H,3,2026-06-27 02:00,Uruguay,Spain,0,1,BAENA Alex,2026-06-24 21:00:00,False,False
 65,Group Stage,G,3,2026-06-27 05:00,Egypt,Iran,1,1,MAHMOUD SABER;REZAEIAN Ramin,2026-06-24 21:00:00,False,False
-66,Group Stage,G,3,2026-06-27 05:00,New Zealand,Belgium,,,JUST Elijah;TROSSARD Leandro;SAELEMAEKERS Alexis;LUKAKU Romelu;DE BRUYNE Kevin,2026-06-24 21:00:00,False,False
+66,Group Stage,G,3,2026-06-27 05:00,New Zealand,Belgium,1,5,JUST Elijah;TROSSARD Leandro;SAELEMAEKERS Alexis;LUKAKU Romelu;DE BRUYNE Kevin,2026-06-24 21:00:00,False,False
 67,Group Stage,L,3,2026-06-27 23:00,Croatia,Ghana,,,,2026-06-24 21:00:00,False,False
 68,Group Stage,L,3,2026-06-27 23:00,Panama,England,,,,2026-06-24 21:00:00,False,False
 69,Group Stage,K,3,2026-06-28 01:30,Colombia,Portugal,,,,2026-06-24 21:00:00,False,False

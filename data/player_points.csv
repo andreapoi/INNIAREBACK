@@ -62,6 +62,7 @@ Alessandro,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,
 Alessandro,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,1,2,2,MBAPPE Kylian,False,False,0.0,2.0,0.0,0.0,2.0
 Alessandro,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,2,0,1,MANE Sadio,False,False,0.0,2.0,0.0,0.0,2.0
 Alessandro,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,1,X,JOVANE CABRAL,False,False,0.0,2.0,0.0,0.0,2.0
+Alessandro,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,1,2,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Andrea,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,JIMENEZ Raul,False,False,5.0,2.0,3.5,0.0,10.5
 Andrea,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,2,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Andrea,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DZEKO Edin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -125,6 +126,7 @@ Andrea,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,3,2,
 Andrea,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,2,X,MBAPPE Kylian,False,False,0.0,0.0,0.0,0.0,0.0
 Andrea,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,4,0,1,JACKSON Nicolas,False,False,0.0,2.0,0.0,0.0,2.0
 Andrea,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,1,X,MOHAMED KANNO,False,False,0.0,2.0,0.0,0.0,2.0
+Andrea,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,0,2,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Edoardo,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,1,0,1,VEGA Alexis,False,False,0.0,2.0,0.0,0.0,2.0
 Edoardo,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,3,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Edoardo,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DZEKO Edin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -188,6 +190,7 @@ Edoardo,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,3,2
 Edoardo,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,1,2,2,MBAPPE Kylian,False,False,0.0,2.0,0.0,0.0,2.0
 Edoardo,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,2,0,1,MBAYE Ibrahim,False,False,0.0,2.0,0.0,0.0,2.0
 Edoardo,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,0,1,2,,True,False,0.0,0.0,0.0,0.0,0.0
+Edoardo,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,1,2,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Ferdinando,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,1,1,JIMENEZ Raul,False,False,0.0,2.0,3.5,0.0,5.5
 Ferdinando,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,1,X,SON Heungmin,False,False,0.0,0.0,0.0,0.0,0.0
 Ferdinando,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DZEKO Edin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -251,6 +254,7 @@ Ferdinando,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,
 Ferdinando,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,2,X,HAALAND Erling,False,False,0.0,0.0,0.0,0.0,0.0
 Ferdinando,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,2,0,1,JACKSON Nicolas,False,False,0.0,2.0,0.0,0.0,2.0
 Ferdinando,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,1,X,DAILON LIVRAMENTO,False,False,0.0,2.0,0.0,0.0,2.0
+Ferdinando,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,0,2,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Gabriele,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,3,0,1,QUINONES Julian,False,False,0.0,2.0,3.5,0.0,5.5
 Gabriele,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,0,2,2,,True,False,0.0,0.0,0.0,0.0,0.0
 Gabriele,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DEMIROVIC Ermedin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -314,6 +318,7 @@ Gabriele,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,3,
 Gabriele,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,3,2,DEMBELE Ousmane,False,False,0.0,2.0,3.5,0.0,5.5
 Gabriele,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,0,0,X,,False,False,0.0,0.0,0.0,0.0,0.0
 Gabriele,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,1,X,ABDULELAH ALAMRI,False,False,0.0,2.0,0.0,0.0,2.0
+Gabriele,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,1,3,2,PEDRI,False,False,0.0,2.0,0.0,0.0,2.0
 Peppe,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,1,0,1,ALVARADO Roberto,False,False,0.0,2.0,0.0,0.0,2.0
 Peppe,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,1,X,BAE Junho,False,False,0.0,0.0,0.0,0.0,0.0
 Peppe,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,KONE Ismael,False,False,5.0,2.0,0.0,0.0,7.0
@@ -377,6 +382,7 @@ Peppe,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,3,2,A
 Peppe,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,2,X,MBAPPE Kylian,False,False,0.0,0.0,0.0,0.0,0.0
 Peppe,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,2,0,1,MANE Sadio,False,False,0.0,2.0,0.0,0.0,2.0
 Peppe,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,0,1,HELIO VARELA,False,False,0.0,0.0,0.0,0.0,0.0
+Peppe,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,1,3,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sca.,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,GIMENEZ Santiago,False,False,5.0,2.0,0.0,0.0,7.0
 Salvatore Sca.,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,1,X,SON Heungmin,False,False,0.0,0.0,0.0,0.0,0.0
 Salvatore Sca.,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,2,1,1,DAVID Jonathan,False,False,0.0,0.0,0.0,0.0,0.0
@@ -440,6 +446,7 @@ Salvatore Sca.,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,
 Salvatore Sca.,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,1,1,HAALAND Erling,False,False,0.0,0.0,0.0,0.0,0.0
 Salvatore Sca.,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,2,0,1,MANE Sadio,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sca.,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,0,1,2,SALEM ALDAWSARI,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sca.,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,1,2,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sch.,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,VEGA Alexis,False,False,5.0,2.0,0.0,0.0,7.0
 Salvatore Sch.,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,0,1,SON Heungmin,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sch.,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,2,2,DAVID Jonathan,False,False,0.0,0.0,0.0,0.0,0.0
@@ -503,6 +510,7 @@ Salvatore Sch.,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,
 Salvatore Sch.,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,4,2,MBAPPE Kylian,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sch.,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,4,1,1,JACKSON Nicolas,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sch.,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,0,2,2,FERAS ALBRIKAN,False,False,0.0,0.0,0.0,0.0,0.0
+Salvatore Sch.,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,1,4,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Simone,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,1,1,GIMENEZ Santiago,False,False,0.0,2.0,0.0,0.0,2.0
 Simone,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,0,3,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Simone,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,2,1,1,DZEKO Edin,False,False,0.0,0.0,0.0,0.0,0.0
@@ -566,6 +574,7 @@ Simone,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,3,2,
 Simone,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,2,X,HAALAND Erling,False,False,0.0,0.0,0.0,0.0,0.0
 Simone,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,2,0,1,MANE Sadio,False,False,0.0,2.0,0.0,0.0,2.0
 Simone,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,0,1,NUNO DA COSTA,False,False,0.0,0.0,0.0,0.0,0.0
+Simone,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,0,3,2,YAMAL Lamine,False,False,0.0,2.0,0.0,0.0,2.0
 Vins,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,ALVARADO Roberto,False,False,5.0,2.0,0.0,0.0,7.0
 Vins,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,3,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Vins,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DAVID Jonathan,False,False,5.0,2.0,0.0,0.0,7.0
@@ -629,3 +638,4 @@ Vins,60,2026-06-26 04:00,D,Group Stage,3,2026-06-24 21:00:00,Türkiye,USA,3,2,AY
 Vins,61,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Norway,France,1,4,HOLMGREN PEDERSEN Marcus;DOUE Desire;DEMBELE Ousmane,False,False,2,2,X,MBAPPE Kylian,False,False,0.0,0.0,0.0,0.0,0.0
 Vins,62,2026-06-26 21:00,I,Group Stage,3,2026-06-24 21:00:00,Senegal,Iraq,5,0,DIARRA Habib;GUEYE Pape;NDIAYE Iliman;SARR Ismaila,False,False,3,1,1,JACKSON Nicolas,False,False,0.0,2.0,0.0,0.0,2.0
 Vins,63,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Cabo Verde,Saudi Arabia,0,0,,False,False,1,1,X,DAILON LIVRAMENTO,False,False,0.0,2.0,0.0,0.0,2.0
+Vins,64,2026-06-27 02:00,H,Group Stage,3,2026-06-24 21:00:00,Uruguay,Spain,0,1,BAENA Alex,False,False,2,3,2,RUIZ Fabian,False,False,0.0,2.0,0.0,0.0,2.0

@@ -70,7 +70,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 69,Group Stage,K,3,2026-06-28 01:30,Colombia,Portugal,0,0,,2026-06-24 21:00:00,False,False
 70,Group Stage,K,3,2026-06-28 01:30,Congo,Uzbekistan,3,1,MAYELE Fiston;WISSA Yoane;SHOMURODOV Eldor,2026-06-24 21:00:00,False,False
 71,Group Stage,J,3,2026-06-28 04:00,Algeria,Austria,3,3,BELGHALI Ra;MAHREZ Riyad;ARNAUTOVIC Marko;KALAJDZIC Sasa;SABITZER Marcel,2026-06-24 21:00:00,False,False
-72,Group Stage,J,3,2026-06-28 04:00,Jordan,Argentina,,,MOUSA ALTAMARI;LO CELSO Giovani;MARTINEZ Lautaro,2026-06-24 21:00:00,False,False
+72,Group Stage,J,3,2026-06-28 04:00,Jordan,Argentina,,,MOUSA ALTAMARI;LO CELSO Giovani;MARTINEZ Lautaro;MESSI Lionel,2026-06-24 21:00:00,False,False
 73,Knock Out,KOUT,R32,2026-06-28 21:00,South Africa,Canada,,,,2026-06-28 21:00:00,False,False
 74,Knock Out,KOUT,R32,2026-06-29 19:00,Brazil,Japan,,,,2026-06-28 21:00:00,False,False
 75,Knock Out,KOUT,R32,2026-06-29 22:30,Germany,Paraguay,,,,2026-06-28 21:00:00,False,False

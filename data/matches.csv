@@ -75,7 +75,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 74,Knock Out,KOUT,R32,2026-06-29 19:00,Brazil,Japan,2,1,CASEMIRO;GABRIEL MARTINELLI;SANO Kaishu,2026-06-28 21:00:00,False,False
 75,Knock Out,KOUT,R32,2026-06-29 22:30,Germany,Paraguay,1,1,HAVERTZ Kai;ENCISO Julio,2026-06-28 21:00:00,False,False
 76,Knock Out,KOUT,R32,2026-06-30 03:00,Netherlands,Morocco,1,1,GAKPO Cody;DIOP Issa,2026-06-28 21:00:00,False,False
-77,Knock Out,KOUT,R32,2026-06-30 19:00,Côte d'Ivoire,Norway,,,,2026-06-28 21:00:00,False,False
+77,Knock Out,KOUT,R32,2026-06-30 19:00,Côte d'Ivoire,Norway,,,DIALLO Amad,2026-06-28 21:00:00,False,False
 78,Knock Out,KOUT,R32,2026-06-30 23:00,France,Sweden,,,,2026-06-28 21:00:00,False,False
 79,Knock Out,KOUT,R32,2026-07-01 03:00,Mexico,Ecuador,,,,2026-06-28 21:00:00,False,False
 80,Knock Out,KOUT,R32,2026-07-01 18:00,England,Congo,,,,2026-06-28 21:00:00,False,False

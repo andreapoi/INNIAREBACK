@@ -87,3 +87,11 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 86,Knock Out,KOUT,R32,2026-07-03 20:00,Australia,Egypt,,,,2026-06-28 21:00:00,False,False
 87,Knock Out,KOUT,R32,2026-07-04 00:00,Argentina,Cabo Verde,,,,2026-06-28 21:00:00,False,False
 88,Knock Out,KOUT,R32,2026-07-04 03:30,Colombia,Ghana,,,,2026-06-28 21:00:00,False,False
+89,Knock Out,KOUT,R16,2026-07-04 19:00,Canada,Morocco,,,,2026-07-04 19:00:00,False,False
+90,Knock Out,KOUT,R16,2026-07-04 23:00,Paraguay,,,,,2026-07-04 19:00:00,False,False
+91,Knock Out,KOUT,R16,2026-07-05 22:00,Brazil,Norway,,,,2026-07-04 19:00:00,False,False
+92,Knock Out,KOUT,R16,2026-07-06 02:00,,,,,,2026-07-04 19:00:00,False,False
+93,Knock Out,KOUT,R16,2026-07-06 21:00,,,,,,2026-07-04 19:00:00,False,False
+94,Knock Out,KOUT,R16,2026-07-07 02:00,,,,,,2026-07-04 19:00:00,False,False
+95,Knock Out,KOUT,R16,2026-07-07 18:00,,,,,,2026-07-04 19:00:00,False,False
+96,Knock Out,KOUT,R16,2026-07-07 22:00,,,,,,2026-07-04 19:00:00,False,False

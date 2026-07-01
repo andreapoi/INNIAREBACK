@@ -77,7 +77,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 76,Knock Out,KOUT,R32,2026-06-30 03:00,Netherlands,Morocco,1,1,GAKPO Cody;DIOP Issa,2026-06-28 21:00:00,False,False
 77,Knock Out,KOUT,R32,2026-06-30 19:00,Côte d'Ivoire,Norway,1,2,DIALLO Amad;HAALAND Erling;NUSA Antonio,2026-06-28 21:00:00,False,False
 78,Knock Out,KOUT,R32,2026-06-30 23:00,France,Sweden,3,0,BARCOLA Bradley;MBAPPE Kylian,2026-06-28 21:00:00,False,False
-79,Knock Out,KOUT,R32,2026-07-01 03:00,Mexico,Ecuador,,,QUINONES Julian,2026-06-28 21:00:00,False,False
+79,Knock Out,KOUT,R32,2026-07-01 03:00,Mexico,Ecuador,,,QUINONES Julian;JIMENEZ Raul,2026-06-28 21:00:00,False,False
 80,Knock Out,KOUT,R32,2026-07-01 18:00,England,Congo,,,,2026-06-28 21:00:00,False,False
 81,Knock Out,KOUT,R32,2026-07-01 22:00,Belgium,Senegal,,,,2026-06-28 21:00:00,False,False
 82,Knock Out,KOUT,R32,2026-07-02 02:00,USA,Bosnia and Herzegovina,,,,2026-06-28 21:00:00,False,False

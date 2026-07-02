@@ -81,7 +81,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 80,Knock Out,KOUT,R32,2026-07-01 18:00,England,Congo,2,1,KANE Harry;CIPENGA Brian,2026-06-28 21:00:00,False,False
 81,Knock Out,KOUT,R32,2026-07-01 22:00,Belgium,Senegal,2,2,DIARRA Habib;SARR Ismaila;TIELEMANS Youri;LUKAKU Romelu,2026-06-28 21:00:00,False,False
 82,Knock Out,KOUT,R32,2026-07-02 02:00,USA,Bosnia and Herzegovina,2,0,BALOGUN Folarin;TILLMAN Malik,2026-06-28 21:00:00,False,False
-83,Knock Out,KOUT,R32,2026-07-02 21:00,Spain,Austria,,,OYARZABAL Mikel,2026-06-28 21:00:00,False,False
+83,Knock Out,KOUT,R32,2026-07-02 21:00,Spain,Austria,,,OYARZABAL Mikel;PORRO Pedro,2026-06-28 21:00:00,False,False
 84,Knock Out,KOUT,R32,2026-07-03 01:00,Portugal,Croatia,,,,2026-06-28 21:00:00,False,False
 85,Knock Out,KOUT,R32,2026-07-03 05:00,Switzerland,Algeria,,,,2026-06-28 21:00:00,False,False
 86,Knock Out,KOUT,R32,2026-07-03 20:00,Australia,Egypt,,,,2026-06-28 21:00:00,False,False

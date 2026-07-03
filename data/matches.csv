@@ -83,7 +83,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 82,Knock Out,KOUT,R32,2026-07-02 02:00,USA,Bosnia and Herzegovina,2,0,BALOGUN Folarin;TILLMAN Malik,2026-06-28 21:00:00,False,False
 83,Knock Out,KOUT,R32,2026-07-02 21:00,Spain,Austria,3,0,OYARZABAL Mikel;PORRO Pedro,2026-06-28 21:00:00,False,False
 84,Knock Out,KOUT,R32,2026-07-03 01:00,Portugal,Croatia,2,1,CRISTIANO RONALDO;GONCALO RAMOS;PERISIC Ivan,2026-06-28 21:00:00,False,False
-85,Knock Out,KOUT,R32,2026-07-03 05:00,Switzerland,Algeria,,,NDOYE Dan;EMBOLO Breel,2026-06-28 21:00:00,False,False
+85,Knock Out,KOUT,R32,2026-07-03 05:00,Switzerland,Algeria,2,0,NDOYE Dan;EMBOLO Breel,2026-06-28 21:00:00,False,False
 86,Knock Out,KOUT,R32,2026-07-03 20:00,Australia,Egypt,,,,2026-06-28 21:00:00,False,False
 87,Knock Out,KOUT,R32,2026-07-04 00:00,Argentina,Cabo Verde,,,,2026-06-28 21:00:00,False,False
 88,Knock Out,KOUT,R32,2026-07-04 03:30,Colombia,Ghana,,,,2026-06-28 21:00:00,False,False

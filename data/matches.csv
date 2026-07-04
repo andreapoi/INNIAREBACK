@@ -87,7 +87,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 86,Knock Out,KOUT,R32,2026-07-03 20:00,Australia,Egypt,1,1,EMAM ASHOUR,2026-06-28 21:00:00,False,True
 87,Knock Out,KOUT,R32,2026-07-04 00:00,Argentina,Cabo Verde,1,1,MESSI Lionel;DEROY DUARTE,2026-06-28 21:00:00,False,False
 88,Knock Out,KOUT,R32,2026-07-04 03:30,Colombia,Ghana,1,0,ARIAS Jhon,2026-06-28 21:00:00,False,False
-89,Knock Out,KOUT,R16,2026-07-04 19:00,Canada,Morocco,,,OUNAHI Azzedine;RAHIMI Sou,2026-07-04 19:00:00,False,False
+89,Knock Out,KOUT,R16,2026-07-04 19:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,2026-07-04 19:00:00,False,False
 90,Knock Out,KOUT,R16,2026-07-04 23:00,Paraguay,France,,,,2026-07-04 19:00:00,False,False
 91,Knock Out,KOUT,R16,2026-07-05 22:00,Brazil,Norway,,,,2026-07-04 19:00:00,False,False
 92,Knock Out,KOUT,R16,2026-07-06 02:00,Mexico,England,,,,2026-07-04 19:00:00,False,False

@@ -93,6 +93,7 @@ Alessandro,91,3,2,1,HAALAND Erling,False,False,2026-07-03 14:38:40
 Alessandro,92,1,2,2,KANE Harry,False,False,2026-07-03 14:38:40
 Alessandro,93,1,2,2,YAMAL Lamine,False,False,2026-07-03 14:38:40
 Alessandro,94,1,1,X,LUKAKU Romelu,False,False,2026-07-03 14:38:40
+Alessandro,95,,,,,False,False,
 Andrea,1,2,0,1,JIMENEZ Raul,False,False,2026-06-11 20:39:23
 Andrea,2,1,2,2,SCHICK Patrik,False,False,2026-06-11 20:39:23
 Andrea,3,1,1,X,DZEKO Edin,False,False,2026-06-11 20:39:23
@@ -187,6 +188,7 @@ Andrea,91,1,1,X,VINICIUS JUNIOR,False,False,2026-07-03 22:22:25
 Andrea,92,1,2,2,KANE Harry,False,False,2026-07-03 22:22:25
 Andrea,93,0,0,X,,False,False,2026-07-03 22:22:25
 Andrea,94,1,1,X,PULISIC Christian,False,False,2026-07-03 22:22:25
+Andrea,95,,,,,False,False,
 Edoardo,1,1,0,1,VEGA Alexis,False,False,2026-06-10 21:34:59
 Edoardo,2,1,3,2,SCHICK Patrik,False,False,2026-06-10 21:34:59
 Edoardo,3,1,1,X,DZEKO Edin,False,False,2026-06-10 21:34:59
@@ -281,6 +283,7 @@ Edoardo,91,,,,,False,False,
 Edoardo,92,,,,,False,False,
 Edoardo,93,,,,,False,False,
 Edoardo,94,,,,,False,False,
+Edoardo,95,,,,,False,False,
 Ferdinando,1,2,1,1,JIMENEZ Raul,False,False,2026-06-10 14:36:47
 Ferdinando,2,1,1,X,SON Heungmin,False,False,2026-06-10 14:36:47
 Ferdinando,3,1,1,X,DZEKO Edin,False,False,2026-06-10 14:36:47
@@ -375,6 +378,7 @@ Ferdinando,91,,,,,False,False,
 Ferdinando,92,,,,,False,False,
 Ferdinando,93,,,,,False,False,
 Ferdinando,94,,,,,False,False,
+Ferdinando,95,,,,,False,False,
 Gabriele,1,3,0,1,QUINONES Julian,False,False,2026-06-09 09:06:21
 Gabriele,2,0,2,2,,True,False,2026-06-09 09:06:21
 Gabriele,3,1,1,X,DEMIROVIC Ermedin,False,False,2026-06-09 09:06:21
@@ -469,6 +473,7 @@ Gabriele,91,,,,,False,False,
 Gabriele,92,,,,,False,False,
 Gabriele,93,,,,,False,False,
 Gabriele,94,,,,,False,False,
+Gabriele,95,,,,,False,False,
 Peppe,1,1,0,1,ALVARADO Roberto,False,False,2026-06-11 20:01:50
 Peppe,2,1,1,X,BAE Junho,False,False,2026-06-11 20:01:50
 Peppe,3,1,1,X,KONE Ismael,False,False,2026-06-11 20:01:50
@@ -563,6 +568,7 @@ Peppe,91,,,,,False,False,
 Peppe,92,,,,,False,False,
 Peppe,93,,,,,False,False,
 Peppe,94,,,,,False,False,
+Peppe,95,,,,,False,False,
 Salvatore Sca.,1,2,0,1,GIMENEZ Santiago,False,False,2026-06-11 15:09:16
 Salvatore Sca.,2,1,1,X,SON Heungmin,False,False,2026-06-11 15:09:16
 Salvatore Sca.,3,2,1,1,DAVID Jonathan,False,False,2026-06-11 15:09:16
@@ -657,6 +663,7 @@ Salvatore Sca.,91,,,,,False,False,
 Salvatore Sca.,92,,,,,False,False,
 Salvatore Sca.,93,,,,,False,False,
 Salvatore Sca.,94,,,,,False,False,
+Salvatore Sca.,95,,,,,False,False,
 Salvatore Sch.,1,2,0,1,VEGA Alexis,False,False,2026-06-08 16:45:52
 Salvatore Sch.,2,1,0,1,SON Heungmin,False,False,2026-06-08 16:45:52
 Salvatore Sch.,3,1,2,2,DAVID Jonathan,False,False,2026-06-08 16:45:52
@@ -751,6 +758,7 @@ Salvatore Sch.,91,2,2,X,HAALAND Erling,False,False,2026-07-03 10:47:06
 Salvatore Sch.,92,1,2,2,KANE Harry,False,False,2026-07-03 10:47:06
 Salvatore Sch.,93,1,1,X,YAMAL Lamine,False,False,2026-07-03 10:47:06
 Salvatore Sch.,94,2,2,X,LUKAKU Romelu,False,False,2026-07-03 10:47:06
+Salvatore Sch.,95,,,,,False,False,
 Simone,1,2,1,1,GIMENEZ Santiago,False,False,2026-06-10 14:11:02
 Simone,2,0,3,2,SCHICK Patrik,False,False,2026-06-10 14:11:02
 Simone,3,2,1,1,DZEKO Edin,False,False,2026-06-10 14:11:02
@@ -845,6 +853,7 @@ Simone,91,,,,,False,False,
 Simone,92,,,,,False,False,
 Simone,93,,,,,False,False,
 Simone,94,,,,,False,False,
+Simone,95,,,,,False,False,
 Vins,1,2,0,1,ALVARADO Roberto,False,False,2026-06-11 20:11:03
 Vins,2,1,3,2,SCHICK Patrik,False,False,2026-06-09 17:05:25
 Vins,3,1,1,X,DAVID Jonathan,False,False,2026-06-09 17:05:25
@@ -939,3 +948,4 @@ Vins,91,,,,,False,False,
 Vins,92,,,,,False,False,
 Vins,93,,,,,False,False,
 Vins,94,,,,,False,False,
+Vins,95,,,,,False,False,

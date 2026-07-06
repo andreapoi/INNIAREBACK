@@ -90,6 +90,7 @@ Alessandro,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,G
 Alessandro,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,2,2,DAVID Jonathan,False,False,0.0,2.0,0.0,0.0,2.0
 Alessandro,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,1,2,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Alessandro,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,3,2,1,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Alessandro,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,KANE Harry,False,False,0.0,2.0,3.5,0.0,5.5
 Andrea,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,JIMENEZ Raul,False,False,5.0,2.0,3.5,0.0,10.5
 Andrea,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,2,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Andrea,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DZEKO Edin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -181,6 +182,7 @@ Andrea,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,Ghana
 Andrea,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,0,2,2,HAKIMI Achraf,False,False,0.0,2.0,0.0,0.0,2.0
 Andrea,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,0,3,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Andrea,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,1,1,X,VINICIUS JUNIOR,False,False,0.0,0.0,0.0,0.0,0.0
+Andrea,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,KANE Harry,False,False,0.0,2.0,3.5,0.0,5.5
 Edoardo,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,1,0,1,VEGA Alexis,False,False,0.0,2.0,0.0,0.0,2.0
 Edoardo,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,3,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Edoardo,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DZEKO Edin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -272,6 +274,7 @@ Edoardo,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,Ghan
 Edoardo,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,2,2,DIAZ Brahim,False,False,0.0,2.0,0.0,0.0,2.0
 Edoardo,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,0,2,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Edoardo,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,2,1,1,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Edoardo,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,KANE Harry,False,False,0.0,2.0,3.5,0.0,5.5
 Ferdinando,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,1,1,JIMENEZ Raul,False,False,0.0,2.0,3.5,0.0,5.5
 Ferdinando,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,1,X,SON Heungmin,False,False,0.0,0.0,0.0,0.0,0.0
 Ferdinando,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DZEKO Edin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -363,6 +366,7 @@ Ferdinando,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,G
 Ferdinando,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,2,2,OUNAHI Azzedine,False,False,0.0,2.0,3.5,0.0,5.5
 Ferdinando,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,1,2,2,OLISE Michael,False,False,0.0,2.0,0.0,0.0,2.0
 Ferdinando,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,2,2,X,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Ferdinando,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,0,0,X,,False,False,0.0,0.0,0.0,0.0,0.0
 Gabriele,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,3,0,1,QUINONES Julian,False,False,0.0,2.0,3.5,0.0,5.5
 Gabriele,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,0,2,2,,True,False,0.0,0.0,0.0,0.0,0.0
 Gabriele,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DEMIROVIC Ermedin,False,False,5.0,2.0,0.0,0.0,7.0
@@ -454,6 +458,7 @@ Gabriele,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,Gha
 Gabriele,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,1,X,HAKIMI Achraf,False,False,0.0,0.0,0.0,0.0,0.0
 Gabriele,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,1,3,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Gabriele,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,2,2,X,VINICIUS JUNIOR,False,False,0.0,0.0,0.0,0.0,0.0
+Gabriele,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,BELLINGHAM Jude,False,False,0.0,2.0,3.5,0.0,5.5
 Peppe,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,1,0,1,ALVARADO Roberto,False,False,0.0,2.0,0.0,0.0,2.0
 Peppe,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,1,X,BAE Junho,False,False,0.0,0.0,0.0,0.0,0.0
 Peppe,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,KONE Ismael,False,False,5.0,2.0,0.0,0.0,7.0
@@ -545,6 +550,7 @@ Peppe,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,Ghana,
 Peppe,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,0,2,2,HAKIMI Achraf,False,False,0.0,2.0,0.0,0.0,2.0
 Peppe,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,0,3,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Peppe,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,2,2,X,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Peppe,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,2,3,2,KANE Harry,False,False,5.0,2.0,3.5,0.0,10.5
 Salvatore Sca.,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,GIMENEZ Santiago,False,False,5.0,2.0,0.0,0.0,7.0
 Salvatore Sca.,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,1,X,SON Heungmin,False,False,0.0,0.0,0.0,0.0,0.0
 Salvatore Sca.,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,2,1,1,DAVID Jonathan,False,False,0.0,0.0,0.0,0.0,0.0
@@ -636,6 +642,7 @@ Salvatore Sca.,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colomb
 Salvatore Sca.,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,1,X,HAKIMI Achraf,False,False,0.0,0.0,0.0,0.0,0.0
 Salvatore Sca.,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,1,3,2,DEMBELE Ousmane,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sca.,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,1,1,X,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Salvatore Sca.,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,KANE Harry,False,False,0.0,2.0,3.5,0.0,5.5
 Salvatore Sch.,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,VEGA Alexis,False,False,5.0,2.0,0.0,0.0,7.0
 Salvatore Sch.,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,0,1,SON Heungmin,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sch.,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,2,2,DAVID Jonathan,False,False,0.0,0.0,0.0,0.0,0.0
@@ -727,6 +734,7 @@ Salvatore Sch.,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colomb
 Salvatore Sch.,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,3,2,SAIBARI Ismael,False,False,0.0,2.0,0.0,0.0,2.0
 Salvatore Sch.,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,0,3,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Salvatore Sch.,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,2,2,X,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Salvatore Sch.,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,KANE Harry,False,False,0.0,2.0,3.5,0.0,5.5
 Simone,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,1,1,GIMENEZ Santiago,False,False,0.0,2.0,0.0,0.0,2.0
 Simone,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,0,3,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Simone,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,2,1,1,DZEKO Edin,False,False,0.0,0.0,0.0,0.0,0.0
@@ -818,6 +826,7 @@ Simone,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,Ghana
 Simone,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,1,2,2,SAIBARI Ismael,False,False,0.0,2.0,0.0,0.0,2.0
 Simone,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,1,3,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Simone,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,1,1,X,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Simone,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,2,1,1,KANE Harry,False,False,0.0,0.0,3.5,0.0,3.5
 Vins,1,2026-06-11 21:00,A,Group Stage,1,2026-06-11 21:00:00,Mexico,South Africa,2,0,JIMENEZ Raul;QUINONES Julian,False,False,2,0,1,ALVARADO Roberto,False,False,5.0,2.0,0.0,0.0,7.0
 Vins,2,2026-06-12 04:00,A,Group Stage,1,2026-06-11 21:00:00,South Korea,Czechia,2,1,KREJCI Ladislav;HWANG Inbeom;OH Hyeongyu,False,False,1,3,2,SCHICK Patrik,False,False,0.0,0.0,0.0,0.0,0.0
 Vins,3,2026-06-12 21:00,B,Group Stage,1,2026-06-11 21:00:00,Canada,Bosnia and Herzegovina,1,1,LARIN Cyle;LUKIC Jovo,False,False,1,1,X,DAVID Jonathan,False,False,5.0,2.0,0.0,0.0,7.0
@@ -909,3 +918,4 @@ Vins,88,2026-07-04 03:30,KOUT,Knock Out,R32,2026-06-28 21:00:00,Colombia,Ghana,1
 Vins,89,2026-07-04 19:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Canada,Morocco,0,3,OUNAHI Azzedine;RAHIMI Sou,False,False,0,1,2,SAIBARI Ismael,False,False,0.0,2.0,0.0,0.0,2.0
 Vins,90,2026-07-04 23:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Paraguay,France,0,1,MBAPPE Kylian,False,False,0,3,2,MBAPPE Kylian,False,False,0.0,2.0,3.5,0.0,5.5
 Vins,91,2026-07-05 22:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,False,False,1,1,X,HAALAND Erling,False,False,0.0,0.0,3.5,0.0,3.5
+Vins,92,2026-07-06 02:00,KOUT,Knock Out,R16,2026-07-04 19:00:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,False,False,1,2,2,KANE Harry,False,False,0.0,2.0,3.5,0.0,5.5

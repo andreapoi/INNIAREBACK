@@ -97,5 +97,5 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 96,Knock Out,KOUT,R16,2026-07-07 22:00,Switzerland,Colombia,,,,2026-07-04 19:00:00,False,False
 97,Knock Out,KOUT,QT,2026-07-09 22:00,France,Morocco,,,,2026-07-09 22:00:00,False,False
 98,Knock Out,KOUT,QT,2026-07-10 21:00,,,,,,2026-07-09 22:00:00,False,False
-99,Knock Out,KOUT,QT,2026-07-11 23:00,Norway,,,,,2026-07-09 22:00:00,False,False
+99,Knock Out,KOUT,QT,2026-07-11 23:00,Norway,England,,,,2026-07-09 22:00:00,False,False
 100,Knock Out,KOUT,QT,2026-07-12 03:00,,,,,,2026-07-09 22:00:00,False,False

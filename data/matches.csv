@@ -91,7 +91,7 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 90,Knock Out,KOUT,R16,2026-07-04 23:00,Paraguay,France,0,1,MBAPPE Kylian,2026-07-04 19:00:00,False,False
 91,Knock Out,KOUT,R16,2026-07-05 22:00,Brazil,Norway,1,2,NEYMAR JR;HAALAND Erling,2026-07-04 19:00:00,False,False
 92,Knock Out,KOUT,R16,2026-07-06 02:00,Mexico,England,2,3,QUINONES Julian;JIMENEZ Raul;BELLINGHAM Jude;KANE Harry,2026-07-04 19:00:00,False,False
-93,Knock Out,KOUT,R16,2026-07-06 21:00,Portugal,Spain,,,,2026-07-04 19:00:00,False,False
+93,Knock Out,KOUT,R16,2026-07-06 21:00,Portugal,Spain,,,MERINO Mikel,2026-07-04 19:00:00,False,False
 94,Knock Out,KOUT,R16,2026-07-07 02:00,USA,Belgium,,,,2026-07-04 19:00:00,False,False
 95,Knock Out,KOUT,R16,2026-07-07 18:00,Argentina,Egypt,,,,2026-07-04 19:00:00,False,False
 96,Knock Out,KOUT,R16,2026-07-07 22:00,Switzerland,Colombia,,,,2026-07-04 19:00:00,False,False

@@ -96,6 +96,6 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 95,Knock Out,KOUT,R16,2026-07-07 18:00,Argentina,Egypt,3,2,IBRAHIM ADEL;MOSTAFA ZICO;FERNANDEZ Enzo;MESSI Lionel;ROMERO Cristian,2026-07-04 19:00:00,False,False
 96,Knock Out,KOUT,R16,2026-07-07 22:00,Switzerland,Colombia,0,0,,2026-07-04 19:00:00,False,False
 97,Knock Out,KOUT,QT,2026-07-09 22:00,France,Morocco,2,0,DEMBELE Ousmane;MBAPPE Kylian,2026-07-09 22:00:00,False,False
-98,Knock Out,KOUT,QT,2026-07-10 21:00,Spain,Belgium,,,MERINO Mikel;RUIZ Fabian,2026-07-09 22:00:00,False,False
+98,Knock Out,KOUT,QT,2026-07-10 21:00,Spain,Belgium,,,MERINO Mikel;RUIZ Fabian;DE KETELAERE Charles,2026-07-09 22:00:00,False,False
 99,Knock Out,KOUT,QT,2026-07-11 23:00,Norway,England,,,,2026-07-09 22:00:00,False,False
 100,Knock Out,KOUT,QT,2026-07-12 03:00,Argentina,Switzerland,,,,2026-07-09 22:00:00,False,False

@@ -100,6 +100,6 @@ match_id,stato_avanzamento_torneo,group,match_day,datetime,home_team,away_team,h
 99,Knock Out,KOUT,QT,2026-07-11 23:00,Norway,England,1,1,SCHJELDERUP Andreas;BELLINGHAM Jude,2026-07-09 22:00:00,False,False
 100,Knock Out,KOUT,QT,2026-07-12 03:00,Argentina,Switzerland,1,1,MAC ALLISTER Alexis;NDOYE Dan,2026-07-09 22:00:00,False,False
 101,Knock Out,KOUT,SF,2026-07-14 21:00,France,Spain,0,2,OYARZABAL Mikel;PORRO Pedro,2026-07-14 21:00:00,False,False
-102,Knock Out,KOUT,SF,2026-07-15 21:00,England,Argentina,,,,2026-07-14 21:00:00,False,False
+102,Knock Out,KOUT,SF,2026-07-15 21:00,England,Argentina,,,GORDON Anthony,2026-07-14 21:00:00,False,False
 103,Knock Out,KOUT,3rd,2026-07-18 23:00,France,,,,,2026-07-18 23:00:00,False,False
 104,Knock Out,KOUT,F,2026-07-19 21:00,Spain,,,,,2026-07-19 21:00:00,False,False
